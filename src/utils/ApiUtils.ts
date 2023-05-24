@@ -1,8 +1,11 @@
 import axios from "axios";
 
+const baseUrl = import.meta.env.VITE_G_URL
+const apiKey = import.meta.env.VITE_G_API
+
 const config = {
-  baseUrl: "https://www.googleapis.com/youtube/v3/",
-  apiKey: process.env.VUE_APP_G_API,
+  baseUrl,
+  apiKey,
 };
 
 class ApiUtils {

@@ -3,9 +3,8 @@ import { reactive } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import axios from "axios"
 import AppHeader from './components/appHeader.vue'
-import JoinMessage from "@/components/JoinMessage.vue";
+import AppFooter from "@/components/AppFooter.vue";
 
-const state = reactive({ count: 0})
 const reviews = reactive([])
 const baseApiUrl = 'http://localhost:3000'
 // const getReviews = async () => {
@@ -19,13 +18,10 @@ const baseApiUrl = 'http://localhost:3000'
 <template>
   <div class="max-w-7xl mx-auto">
     <AppHeader />
-    <JoinMessage />
-    <div class="flex justify-center">
+    <div class="flex flex-col justify-center max-w-7xl mx-auto">
       <RouterView />
     </div>
-    <footer class="flex justify-center">
-      <p>&copy; by Rick Jones. All rights reserved.</p>
-    </footer>
+    <AppFooter />
   </div>
 </template>
 

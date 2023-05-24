@@ -8,6 +8,6 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["node"] // Needed to add this here so that the compiler will find the type 'process'
+//    "types": ["node"] // Needed to add this here so that the compiler will find the type 'process'
   }
 }

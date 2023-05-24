@@ -1,4 +1,4 @@
-import apiUtils from './ApiUtils';
+import apiUtils from '@/utils/ApiUtils';
 
 type VideoChannelDetails = {
   videoId: string,

@@ -1,7 +1,7 @@
 
 class StringUtils {
 
-  nFormatter(num, digits) {
+  nFormatter(num: number, digits: number): string {
     const si = [
       { value: 1, symbol: "" },
       { value: 1E3, symbol: "k" },

@@ -20,7 +20,7 @@ const navLinks = ref([
 </script>
 
 <template>
-  <div class="app-header flex flex-row w-full justify-between">
+  <div class="flex flex-row w-full justify-between pb-8 pt-8">
     <div class="flex flex-row items-center justify-center">
       <site-logo />
     </div>
@@ -30,7 +30,7 @@ const navLinks = ref([
       </div>
       <nav id="nav" class="flex flex-row items-center justify-end w-full transition">
         <button-nav v-for="(link, index) in navLinks" :link="link.link" :path="link.path" :key="index"/>
-        <button class="bg-orange-500 pl-4 pr-4 pt-2 pb-2">LOGIN</button>
+        <button class="bg-orange-500 pl-4 pr-4 pt-2 pb-2 text-white rounded-3xl">LOGIN</button>
       </nav>
     </div>
   </div>
