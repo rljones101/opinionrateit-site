@@ -22,19 +22,19 @@ import ReadMoreLink from "@/components/links/ReadMoreLink.vue";
         <div class="flex flex-col gap-4">
           <div class="icon-wrapper"><IconCommunity /></div>
           <h3 class="font-bold text-2xl text-white">Community</h3>
-          <p>Urna magna te verear dissentiunt tibique definitionem voluptaria cum quod porro ante habitasse fermentum propriae doming viverra honestatis pharetra inciderint.</p>
+          <p>Interact with other members and ensure your reviews are engaging while providing valuable information.</p>
           <ReadMoreLink />
         </div>
         <div class="flex flex-col gap-4">
           <div class="icon-wrapper"><IconDocumentation/></div>
           <h3 class="font-bold text-2xl text-white">Tech Knowledge</h3>
-          <p>lacinia expetendis singulis enim integer salutatus convallis tritani intellegat impetus expetenda conubia ignota has facilisi suspendisse graeci vero iudicabit suscipit veritus inani dicta error venenatis vivamus nihil porro.</p>
+          <p>Increase awareness in latest tech trends, connect with merchants that share your interest.</p>
           <ReadMoreLink />
         </div>
         <div class="flex flex-col gap-4">
           <div class="icon-wrapper"><IconEcosystem /></div>
           <h3 class="font-bold text-2xl text-white">Engagement Tracking</h3>
-          <p>eu dicit pellentesque laoreet pretium condimentum elitr ne ex reprimique utinam integer pretium electram nostrum wisi morbi simul tempus tota esse alterum mandamus cu eloquentiam dolorem repudiandae mattis.</p>
+          <p>Daily analysis is provided that will give you a deep understanding of how you can reach your target audience.</p>
           <ReadMoreLink />
         </div>
       </div>
