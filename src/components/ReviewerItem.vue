@@ -141,7 +141,7 @@ getChannelDetails()
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 items-center p-8 transition-all duration-300 group hover:bg-gray-800 hover:text-blue-400 hover:shadow-lg hover:scale-105 rounded">
+  <div class="flex flex-col gap-4 items-center p-8 transition-all duration-300 group hover:bg-gray-800 hover:font-bold hover:shadow-lg hover:scale-105 rounded">
     <!--    <div class="flex w-full">-->
     <!--      <social-links :social="social" />-->
     <!--    </div>-->

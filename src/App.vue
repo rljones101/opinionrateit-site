@@ -16,9 +16,9 @@ const baseApiUrl = 'http://localhost:3000'
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto">
-    <AppHeader />
-    <div class="flex flex-col justify-center max-w-7xl mx-auto">
+  <div class="">
+    <AppHeader class="sticky-header" />
+    <div class="flex flex-col justify-center">
       <RouterView />
     </div>
     <AppFooter />
@@ -26,5 +26,8 @@ const baseApiUrl = 'http://localhost:3000'
 </template>
 
 <style scoped>
-
+.sticky-header{
+  @apply sticky top-0 z-50 md:max-w-7xl md:mx-auto lg:max-w-none;
+  background-color: var(--vt-c-blue);
+}
 </style>
