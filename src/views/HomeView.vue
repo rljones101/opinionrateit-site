@@ -6,16 +6,45 @@ import IconDocumentation from "@/components/icons/IconDocumentation.vue";
 import IconEcosystem from "@/components/icons/IconEcosystem.vue";
 import AppHero from "@/components/AppHero.vue";
 import ReadMoreLink from "@/components/links/ReadMoreLink.vue";
+import IconStar from "@/components/icons/IconStar.vue";
+import {nextTick, onBeforeUnmount, onMounted} from "vue";
+
+const options = {
+  root: null,
+  rootMargin: '0px',
+  threshold: 0
+}
+const callback = (entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('active')
+    } else {
+      entry.target.classList.remove('active')
+    }
+  })
+}
+const observer = new IntersectionObserver(callback, options)
+
+onMounted(async () => {
+  await nextTick()
+  document.querySelectorAll('.reveal').forEach(el => {
+    observer.observe(el)
+  })
+})
+
+onBeforeUnmount(() => {
+ observer.disconnect()
+})
 </script>
 
 <template>
   <section class="section-info bg-slate-700 text-white shadow-lg">
     <AppHero/>
   </section>
-  <section>
+  <section >
     <FeaturedReviewers class="max-w-7xl mx-auto" />
   </section>
-  <section class="section-info mt-8 bg-slate-700">
+  <section class="section-info mt-8 bg-slate-700 reveal fade-bottom">
     <div class="max-w-7xl mx-auto">
       <h1 class="pt-16 flex justify-center font-bold text-4xl text-white">Activate more effective reviews</h1>
       <div class="points-of-interest p-24 flex flex-col">
@@ -40,7 +69,7 @@ import ReadMoreLink from "@/components/links/ReadMoreLink.vue";
       </div>
     </div>
   </section>
-  <section class="mt-8">
+  <section class="mt-8 reveal fade-left">
     <JoinMessage class="max-w-7xl mx-auto" />
   </section>
 </template>

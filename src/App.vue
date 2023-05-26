@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive } from 'vue'
+import {reactive, onMounted, nextTick, onBeforeUnmount} from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
 import axios from "axios"
 import AppHeader from './components/appHeader.vue'
@@ -13,6 +13,7 @@ const baseApiUrl = 'http://localhost:3000'
 // }
 //
 // getReviews().catch(err => console.error(err))
+
 </script>
 
 <template>
@@ -25,7 +26,7 @@ const baseApiUrl = 'http://localhost:3000'
   </div>
 </template>
 
-<style scoped>
+<style>
 .sticky-header{
   @apply sticky top-0 z-50 md:max-w-7xl md:mx-auto lg:max-w-none;
   background-color: var(--vt-c-blue);
