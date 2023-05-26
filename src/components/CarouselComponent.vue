@@ -1,19 +1,26 @@
 <script setup lang="ts">
-import {onUnmounted, ref} from 'vue'
+import {onUnmounted, ref, Ref } from 'vue'
 import IconArrow from "@/components/icons/IconArrow.vue";
+
+export interface Slide {
+  id: number,
+  name: string,
+  style: () => { opacity: 1 }
+}
+
 const props = defineProps<{
-  slides: any[]
+  slides: Slide[]
 }>()
 
-const slidesAlias = ref(props.slides)
+const slidesAlias: Ref<Slide[]> = ref(props.slides)
 const animateCarousel = () => {
   next()
 }
 
 let animateId = window.setInterval(animateCarousel, 3000)
 
-const updateOpacity = (slide) => {
-  slidesAlias.value.forEach((el) => {
+const updateOpacity = (slide: Slide) => {
+  slidesAlias.value.forEach((el: Slide) => {
     el.style.opacity = 1
   });
   slide.style.opacity = 0
@@ -24,8 +31,8 @@ const next = () => {
   window.clearInterval(animateId)
 
   // Take the first element and add it at the end
-  const first = slidesAlias.value.shift();
-  updateOpacity(first);
+  const first: any = slidesAlias.value.shift();
+  updateOpacity(first as Slide);
   slidesAlias.value = [...slidesAlias.value, first];
 }
 
@@ -33,8 +40,8 @@ const previous = () => {
   window.clearInterval(animateId)
   // Save the last element and then add it back to the slides
   // at the beginning
-  const last = slidesAlias.value.pop();
-  updateOpacity(last);
+  const last: any = slidesAlias.value.pop();
+  updateOpacity(last as Slide);
   slidesAlias.value = [last, ...slidesAlias.value];
 }
 

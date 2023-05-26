@@ -6,14 +6,8 @@ import IconDocumentation from "@/components/icons/IconDocumentation.vue";
 import IconEcosystem from "@/components/icons/IconEcosystem.vue";
 import AppHero from "@/components/AppHero.vue";
 import ReadMoreLink from "@/components/links/ReadMoreLink.vue";
-import IconStar from "@/components/icons/IconStar.vue";
 import {nextTick, onBeforeUnmount, onMounted} from "vue";
 
-const options = {
-  root: null,
-  rootMargin: '0px',
-  threshold: 0
-}
 const callback = (entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -23,7 +17,7 @@ const callback = (entries) => {
     }
   })
 }
-const observer = new IntersectionObserver(callback, options)
+const observer: IntersectionObserver = new IntersectionObserver(callback)
 
 onMounted(async () => {
   await nextTick()
@@ -38,11 +32,11 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="section-info bg-slate-700 text-white shadow-lg">
+  <section class="section-info bg-slate-700 text-white shadow-lg reveal fade-bottom">
     <AppHero/>
   </section>
   <section >
-    <FeaturedReviewers class="max-w-7xl mx-auto" />
+    <FeaturedReviewers class="max-w-7xl mx-auto reveal fade-right" />
   </section>
   <section class="section-info mt-8 bg-slate-700 reveal fade-bottom">
     <div class="max-w-7xl mx-auto">
