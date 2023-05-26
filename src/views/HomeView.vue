@@ -32,7 +32,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <section class="section-info bg-slate-700 text-white shadow-lg reveal fade-bottom">
+  <section class="section-info bg-slate-700 text-white shadow-lg reveal fade-top">
     <AppHero/>
   </section>
   <section >

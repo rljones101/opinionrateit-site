@@ -19,31 +19,49 @@ import BaseButton from "@/components/buttons/BaseButton.vue";
 
 <style scoped>
 .image-block {
-  min-width: 250px;
-  min-height: 450px;
-  margin-left: -30px;
-  margin-right: -30px;
+  @apply border-4 border-orange-500 shadow-lg shadow-blue-950;
+  min-width: 450px;
+  min-height: 250px;
+  //margin-left: -30px;
+  //margin-right: -30px;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+  background-origin: content-box;
+  //clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
 }
 
 .hero-image-container {
   @apply flex bg-orange-500;
+  position: relative;
+  height: 450px;
 }
 
 .app-hero {
   @apply flex items-center gap-4 max-w-7xl mx-auto;
 }
 
+.app-hero .app-hero-text {
+  max-width: 450px;
+}
+
 .desktop-background {
   background-image: url("../assets/img/20180809_092515.jpg");
+  position: absolute;
+  top: 16px;
+  left: -74px;
+  z-index: 2;
 }
 .computer-background {
   background-image: url("../assets/img/20180519_223759.jpg");
+  position: absolute;
+  top: 244px;
+  left: 125px;
 }
 .headphone-background {
   background-image: url("../assets/img/20220411_172601.jpg");
+  position: absolute;
+  top: 50px;
+  left: 259px;
 }
 </style>
