@@ -1,7 +1,7 @@
 <script setup lang="ts">
-defineProps<{
-  color: string
-}>()
+withDefaults(defineProps<{ color?: string }>(), {
+  color: 'text-orange-500'
+})
 </script>
 
 <template>

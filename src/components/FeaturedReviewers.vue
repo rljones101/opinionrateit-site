@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ReviewerItem from '../components/ReviewerItem.vue'
+import ReviewerItem from '@/components/ReviewerItem.vue'
 import CarouselComponent from "@/components/CarouselComponent.vue";
 import reviewerController from "@/controllers/reviewerController";
 import AppTitle from "@/components/AppTitle.vue";
@@ -12,14 +12,14 @@ let list = reviewerController.reviewers
   <div>
     <AppTitle>Featured Reviewers</AppTitle>
     <CarouselComponent :slides="list">
-      <template #slide="slide">
+      <template #slide="{ id, name, channelId, social, metrics}">
         <ReviewerItem
-            :key="slide.id"
-            :name="slide.name"
-            :id="slide.id"
-            :channel-id="slide.channelId"
-            :social="slide.social"
-            :metrics="slide.metrics" />
+            :key="id"
+            :name="name"
+            :id="id"
+            :channel-id="channelId"
+            :social="social"
+            :metrics="metrics" />
       </template>
     </CarouselComponent>
   </div>
