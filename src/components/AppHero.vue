@@ -19,7 +19,7 @@ import BaseButton from "@/components/buttons/BaseButton.vue";
 
 <style scoped>
 .image-block {
-  @apply border-4 border-orange-500 shadow-lg shadow-blue-950;
+  @apply border-4 border-orange-500 shadow-lg shadow-slate-800;
   min-width: 450px;
   min-height: 250px;
   //margin-left: -30px;
