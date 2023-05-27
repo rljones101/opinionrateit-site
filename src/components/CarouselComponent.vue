@@ -1,60 +1,19 @@
 <script setup lang="ts">
-import {onUnmounted, ref, Ref } from 'vue'
 import IconArrow from "@/components/icons/IconArrow.vue";
-
-export interface Slide {
-  id: number,
-  name: string,
-  style: () => { opacity: 1 }
-}
+import { useCarousel, Slide } from "@/controllers/carouselController";
 
 const props = defineProps<{
   slides: Slide[]
 }>()
 
-const slidesAlias: Ref<Slide[]> = ref(props.slides)
-const animateCarousel = () => {
-  next()
-}
-
-let animateId = window.setInterval(animateCarousel, 3000)
-
-const updateOpacity = (slide: Slide) => {
-  slidesAlias.value.forEach((el: Slide) => {
-    el.style.opacity = 1
-  });
-  slide.style.opacity = 0
-  animateId = window.setInterval(animateCarousel, 3000)
-}
-
-const next = () => {
-  window.clearInterval(animateId)
-
-  // Take the first element and add it at the end
-  const first: any = slidesAlias.value.shift();
-  updateOpacity(first as Slide);
-  slidesAlias.value = [...slidesAlias.value, first];
-}
-
-const previous = () => {
-  window.clearInterval(animateId)
-  // Save the last element and then add it back to the slides
-  // at the beginning
-  const last: any = slidesAlias.value.pop();
-  updateOpacity(last as Slide);
-  slidesAlias.value = [last, ...slidesAlias.value];
-}
-
-onUnmounted(() => {
-  window.clearInterval(animateId)
-})
+const { slides, next, previous } = useCarousel(props.slides)
 
 </script>
 
 <template>
   <div class="carousel_container">
     <transition-group class="carousel gap-4" tag="div">
-      <div v-for="slide in slidesAlias" :key="slide.id" class="slide" :style="slide.style">
+      <div v-for="slide in slides" :key="slide.id" class="slide" :style="slide.style">
         <slot name="slide" v-bind="slide"></slot>
       </div>
     </transition-group>

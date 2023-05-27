@@ -101,6 +101,12 @@
 .reveal.active .slide-in-right-animation-3 {
     animation: slide-in-right 0.9s ease-in;
 }
+
+.grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+}
 /*#app {*/
 /*  max-width: 1280px;*/
 /*  margin: 0 auto;*/

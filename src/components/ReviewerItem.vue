@@ -15,9 +15,34 @@ const props = defineProps<{
   metrics: any[]
 }>()
 
+// interface ChannelDetails {
+//   id: string,
+//   name: string,
+//   title?: string,
+//   description?: string,
+//   channelThumbnail?: string,
+//   thumbnails?: {
+//     default?: {
+//       url?: string
+//     },
+//     high?: {
+//       url?: string
+//     }
+//   },
+//   publishedAt?: string,
+//   statistics: {
+//     commentCount: number,
+//     hiddenSubscriberCount: boolean,
+//     subscriberCount: number,
+//     videoCount: number,
+//     viewCount: number
+//   }
+// }
+
 // Define data
 let channelDetails = ref({
   id: null,
+  name: props.name,
   title: 'Default',
   description: 'Replace this description...',
   channelThumbnail: '<span>Image here...</span>',
@@ -63,15 +88,20 @@ const reviewerImage = computed(() => {
   return channelDetails.value.thumbnails.default.url
 })
 
-const backgroundImage = computed(() => {
-  return channelDetails.value.thumbnails.high.url
-})
+// const backgroundImage = computed(() => {
+//   return channelDetails.value.thumbnails.high.url
+// })
 
 const publishDate = computed(() => {
   const now = DateTime.now()
   const previousDate = DateTime.fromISO(channelDetails.value.publishedAt)
   const dateDiff = now.diff(previousDate, 'years').toObject()
-  return Math.floor(dateDiff.years) + ' years'
+
+  let years = ''
+  if (dateDiff.years) {
+    years = Math.floor(dateDiff.years) + ' years'
+  }
+  return years
 })
 
 const formattedSubscriberCount = computed(() => {
@@ -93,18 +123,20 @@ const metricScore = computed(() => {
   return 0
 })
 
-const setChannelDetails = (id, data, stats) => {
+const setChannelDetails = (id:string, snippet:any, stats:any) => {
   return {
     id,
-    title: data.title,
-    description: data.description,
-    publishedAt: data.publishedAt,
+    name: props.name,
+    title: snippet.title,
+    description: snippet.description,
+    channelThumbnail: '',
+    publishedAt: snippet.publishedAt,
     thumbnails: {
       default: {
-        url: data.thumbnails.default.url
+        url: snippet.thumbnails.default.url
       },
       high: {
-        url: data.thumbnails.high.url
+        url: snippet.thumbnails.high.url
       }
     },
     statistics: {
@@ -118,10 +150,8 @@ const setChannelDetails = (id, data, stats) => {
 }
 const getChannelDetails = async () => {
   try {
-    const channel = await reviewerController.getChannelDetails(props.channelId)
-    if (channel) {
-      channelDetails.value = setChannelDetails(channel.id, channel.snippet, channel.statistics)
-    }
+    const {id, snippet, statistics } = await reviewerController.getChannelDetails(props.channelId)
+    channelDetails.value = setChannelDetails(id, snippet, statistics)
   } catch (err) {
     console.error(err);
   }
@@ -146,7 +176,7 @@ getChannelDetails()
     <!--      <social-links :social="social" />-->
     <!--    </div>-->
     <div v-if='reviewerImage' class="reviewer-image-container"><img :alt="channelDetails.title" :src="reviewerImage" class="reviewer-image" /></div>
-    <router-link :to="`/profile/${channelDetails.id}`" class="font-bold text-orange-500">{{channelDetails.title}}</router-link>
+    <router-link :to="`/reviewers/${channelDetails.name}`" class="font-bold text-orange-500">{{channelDetails.title}}</router-link>
     <div class="flex items-center flex-grow gap-4">
       <div class="chart-container">
         <div class="graph-card">

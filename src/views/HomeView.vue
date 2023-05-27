@@ -6,29 +6,10 @@ import IconDocumentation from "@/components/icons/IconDocumentation.vue";
 import IconEcosystem from "@/components/icons/IconEcosystem.vue";
 import AppHero from "@/components/AppHero.vue";
 import ReadMoreLink from "@/components/links/ReadMoreLink.vue";
-import {nextTick, onBeforeUnmount, onMounted} from "vue";
+import { useRevealObserver } from "@/controllers/observerController";
 
-const callback = (entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('active')
-    } else {
-      entry.target.classList.remove('active')
-    }
-  })
-}
-const observer: IntersectionObserver = new IntersectionObserver(callback)
+useRevealObserver()
 
-onMounted(async () => {
-  await nextTick()
-  document.querySelectorAll('.reveal').forEach(el => {
-    observer.observe(el)
-  })
-})
-
-onBeforeUnmount(() => {
- observer.disconnect()
-})
 </script>
 
 <template>

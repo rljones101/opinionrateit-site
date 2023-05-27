@@ -1,54 +1,62 @@
-type Slide = {
+import { onMounted, onUnmounted, ref} from 'vue'
+
+export interface Slide {
   id: number,
   name: string,
-  style: { opacity: number }
+  style: { opacity:number }
 }
 
-export default class CarouselController {
-  slides: Slide[] = []
-  animateId: number = 1
-  constructor(slides: any = []) {
-    this.slides = slides
-    this.startAnimation()
+const useCarousel = (slides: Slide[]) => {
+
+  const slideAlias = ref(slides)
+
+  const animateCarousel = () => {
+    next()
   }
 
-  getSlides(): any {
-    return this.slides
-  }
+  let animateId = window.setInterval(animateCarousel, 3000)
 
-  stopAnimation() {
-    window.clearInterval(this.animateId)
-  }
-
-  startAnimation() {
-    this.animateId = window.setInterval(() => {
-      this.next()
-    }, 3000)
-  }
-
-  next() {
-    this.stopAnimation()
-
-    // Take the first element and add it at the end
-    const first: any = this.slides.shift();
-    this.updateStyleOpacity(first);
-    this.slides = [...this.slides, first];
-  }
-
-  previous() {
-    this.stopAnimation()
-    // Save the last element and then add it back to the slides
-    // at the beginning
-    const last: any = this.slides.pop();
-    this.updateStyleOpacity(last);
-    this.slides = [last, ...this.slides];
-  }
-
-  updateStyleOpacity(slide: Slide) {
-    this.slides.forEach((el:Slide) => {
+  const updateOpacity = (slide: Slide) => {
+    slideAlias.value.forEach((el: Slide) => {
       el.style.opacity = 1
     });
     slide.style.opacity = 0
-    this.startAnimation()
+    animateId = window.setInterval(animateCarousel, 3000)
   }
+
+  const next = () => {
+    window.clearInterval(animateId)
+
+    // Take the first element and add it at the end
+    const first: any = slideAlias.value.shift();
+    updateOpacity(first as Slide);
+    slideAlias.value = [...slideAlias.value, first];
+  }
+
+  const previous = () => {
+    window.clearInterval(animateId)
+    // Save the last element and then add it back to the slides
+    // at the beginning
+    const last: any = slideAlias.value.pop();
+    updateOpacity(last as Slide);
+    slideAlias.value = [last, ...slideAlias.value];
+  }
+
+  onMounted(() => {
+    animateCarousel()
+  })
+
+  onUnmounted(() => {
+    window.clearInterval(animateId)
+  })
+
+  return {
+    slides: slideAlias,
+    next,
+    previous
+  }
+}
+
+export {
+  useCarousel
 }

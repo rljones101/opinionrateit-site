@@ -4,7 +4,7 @@ import CarouselComponent from "@/components/CarouselComponent.vue";
 import reviewerController from "@/controllers/reviewerController";
 import AppTitle from "@/components/AppTitle.vue";
 
-let list = reviewerController.reviewers
+let list = [...reviewerController.reviewers]
 
 </script>
 
