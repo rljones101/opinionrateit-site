@@ -1,5 +1,5 @@
 import axios from 'axios';
-import GoogleAPIService from 'src/services/GoogleAPIService';
+import GoogleAPIService from '@/services/GoogleAPIService.ts';
 
 const _productDataInterface = (productData) => {
   return {

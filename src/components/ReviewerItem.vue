@@ -5,56 +5,52 @@ import PieChart from "@/components/charts/PieChart.vue";
 import ButtonReviews from "@/components/buttons/ButtonReviews.vue";
 import StringUtils from '../utils/StringUtils'
 import reviewerController from "@/controllers/reviewerController";
+import type { ChartData } from 'chart.js'
 
 // Define Props
 const props = defineProps<{
   name: string,
   id: number,
-  channelId: string,
-  social: any[],
+  channelId?: string,
+  social?: any[],
   metrics: any[]
 }>()
 
-// interface ChannelDetails {
-//   id: string,
-//   name: string,
-//   title?: string,
-//   description?: string,
-//   channelThumbnail?: string,
-//   thumbnails?: {
-//     default?: {
-//       url?: string
-//     },
-//     high?: {
-//       url?: string
-//     }
-//   },
-//   publishedAt?: string,
-//   statistics: {
-//     commentCount: number,
-//     hiddenSubscriberCount: boolean,
-//     subscriberCount: number,
-//     videoCount: number,
-//     viewCount: number
-//   }
-// }
-
-// Define data
-let channelDetails = ref({
-  id: null,
-  name: props.name,
-  title: 'Default',
-  description: 'Replace this description...',
-  channelThumbnail: '<span>Image here...</span>',
+interface ChannelDetailsInterface {
+  id: string,
+  name: string,
+  title: string,
+  description?: string,
+  channelThumbnail?: string,
+  publishedAt: string,
   thumbnails: {
     default: {
-      url: null
+      url: string
     },
-    high: {
-      url: null
+    high?: {
+      url?: string
     }
   },
+  statistics: {
+    commentCount: number,
+    hiddenSubscriberCount: boolean,
+    subscriberCount: number,
+    videoCount: number,
+    viewCount: number
+  }
+}
+
+// Define data
+let channelDetails = ref<ChannelDetailsInterface>({
+  id: '',
+  name: props.name || 'name here..',
+  title: 'Default',
   publishedAt: '',
+  thumbnails: {
+    default: {
+      url: ''
+    }
+  },
   statistics: {
     commentCount: 0,
     hiddenSubscriberCount: false,
@@ -63,12 +59,12 @@ let channelDetails = ref({
     viewCount: 0
   }
 })
-const chartData = ref({
+
+const chartData = ref<ChartData<"doughnut">>({
   labels: ['score'],
   datasets: [{
     label: 'score',
     data: [],
-    cutout: '80%',
     backgroundColor: ['rgb(22,167,46)', 'rgba(247,114,22,0.2)'],
     borderColor: 'rgba(0,0,0,0)',
     borderWidth: 1
@@ -123,7 +119,7 @@ const metricScore = computed(() => {
   return 0
 })
 
-const setChannelDetails = (id:string, snippet:any, stats:any) => {
+const setChannelDetails = (id:string, snippet:any, stats:any): ChannelDetailsInterface => {
   return {
     id,
     name: props.name,
@@ -150,8 +146,10 @@ const setChannelDetails = (id:string, snippet:any, stats:any) => {
 }
 const getChannelDetails = async () => {
   try {
-    const {id, snippet, statistics } = await reviewerController.getChannelDetails(props.channelId)
-    channelDetails.value = setChannelDetails(id, snippet, statistics)
+    if (props.channelId !== undefined && props.channelId !== '') {
+      const channel = await reviewerController.getChannelDetails(props.channelId)
+      channelDetails.value = setChannelDetails(channel.id, channel.snippet, channel.statistics)
+    }
   } catch (err) {
     console.error(err);
   }
@@ -160,8 +158,10 @@ const getChannelDetails = async () => {
 const getMetricScore = (weights: any[]) => {
   const sum = weights.reduce((acc, cur) => acc + cur);
   const average = Math.floor(sum/weights.length);
-  chartData.value.datasets[0].data.push(average);
-  chartData.value.datasets[0].data.push(Math.floor((100 - average)))
+  if (chartData?.value?.datasets?.[0]?.data) {
+    chartData.value.datasets[0].data.push(average);
+    chartData.value.datasets[0].data.push(Math.floor((100 - average)))
+  }
   // console.log('datasets:', this.chartData.datasets[0].data)
   return Math.floor(average) + '%';
 }

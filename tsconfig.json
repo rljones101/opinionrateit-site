@@ -17,8 +17,12 @@
     "types": ["vite/client"],
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "composite": true,
+    "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
   "ts-node": {

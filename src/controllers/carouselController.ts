@@ -4,6 +4,9 @@ export interface Slide {
   id: number,
   name: string,
   style: { opacity:number }
+  channelId?: string,
+  social: any[],
+  metrics: any[]
 }
 
 const useCarousel = (slides: Slide[]) => {

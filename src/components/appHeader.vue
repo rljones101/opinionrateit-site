@@ -4,7 +4,7 @@ import buttonNav from './buttons/buttonNav.vue'
 import siteLogo from './siteLogo.vue'
 import BaseButton from "@/components/buttons/BaseButton.vue";
 
-const search = ref('')
+// const search = ref('')
 const showMenu = ref(false)
 
 const navLinks = ref([
@@ -41,7 +41,7 @@ const userLinks = ref([
       <site-logo />
     </div>
     <div >
-      <div id="menu-button" class="md:hidden" @click="showMenu">
+      <div id="menu-button" class="md:hidden">
         <button @click="showMenu=!showMenu"><i class="material-icons">menu</i></button>
       </div>
       <nav id="nav" class="flex flex-row items-center justify-end w-full transition">
