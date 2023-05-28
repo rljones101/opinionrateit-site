@@ -1,8 +1,8 @@
-import catchAsync from '../utils/catchAsync.js';
-import AppError from'../utils/appError.js';
-import APIFeatures from '../utils/apiFeatures.js';
+const catchAsync = require('../utils/catchAsync.js');
+const AppError = require('../utils/appError.js');
+const APIFeatures = require('../utils/apiFeatures.js');
 
-export const deleteOne = (Model) =>
+exports.deleteOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.findByIdAndDelete(req.params.id);
 
@@ -16,7 +16,7 @@ export const deleteOne = (Model) =>
     });
   });
 
-export const updateOne = (Model) =>
+exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
     const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -35,7 +35,7 @@ export const updateOne = (Model) =>
     });
   });
 
-export const createOne = (Model) =>
+exports.createOne = (Model) =>
   catchAsync(async (req, res) => {
     const doc = await Model.create(req.body);
 
@@ -47,7 +47,7 @@ export const createOne = (Model) =>
     });
   });
 
-export const getOne = (Model, popOptions) =>
+exports.getOne = (Model, popOptions) =>
   catchAsync(async (req, res, next) => {
     let query = Model.findById(req.params.id);
     if (popOptions) query = query.populate(popOptions);
@@ -64,7 +64,7 @@ export const getOne = (Model, popOptions) =>
     });
   });
 
-export const getAll = (Model) =>
+exports.getAll = (Model) =>
   catchAsync(async (req, res) => {
     // To allow for nested GET reviews on Tour
     let filter = {};

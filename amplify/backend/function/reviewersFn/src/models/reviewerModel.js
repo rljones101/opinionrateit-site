@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+const mongoose = require('mongoose')
 const reviewerSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -26,4 +26,4 @@ const reviewerSchema = new mongoose.Schema({
 })
 
 const Reviewer = mongoose.model('Reviewer', reviewerSchema)
-export { Reviewer }
+module.exports = Reviewer

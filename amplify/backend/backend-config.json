@@ -1,0 +1,43 @@
+{
+  "api": {
+    "orateitApi": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "reviewersFn"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
+  "function": {
+    "reviewersFn": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_reviewersFn_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reviewersFn"
+        }
+      ]
+    },
+    "AMPLIFY_function_reviewersFn_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "reviewersFn"
+        }
+      ]
+    }
+  }
+}

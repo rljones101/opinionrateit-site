@@ -2,7 +2,9 @@ import fetch from 'node-fetch'
 async function onBeforeRender( pageContext ) {
   let reviewers = []
   try {
-    const res = await fetch(`${process.env.VITE_BASE_URL}api/v1/reviewers`)
+    const baseApiUrl = 'https://lr23wc2w67.execute-api.us-east-2.amazonaws.com/devbackend'
+
+    const res = await fetch(`${baseApiUrl}/reviewers`)
     reviewers = await res.json()
   } catch (err) {
     console.log(err)
