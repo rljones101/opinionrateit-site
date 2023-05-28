@@ -5,8 +5,8 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue'
 import { DoughnutChart } from 'vue-chart-3'
-import { Chart, registerables } from 'chart.js'
-Chart.register(...registerables)
+import { Chart, DoughnutController, ArcElement, Tooltip  } from 'chart.js'
+Chart.register(DoughnutController, ArcElement, Tooltip)
 export default defineComponent({
   name: 'PieChart',
   components: { DoughnutChart },

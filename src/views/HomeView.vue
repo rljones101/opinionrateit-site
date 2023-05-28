@@ -10,6 +10,11 @@ import { useRevealObserver } from "@/controllers/observerController";
 
 useRevealObserver()
 
+const props = defineProps<{
+  reviewers?: any[]
+}>()
+const list = props.reviewers?.length ? props.reviewers : []
+
 </script>
 
 <template>
@@ -17,7 +22,7 @@ useRevealObserver()
     <AppHero/>
   </section>
   <section >
-    <FeaturedReviewers class="max-w-7xl mx-auto reveal fade-right" />
+    <FeaturedReviewers :reviewers="list" class="max-w-7xl mx-auto reveal fade-right" />
   </section>
   <section class="section-info mt-8 bg-slate-700 reveal fade-bottom">
     <div class="max-w-7xl mx-auto">

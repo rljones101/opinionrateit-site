@@ -1,17 +1,18 @@
 <script setup lang="ts">
 import ReviewerItem from '@/components/ReviewerItem.vue'
 import CarouselComponent from "@/components/CarouselComponent.vue";
-import reviewerController from "@/controllers/reviewerController";
 import AppTitle from "@/components/AppTitle.vue";
 
-let list = [...reviewerController.reviewers]
+defineProps<{
+  reviewers: any[]
+}>()
 
 </script>
 
 <template>
   <div>
     <AppTitle>Featured Reviewers</AppTitle>
-    <CarouselComponent :slides="list">
+    <CarouselComponent :slides="reviewers">
       <template #slide="{ id, name, channelId, social, metrics}">
         <ReviewerItem
             :key="id"

@@ -176,7 +176,8 @@ getChannelDetails()
     <!--      <social-links :social="social" />-->
     <!--    </div>-->
     <div v-if='reviewerImage' class="reviewer-image-container"><img :alt="channelDetails.title" :src="reviewerImage" class="reviewer-image" /></div>
-    <router-link :to="`/reviewers/${channelDetails.name}`" class="font-bold text-orange-500">{{channelDetails.title}}</router-link>
+<!--    <router-link :to="`/reviewers/${channelDetails.name}`" class="font-bold text-orange-500">{{channelDetails.title}}</router-link>-->
+    <a :href="`/reviewers/${channelDetails.name}`" class="font-bold text-orange-500">{{channelDetails.title}}</a>
     <div class="flex items-center flex-grow gap-4">
       <div class="chart-container">
         <div class="graph-card">

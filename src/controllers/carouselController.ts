@@ -8,24 +8,32 @@ export interface Slide {
 
 const useCarousel = (slides: Slide[]) => {
 
-  const slideAlias = ref(slides)
-
-  const animateCarousel = () => {
-    next()
+  let animateId: number
+  const startAnimation = () => {
+    if (!import.meta.env.SSR) {
+      animateId = window.setInterval(() => {
+        next()
+      }, 3000)
+    }
   }
 
-  let animateId = window.setInterval(animateCarousel, 3000)
+  const stopAnimation = () => {
+    if (!import.meta.env.SSR && animateId) {
+      window.clearInterval(animateId)
+    }
+  }
 
+  const slideAlias = ref(slides)
   const updateOpacity = (slide: Slide) => {
     slideAlias.value.forEach((el: Slide) => {
       el.style.opacity = 1
     });
     slide.style.opacity = 0
-    animateId = window.setInterval(animateCarousel, 3000)
+    startAnimation()
   }
 
   const next = () => {
-    window.clearInterval(animateId)
+    stopAnimation()
 
     // Take the first element and add it at the end
     const first: any = slideAlias.value.shift();
@@ -34,7 +42,7 @@ const useCarousel = (slides: Slide[]) => {
   }
 
   const previous = () => {
-    window.clearInterval(animateId)
+    stopAnimation()
     // Save the last element and then add it back to the slides
     // at the beginning
     const last: any = slideAlias.value.pop();
@@ -43,11 +51,11 @@ const useCarousel = (slides: Slide[]) => {
   }
 
   onMounted(() => {
-    animateCarousel()
+    startAnimation()
   })
 
   onUnmounted(() => {
-    window.clearInterval(animateId)
+    stopAnimation()
   })
 
   return {
