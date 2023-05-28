@@ -1,13 +1,13 @@
 {
-//  "files": [],
-//  "references": [
+  "files": [],
+  "references": [
 //    {
 //      "path": "./tsconfig.node.json"
 //    },
 //    {
 //      "path": "./tsconfig.app.json"
 //    }
-//  ]
+  ],
   "compilerOptions": {
     "strict": true,
     "module": "ES2020",

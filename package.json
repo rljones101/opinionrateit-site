@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "watch-tailwind-changes": "npx tailwindcss -i ./src/assets/main.css -o ./src/assets/styles.css --watch",
-    "dev-backend": "cd ./src/backend/ && npm run start",
-    "dev": "ts-node ./server/index.ts",
+    "dev": "npm run server",
+    "prod": "npm run build-only && npm run server:prod",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",
+    "server": "ts-node ./server/index.ts",
+    "server:prod": "cross-env NODE_ENV=production ts-node ./server/index.ts",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/"
@@ -18,6 +20,7 @@
     "axios": "^1.4.0",
     "chart.js": "^3.9.1",
     "compression": "^1.7.4",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "luxon": "^3.3.0",
