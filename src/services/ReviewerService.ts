@@ -436,7 +436,7 @@ export default class ReviewerService {
     }
 
     reviewers = [...reviewers.data.data].map(reviewer => {
-      return { ...reviewer, style: { opacity: 1 }}
+      return { ...reviewer, id: reviewer._id }
     })
 
     return reviewers

@@ -5,8 +5,8 @@ import AppTitle from "@/components/AppTitle.vue";
 </script>
 
 <template>
-  <div class="flex items-center p-8 gap-4 rounded">
-    <div>
+  <div class="md:flex items-center p-8 gap-4 rounded">
+    <div class="mb-8 md:mb-0">
       <AppTitle>What analytics are measured?</AppTitle>
       <p class="p-4">Below you will find the metrics that we help collect:</p>
       <ul style="margin: 10px;">
