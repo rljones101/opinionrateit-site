@@ -4,7 +4,7 @@ import ReviewerService from "@/services/ReviewerService";
 const googleApiService = new GoogleAPIService();
 const reviewerService = new ReviewerService()
 
-const reviewers = reviewerService.getReviewers()
+const reviewers = await reviewerService.getReviewers()
 
 const getVideos = async (youtubeChannelId: string) => {
   try {
@@ -26,9 +26,7 @@ const getChannelDetails = async (youtubeChannelId: string) => {
     const response = await googleApiService.getChannelDetails(youtubeChannelId);
     // console.log('response:', response);
     if (response.data && response.data.items.length) {
-      const channel = response.data.items[0];
-      // console.log('channel:', channel);
-      return channel;
+      return  response.data.items[0]
     }
   } catch (err) {
     throw new Error(

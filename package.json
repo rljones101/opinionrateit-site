@@ -2,16 +2,12 @@
   "name": "opinionrateit-site",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "watch-tailwind-changes": "npx tailwindcss -i ./src/assets/main.css -o ./src/assets/styles.css --watch",
-    "dev": "npm run server",
-    "prod": "npm run build-only && npm run server:prod",
+    "dev": "vite",
     "build": "run-p type-check build-only",
     "preview": "vite preview",
     "build-only": "vite build",
-    "server": "ts-node ./server/index.ts",
-    "server:prod": "cross-env NODE_ENV=production ts-node ./server/index.ts",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/"

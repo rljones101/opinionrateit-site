@@ -4,23 +4,22 @@ export interface Slide {
   id: number,
   name: string,
   style: { opacity:number }
+  channelId?: string,
+  social: any[],
+  metrics: any[]
 }
 
 const useCarousel = (slides: Slide[]) => {
 
   let animateId: number
   const startAnimation = () => {
-    if (!import.meta.env.SSR) {
-      animateId = window.setInterval(() => {
-        next()
-      }, 3000)
-    }
+    animateId = window.setInterval(() => {
+      next()
+    }, 3000)
   }
 
   const stopAnimation = () => {
-    if (!import.meta.env.SSR && animateId) {
-      window.clearInterval(animateId)
-    }
+    window.clearInterval(animateId)
   }
 
   const slideAlias = ref(slides)

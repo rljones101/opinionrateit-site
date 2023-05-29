@@ -5,10 +5,9 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue'
 import { DoughnutChart } from 'vue-chart-3'
-import { Chart, DoughnutController, ArcElement  } from 'chart.js'
-if (!import.meta.env.SSR) {
-  Chart.register(DoughnutController, ArcElement)
-}
+import { Chart, registerables  } from 'chart.js'
+Chart.register(...registerables)
+
 export default defineComponent({
   name: 'PieChart',
   components: { DoughnutChart },
@@ -19,7 +18,11 @@ export default defineComponent({
     },
     chartData: {
       type: Object,
-      default: () => {}
+      default: () => {
+        return {
+          datasets: [{ x: '' }]
+        }
+      }
     }
   },
   setup(props) {
@@ -41,6 +44,7 @@ export default defineComponent({
 
     const dnChartData = computed(() => {
       return {
+        datasets: [],
         ...props?.chartData,
       }
     })

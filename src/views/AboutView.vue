@@ -9,6 +9,6 @@
 <style scoped>
 
 </style>
-<script setup>
+<script setup lang="ts">
 import AppTitle from '@/components/AppTitle.vue'
 </script>

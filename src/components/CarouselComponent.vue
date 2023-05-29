@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import IconArrow from "@/components/icons/IconArrow.vue";
-import { useCarousel, Slide } from "@/controllers/carouselController";
+import { useCarousel } from "@/controllers/carouselController";
+import type { Slide } from '@/controllers/carouselController'
 
 const props = defineProps<{
   slides: Slide[]

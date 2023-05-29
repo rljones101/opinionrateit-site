@@ -1,0 +1,17 @@
+{
+  "projectName": "opinionrateitsite",
+  "version": "3.1",
+  "frontend": "javascript",
+  "javascript": {
+    "framework": "vue",
+    "config": {
+      "SourceDir": "src",
+      "DistributionDir": "dist",
+      "BuildCommand": "npm.cmd build-script build:prod",
+      "StartCommand": "npm.cmd build-script server"
+    }
+  },
+  "providers": [
+    "awscloudformation"
+  ]
+}
