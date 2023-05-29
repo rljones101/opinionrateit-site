@@ -5,10 +5,12 @@ import reviewerController from "@/controllers/reviewerController";
 import ReviewerItem from "@/components/ReviewerItem.vue";
 import PageContainer from "@/components/containers/PageContainer.vue";
 import { useRevealObserver } from "@/controllers/observerController";
+import {ref} from "vue";
 
 useRevealObserver()
 
-let list = reviewerController.reviewers
+let list = ref([...reviewerController.reviewers])
+console.log('list:', list.value)
 
 </script>
 

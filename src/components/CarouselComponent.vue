@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import IconArrow from "@/components/icons/IconArrow.vue";
 import { useCarousel } from "@/controllers/carouselController";
-import type { Slide } from '@/controllers/carouselController'
+import type { Slide } from '@/types'
 
 const props = defineProps<{
   slides: Slide[]
@@ -15,7 +15,7 @@ const { slides, next, previous } = useCarousel(props.slides)
   <div class="carousel_container">
     <transition-group class="carousel flex overflow-hidden justify-center gap-4" tag="div">
       <div v-for="slide in slides" :key="slide.id" class="slide" :style="slide.style">
-        <slot name="slide" v-bind="slide"></slot>
+        <slot name="slide" v-bind="slide.data"></slot>
       </div>
     </transition-group>
     <div class="controls">
