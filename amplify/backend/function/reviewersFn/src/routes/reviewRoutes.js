@@ -1,8 +1,8 @@
 const express =  require('express')
-const reviewController =  require('../controllers/reviewController.js')
+const reviewerController =  require('../controllers/reviewerController.js')
 
 const reviewRoutes = express.Router()
 
-reviewRoutes.route('/').get(reviewController.getAllReviews)
+reviewRoutes.route('/').get(reviewerController.getAllReviewers)
 
 module.exports = reviewRoutes

@@ -1,4 +1,4 @@
-export default class APIFeatures {
+class APIFeatures {
   constructor(query, queryString) {
     this.query = query;
     this.queryString = queryString;
@@ -49,3 +49,5 @@ export default class APIFeatures {
     return this;
   }
 }
+
+module.exports = APIFeatures

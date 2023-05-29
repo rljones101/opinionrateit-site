@@ -1,21 +1,17 @@
-/*
-Copyright 2017 - 2017 Amazon.com, Inc. or its affiliates. All Rights Reserved.
-Licensed under the Apache License, Version 2.0 (the "License"). You may not use this file except in compliance with the License. A copy of the License is located at
-    http://aws.amazon.com/apache2.0/
-or in the "license" file accompanying this file. This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and limitations under the License.
-*/
-
-
-
-
 const express = require('express')
 const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 const mongoose = require('mongoose')
-const Reviewer = require('./models/reviewerModel.js')
+const reviewerRouter = require('./routes/reviewRoutes.js')
+
+console.log('process.env', process.env)
 
 const connectToDatabase = async () => {
+
+  if (process.env.NODE_ENV === 'development') {
+    const dotenv = await import('dotenv')
+    dotenv.config({ path: './config.env' });
+  }
 
   try {
     const DB = process.env.DATABASE.replace(
@@ -47,73 +43,36 @@ app.use(function(req, res, next) {
 });
 
 
+app.use('/api/v1/reviewers', reviewerRouter)
+
 /**********************
  * Example get method *
  **********************/
 
-app.get('/reviewers', async function(req, res) {
-  // Add your code here
-  const Reviewers = await Reviewer.find()
+// app.get('/api/v1/reviewers', async () =>   catchAsync(async (req, res) => {
+//   // To allow for nested GET reviews on Tour
+//   let filter = {};
+//   // if (req.params.tourId) filter = { tour: req.params.tourId };
+//   const Model = Reviewer
+//
+//   // EXECUTE QUERY
+//   const features = new APIFeatures(Model.find(filter), req.query)
+//       .filter()
+//       .sort()
+//       .limitFields()
+//       .paginate();
+//   const doc = await features.query;
+//
+//   // SEND RESPONSE
+//   res.status(200).json({
+//     status: 'success',
+//     results: doc.length,
+//     data: {
+//       data: doc,
+//     },
+//   });
+// })),
 
-  res.json({
-    success: 'get call succeed!',
-    url: req.url,
-    data: {
-      data: Reviewers
-    }
-  });
-});
-
-app.get('/reviewers/*', function(req, res) {
-  // Add your code here
-  res.json({success: 'get call succeed!', url: req.url});
-});
-
-/****************************
-* Example post method *
-****************************/
-
-app.post('/reviewers', function(req, res) {
-  // Add your code here
-  res.json({success: 'post call succeed!', url: req.url, body: req.body})
-});
-
-app.post('/reviewers/*', function(req, res) {
-  // Add your code here
-  res.json({success: 'post call succeed!', url: req.url, body: req.body})
-});
-
-/****************************
-* Example put method *
-****************************/
-
-app.put('/reviewers', function(req, res) {
-  // Add your code here
-  res.json({success: 'put call succeed!', url: req.url, body: req.body})
-});
-
-app.put('/reviewers/*', function(req, res) {
-  // Add your code here
-  res.json({success: 'put call succeed!', url: req.url, body: req.body})
-});
-
-/****************************
-* Example delete method *
-****************************/
-
-app.delete('/reviewers', function(req, res) {
-  // Add your code here
-  res.json({success: 'delete call succeed!', url: req.url});
-});
-
-app.delete('/reviewers/*', function(req, res) {
-  // Add your code here
-  res.json({success: 'delete call succeed!', url: req.url});
-});
-
-app.listen(3000, function() {
-    console.log("App started")
-});
 
 // Export the app object. When executing the application local this does nothing. However,
 // to port it to AWS Lambda we will create a wrapper around that will load the app from

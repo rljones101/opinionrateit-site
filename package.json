@@ -10,6 +10,7 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "test-backend": "cd ./amplify/backend/function/reviewersFn/src/ && npm run start:backend",
     "format": "prettier --write src/"
   },
   "dependencies": {
@@ -32,6 +33,7 @@
     "@vue/eslint-config-typescript": "^11.0.3",
     "@vue/tsconfig": "^0.4.0",
     "autoprefixer": "^10.4.14",
+    "cross-env": "^7.0.3",
     "eslint": "^8.39.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-vue": "^9.11.0",

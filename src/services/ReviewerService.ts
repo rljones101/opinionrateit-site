@@ -428,7 +428,7 @@ export default class ReviewerService {
     try {
       const baseApiUrl = import.meta.env.VITE_API_URL
 
-      const res = await fetch(`${baseApiUrl}/reviewers`)
+      const res = await fetch(`${baseApiUrl}/api/v1/reviewers`)
       reviewers = await res.json()
       // console.log(reviewers)
     } catch (err) {

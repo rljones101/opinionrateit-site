@@ -1,15 +1,8 @@
 {
   "version": 1,
   "paths": {
-    "/reviewers": {
-      "name": "/reviewers",
-      "lambdaFunction": "reviewersFn",
-      "permissions": {
-        "setting": "open"
-      }
-    },
-    "/reviews": {
-      "name": "/reviews",
+    "/api/v1/reviewers": {
+      "name": "/api/v1/reviewers",
       "lambdaFunction": "reviewersFn",
       "permissions": {
         "setting": "open"
