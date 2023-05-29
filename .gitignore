@@ -17,7 +17,6 @@ coverage
 *.env
 
 /src/backend/node_modules/
-/src/backend/config.env
 
 /cypress/videos/
 /cypress/screenshots/

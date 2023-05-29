@@ -86,4 +86,12 @@ exports.getAll = (Model) =>
         data: doc,
       },
     });
+    // res.json({
+    //   success: 'get call succeed',
+    //   results: doc.length,
+    //   url: req.url,
+    //   data: {
+    //     data: doc
+    //   }
+    // })
   });
