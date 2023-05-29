@@ -430,7 +430,7 @@ export default class ReviewerService {
 
       const res = await fetch(`${baseApiUrl}/reviewers`)
       reviewers = await res.json()
-      console.log(reviewers)
+      // console.log(reviewers)
     } catch (err) {
       console.log(err)
     }
