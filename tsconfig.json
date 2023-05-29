@@ -1,35 +1,11 @@
 {
   "files": [],
   "references": [
-//    {
-//      "path": "./tsconfig.node.json"
-//    },
-//    {
-//      "path": "./tsconfig.app.json"
-//    }
+    {
+      "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
+    }
   ],
-  "compilerOptions": {
-    "strict": true,
-    "module": "ES2020",
-    "target": "ES2020",
-    "moduleResolution": "Node",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "types": ["vite/client"],
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "composite": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": [
-        "./src/*"
-      ]
-    }
-  },
-  "ts-node": {
-    "transpileOnly": true,
-    "esm": true,
-    "compilerOptions": {
-      "moduleResolution": "Node16"
-    }
-  }
 }

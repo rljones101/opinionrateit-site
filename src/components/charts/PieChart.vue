@@ -6,9 +6,8 @@
 import { defineComponent, ref, computed } from 'vue'
 import { DoughnutChart } from 'vue-chart-3'
 import { Chart, registerables  } from 'chart.js'
-if (!import.meta.env.SSR) {
-  Chart.register(...registerables)
-}
+Chart.register(...registerables)
+
 export default defineComponent({
   name: 'PieChart',
   components: { DoughnutChart },
