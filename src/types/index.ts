@@ -3,3 +3,7 @@ export interface Slide {
     data: any,
     style: { opacity:number }
 }
+
+export interface IconStartProps {
+    color?: string
+}

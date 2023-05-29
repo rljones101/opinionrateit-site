@@ -21,8 +21,8 @@ useRevealObserver()
   </section>
   <section class="section-info mt-8 bg-slate-700 reveal fade-bottom">
     <div class="max-w-7xl mx-auto">
-      <h1 class="pt-16 flex justify-center font-bold text-4xl text-white">Activate more effective reviews</h1>
-      <div class="points-of-interest p-24 flex flex-col">
+      <h1 class="pt-16 flex justify-center font-bold text-4xl text-white text-center">Activate more effective reviews</h1>
+      <div class="p-24 grid grid-cols-1 md:grid-cols-3 gap-8">
         <div class="flex flex-col gap-4">
           <div class="icon-wrapper"><IconCommunity /></div>
           <h3 class="font-bold text-2xl text-white">Community</h3>
@@ -53,11 +53,6 @@ useRevealObserver()
 .section-info {
   position: relative;
 }
- .points-of-interest {
-   display: grid;
-   grid-gap: 1rem;
-   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
- }
 
  .icon-wrapper {
    @apply bg-orange-500 rounded-full p-4 text-white;

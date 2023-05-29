@@ -10,7 +10,7 @@ import type { ChartData } from 'chart.js'
 // Define Props
 const props = defineProps<{
   name: string,
-  id: number,
+  id: number | string,
   channelId?: string,
   social?: any[],
   metrics: any[]
