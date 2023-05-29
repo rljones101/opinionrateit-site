@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "main": "./server/index.ts",
   "scripts": {
     "watch-tailwind-changes": "npx tailwindcss -i ./src/assets/main.css -o ./src/assets/styles.css --watch",
     "dev": "npm run server",
