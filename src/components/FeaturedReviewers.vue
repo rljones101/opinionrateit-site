@@ -11,7 +11,6 @@ const slides = ref([...reviewerController.reviewers].map((item, index) => ({
     data: item,
     style: { opacity: 1 }
 } as Slide)))
-console.log('featured reviewers:', slides.value)
 
 </script>
 
