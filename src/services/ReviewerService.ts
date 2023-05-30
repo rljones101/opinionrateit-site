@@ -418,17 +418,18 @@ export default class ReviewerService {
     //console.log(this)
   }
 
-  async getReviewers() {
-    // const response = await axios.get('reviewers.json')
-    // const reviewers = response.data
-    //console.log('called async > getReviewers:', this.reviewers)
+  async getReviewers(query?: URLSearchParams) {
 
     let reviewers = []
 
     try {
       const baseApiUrl = import.meta.env.VITE_API_URL
+      let url = `${baseApiUrl}/api/v1/reviewers`
+      if (query) {
+        url += `?${new URLSearchParams(query)}`
+      }
 
-      const res = await fetch(`${baseApiUrl}/api/v1/reviewers`)
+      const res = await fetch(url)
       reviewers = await res.json()
       // console.log(reviewers)
     } catch (err) {

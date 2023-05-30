@@ -4,7 +4,7 @@ import ReviewerService from "@/services/ReviewerService";
 const googleApiService = new GoogleAPIService();
 const reviewerService = new ReviewerService()
 
-const reviewers = await reviewerService.getReviewers()
+const getReviewers = async (query?:URLSearchParams) => await reviewerService.getReviewers(query)
 
 const getVideos = async (youtubeChannelId: string) => {
   try {
@@ -38,5 +38,5 @@ const getChannelDetails = async (youtubeChannelId: string) => {
 export default {
   getVideos,
   getChannelDetails,
-  reviewers
+  getReviewers
 };
