@@ -1,3 +1,4 @@
+@import "./transitions.css";
 @import './base.css';
 
 @keyframes fade-bottom {

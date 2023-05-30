@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import IconArrow from "@/components/icons/IconArrow.vue";
-import { useCarousel } from "@/controllers/carouselController";
+import IconArrow from '@/components/icons/IconArrow.vue'
+import { useCarousel } from '@/controllers/carouselController'
 import type { Slide } from '@/types'
 
 const props = defineProps<{
@@ -8,7 +8,6 @@ const props = defineProps<{
 }>()
 
 const { slides, next, previous } = useCarousel(props.slides)
-
 </script>
 
 <template>
@@ -19,10 +18,10 @@ const { slides, next, previous } = useCarousel(props.slides)
       </div>
     </transition-group>
     <div class="controls">
-      <button class="controls_button" @click=previous>
+      <button class="controls_button" @click="previous">
         <IconArrow />
       </button>
-      <button class="controls_button" @click=next>
+      <button class="controls_button" @click="next">
         <IconArrow class="rotate-180" />
       </button>
     </div>
@@ -71,8 +70,7 @@ const { slides, next, previous } = useCarousel(props.slides)
 }
 
 .carousel_container .controls .controls_button {
-  @apply
-  flex
+  @apply flex
   justify-center
   items-center
   border
@@ -85,6 +83,6 @@ const { slides, next, previous } = useCarousel(props.slides)
 
   width: 44px;
   height: 44px;
-  box-shadow: rgba(0,0,0, 0.5) 0 10px 10px
+  box-shadow: rgba(0, 0, 0, 0.5) 0 10px 10px;
 }
 </style>
