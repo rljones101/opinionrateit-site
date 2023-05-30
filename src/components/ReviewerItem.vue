@@ -1,41 +1,41 @@
 <script setup lang="ts">
-import { reactive, computed, ref } from "vue";
-import { DateTime } from 'luxon';
-import PieChart from "@/components/charts/PieChart.vue";
-import ButtonReviews from "@/components/buttons/ButtonReviews.vue";
+import { reactive, computed, ref } from 'vue'
+import { DateTime } from 'luxon'
+import PieChart from '@/components/charts/PieChart.vue'
+import ButtonReviews from '@/components/buttons/ButtonReviews.vue'
 import StringUtils from '../utils/StringUtils'
-import reviewerController from "@/controllers/reviewerController";
+import reviewerController from '@/controllers/reviewerController'
 import type { ChartData } from 'chart.js'
 
 // Define Props
 const props = defineProps<{
-  name: string,
-  id: number | string,
-  channelId?: string,
-  social?: any[],
+  name: string
+  id: number | string
+  channelId?: string
+  social?: any[]
   metrics: any[]
 }>()
 
 interface ChannelDetailsInterface {
-  id: string,
-  name: string,
-  title: string,
-  description?: string,
-  channelThumbnail?: string,
-  publishedAt: string,
+  id: string
+  name: string
+  title: string
+  description?: string
+  channelThumbnail?: string
+  publishedAt: string
   thumbnails: {
     default: {
       url: string
-    },
+    }
     high?: {
       url?: string
     }
-  },
+  }
   statistics: {
-    commentCount: number,
-    hiddenSubscriberCount: boolean,
-    subscriberCount: number,
-    videoCount: number,
+    commentCount: number
+    hiddenSubscriberCount: boolean
+    subscriberCount: number
+    videoCount: number
     viewCount: number
   }
 }
@@ -60,15 +60,17 @@ let channelDetails = ref<ChannelDetailsInterface>({
   }
 })
 
-const chartData = ref<ChartData<"doughnut">>({
+const chartData = ref<ChartData<'doughnut'>>({
   labels: ['score'],
-  datasets: [{
-    label: 'score',
-    data: [],
-    backgroundColor: ['rgb(22,167,46)', 'rgba(247,114,22,0.2)'],
-    borderColor: 'rgba(0,0,0,0)',
-    borderWidth: 1
-  }]
+  datasets: [
+    {
+      label: 'score',
+      data: [],
+      backgroundColor: ['rgb(22,167,46)', 'rgba(247,114,22,0.2)'],
+      borderColor: 'rgba(0,0,0,0)',
+      borderWidth: 1
+    }
+  ]
 })
 const chartOptions = reactive({
   legend: {
@@ -114,12 +116,12 @@ const formattedVideoCount = computed(() => {
 const metricScore = computed(() => {
   if (props.metrics.length) {
     const metricWeights = props.metrics.map((metric) => metric.value)
-    return getMetricScore(metricWeights);
+    return getMetricScore(metricWeights)
   }
   return 0
 })
 
-const setChannelDetails = (id:string, snippet:any, stats:any): ChannelDetailsInterface => {
+const setChannelDetails = (id: string, snippet: any, stats: any): ChannelDetailsInterface => {
   return {
     id,
     name: props.name,
@@ -151,33 +153,38 @@ const getChannelDetails = async () => {
       channelDetails.value = setChannelDetails(channel.id, channel.snippet, channel.statistics)
     }
   } catch (err) {
-    console.error(err);
+    console.error(err)
   }
 }
 
 const getMetricScore = (weights: any[]) => {
-  const sum = weights.reduce((acc, cur) => acc + cur);
-  const average = Math.floor(sum/weights.length);
+  const sum = weights.reduce((acc, cur) => acc + cur)
+  const average = Math.floor(sum / weights.length)
   if (chartData?.value?.datasets?.[0]?.data) {
-    chartData.value.datasets[0].data.push(average);
-    chartData.value.datasets[0].data.push(Math.floor((100 - average)))
+    chartData.value.datasets[0].data.push(average)
+    chartData.value.datasets[0].data.push(Math.floor(100 - average))
   }
   // console.log('datasets:', this.chartData.datasets[0].data)
-  return Math.floor(average) + '%';
+  return Math.floor(average) + '%'
 }
 
 getChannelDetails()
-
 </script>
 
 <template>
-  <div class="flex flex-col gap-4 items-center p-8 transition-all duration-300 group hover:bg-gray-800 hover:font-bold hover:shadow-lg hover:scale-105 rounded">
+  <div
+    class="flex flex-col gap-4 items-center p-8 transition-all duration-300 group hover:bg-gray-800 hover:font-bold hover:shadow-lg hover:scale-105 rounded"
+  >
     <!--    <div class="flex w-full">-->
     <!--      <social-links :social="social" />-->
     <!--    </div>-->
-    <div v-if='reviewerImage' class="reviewer-image-container"><img :alt="channelDetails.title" :src="reviewerImage" class="reviewer-image" /></div>
-<!--    <router-link :to="`/reviewers/${channelDetails.name}`" class="font-bold text-orange-500">{{channelDetails.title}}</router-link>-->
-    <a :href="`/reviewers/${channelDetails.name}`" class="font-bold text-orange-500">{{channelDetails.title}}</a>
+    <div v-if="reviewerImage" class="reviewer-image-container">
+      <img :alt="channelDetails.title" :src="reviewerImage" class="reviewer-image" />
+    </div>
+    <!--    <router-link :to="`/reviewers/${channelDetails.name}`" class="font-bold text-orange-500">{{channelDetails.title}}</router-link>-->
+    <a :href="`/reviewers/${channelDetails.name}`" class="font-bold text-orange-500">{{
+      channelDetails.title
+    }}</a>
     <div class="flex items-center flex-grow gap-4">
       <div class="chart-container">
         <div class="graph-card">
@@ -187,9 +194,9 @@ getChannelDetails()
                 <div class="actual-value">
                   {{ metricScore }}
                 </div>
-<!--                <div class="actual-label">-->
-<!--                  Review Score-->
-<!--                </div>-->
+                <!--                <div class="actual-label">-->
+                <!--                  Review Score-->
+                <!--                </div>-->
               </div>
               <PieChart :chart-data="chartData" :options="chartOptions" />
             </div>
@@ -199,9 +206,9 @@ getChannelDetails()
       <div class="details">
         <!--          <div v-if='reviewerImage' class="reviewer-image-container" v-html='channelDetails.channelThumbnail'></div>-->
         <div class="reviewer-stats">
-          <p class="detail-stat">{{publishDate}}</p>
-          <p class="detail-stat">Subscribers: {{formattedSubscriberCount}} </p>
-          <p class="detail-stat">Videos: {{formattedVideoCount}}</p>
+          <p class="detail-stat">{{ publishDate }}</p>
+          <p class="detail-stat">Subscribers: {{ formattedSubscriberCount }}</p>
+          <p class="detail-stat">Videos: {{ formattedVideoCount }}</p>
         </div>
       </div>
     </div>
@@ -235,7 +242,6 @@ getChannelDetails()
   top: 20%;
   bottom: 20%;
   text-transform: uppercase;
-  //color: var(--color-secondary);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -248,6 +254,6 @@ getChannelDetails()
 }
 
 .metrics-chart-container-value .actual-label {
-  color: rgba(255,255,255,0.5)
+  color: rgba(255, 255, 255, 0.5);
 }
 </style>

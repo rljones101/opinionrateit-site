@@ -5,14 +5,13 @@ import ReviewerItem from '@/components/ReviewerItem.vue'
 import PageContainer from '@/components/containers/PageContainer.vue'
 import { useRevealObserver } from '@/controllers/observerController'
 import { ref } from 'vue'
-import BaseButton from '@/components/buttons/BaseButton.vue'
 
 useRevealObserver()
 
-let list = ref([])
+let list = ref<any[]>([])
 let search = ref('')
 
-reviewerController.getReviewers().then((reviewers) => {
+reviewerController.getReviewers().then((reviewers: any[]) => {
   list.value = reviewers
 })
 
