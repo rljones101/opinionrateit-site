@@ -103,18 +103,20 @@ const clearSearch = () => {
       </button>
     </div>
 
-    <div class="grid-layout" v-show="list.length">
-      <ReviewerItem
-        v-for="reviewer in list"
-        :key="reviewer.id"
-        :id="reviewer.id"
-        :social="reviewer.social"
-        :name="reviewer.name"
-        :metrics="reviewer.metrics"
-        :channel-id="reviewer.channelId"
-        class="border border-slate-700 rounded"
-      />
-    </div>
+    <transition name="fade" mode="in-out">
+      <div class="grid-layout" v-show="list.length">
+        <ReviewerItem
+          v-for="reviewer in list"
+          :key="reviewer.id"
+          :id="reviewer.id"
+          :social="reviewer.social"
+          :name="reviewer.name"
+          :metrics="reviewer.metrics"
+          :channel-id="reviewer.channelId"
+          class="border border-slate-700 rounded"
+        />
+      </div>
+    </transition>
   </PageContainer>
 </template>
 

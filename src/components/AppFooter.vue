@@ -1,6 +1,4 @@
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <footer class="flex justify-center p-8">
@@ -8,6 +6,4 @@
   </footer>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -44,6 +44,7 @@ const { slides, next, previous } = useCarousel(props.slides)
   border-radius: 10px;
   padding: 4rem 0;
   margin: -4rem 0;
+  min-height: 430px;
 }
 
 .carousel_container .carousel .slide {
