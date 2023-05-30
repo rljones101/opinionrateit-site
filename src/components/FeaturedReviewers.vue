@@ -6,7 +6,7 @@ import reviewerController from '@/controllers/reviewerController'
 import type { Slide } from '@/types'
 import { ref } from 'vue'
 
-let slides = ref([])
+let slides = ref<Slide[]>([])
 
 reviewerController.getReviewers().then((reviewers) => {
   slides.value = reviewers.map(
@@ -24,8 +24,7 @@ reviewerController.getReviewers().then((reviewers) => {
   <div>
     <AppTitle>Featured Reviewers</AppTitle>
     <transition name="fade">
-      <CarouselComponent :slides="slides" v-if
-          ="slides.length">
+      <CarouselComponent :slides="slides" v-if="slides.length">
         <template #slide="{ id, name, channelId, social, metrics }">
           <ReviewerItem
             :key="id"

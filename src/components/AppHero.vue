@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import BaseButton from "@/components/buttons/BaseButton.vue";
+import BaseButton from '@/components/buttons/BaseButton.vue'
 </script>
 
 <template>
   <div class="app-hero flex">
     <div class="mr-24 app-hero-text flex-1 flex flex-col slide-in-left-animation p-8">
-      <h1 class="text-5xl mb-4">Create <span class="font-bold text-orange-500">Tech Reviews</span> With Confidence</h1>
-      <p>Need to know what content is right for you? Get on demand information that will help you grow and be a better tech reviewer!</p>
+      <h1 class="text-5xl mb-4">
+        Create <span class="font-bold text-orange-500">Tech Reviews</span> With Confidence
+      </h1>
+      <p>
+        Need to know what content is right for you? Get on demand information that will help you
+        grow and be a better tech reviewer!
+      </p>
       <BaseButton class="mt-4 w-40 bg-orange-500 hover:bg-orange-600">Get Started</BaseButton>
     </div>
     <div class="hero-image-container flex-1 hidden md:flex">
@@ -22,13 +27,11 @@ import BaseButton from "@/components/buttons/BaseButton.vue";
   @apply border-4 border-orange-500 shadow-lg shadow-slate-800;
   min-width: 450px;
   min-height: 250px;
-  //margin-left: -30px;
-  //margin-right: -30px;
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
   background-origin: content-box;
-  //clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);
+  /*clip-path: polygon(25% 0%, 100% 0%, 75% 100%, 0% 100%);*/
 }
 
 .hero-image-container {
@@ -41,24 +44,24 @@ import BaseButton from "@/components/buttons/BaseButton.vue";
 }
 
 .app-hero .app-hero-text {
-  //max-width: 450px;
+  /*max-width: 450px;*/
 }
 
 .desktop-background {
-  background-image: url("../assets/img/20180809_092515.jpg");
+  background-image: url('../assets/img/20180809_092515.jpg');
   position: absolute;
   top: 16px;
   left: -74px;
   z-index: 2;
 }
 .computer-background {
-  background-image: url("../assets/img/20180519_223759.jpg");
+  background-image: url('../assets/img/20180519_223759.jpg');
   position: absolute;
   top: 244px;
   left: 125px;
 }
 .headphone-background {
-  background-image: url("../assets/img/20220411_172601.jpg");
+  background-image: url('../assets/img/20220411_172601.jpg');
   position: absolute;
   top: 50px;
   left: 259px;
