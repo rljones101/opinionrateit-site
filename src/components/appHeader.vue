@@ -2,9 +2,9 @@
 import { ref } from 'vue'
 import buttonNav from './buttons/buttonNav.vue'
 import siteLogo from './siteLogo.vue'
-import BaseButton from "@/components/buttons/BaseButton.vue";
+import BaseButton from '@/components/buttons/BaseButton.vue'
 
-// const search = ref('')
+const emit = defineEmits(['userLogin', 'userSignup'])
 const showMenu = ref(false)
 
 const navLinks = ref([
@@ -23,16 +23,18 @@ const navLinks = ref([
   {
     link: 'Contact',
     path: '/contact'
-  },
+  }
 ])
 
 const userLinks = ref([
   {
     link: 'Sign Up',
-    path: '/signup'
+    path: '/signup',
+    command: () => {
+      emit('userSignup')
+    }
   }
 ])
-
 </script>
 
 <template>
@@ -43,24 +45,48 @@ const userLinks = ref([
       </div>
       <div>
         <div id="menu-button" class="md:hidden">
-          <button @click="showMenu=!showMenu" v-if="!showMenu"><i class="material-icons">menu</i></button>
-          <button @click="showMenu=!showMenu" v-if="showMenu"><i class="material-icons">close</i></button>
+          <button @click="showMenu = !showMenu" v-if="!showMenu">
+            <i class="material-icons">menu</i>
+          </button>
+          <button @click="showMenu = !showMenu" v-if="showMenu">
+            <i class="material-icons">close</i>
+          </button>
         </div>
-        <nav id="nav" class="hidden md:flex flex-row items-center justify-end w-full transition" >
-          <button-nav v-for="(link, index) in navLinks" :link="link.link" :path="link.path" :key="index"/>
+        <nav id="nav" class="hidden md:flex flex-row items-center justify-end w-full transition">
+          <button-nav
+            v-for="(link, index) in navLinks"
+            :link="link.link"
+            :path="link.path"
+            :key="index"
+          />
           <span>|</span>
-          <button-nav v-for="(link, index) in userLinks" :link="link.link" :path="link.path" :key="index"/>
-          <BaseButton>login</BaseButton>
+          <button-nav
+            v-for="(link, index) in userLinks"
+            :link="link.link"
+            :path="link.path"
+            :key="index"
+          />
+          <BaseButton @click="emit('userLogin')">login</BaseButton>
         </nav>
       </div>
     </div>
 
-    <div class="dropdown-nav-menu" :class="{'show': showMenu}">
+    <div class="dropdown-nav-menu" :class="{ show: showMenu }">
       <nav id="hiddenNav" class="flex flex-col items-start">
-        <button-nav v-for="(link, index) in navLinks" :link="link.link" :path="link.path" :key="index"/>
+        <button-nav
+          v-for="(link, index) in navLinks"
+          :link="link.link"
+          :path="link.path"
+          :key="index"
+        />
         <span class="hidden md:inline">|</span>
-        <button-nav v-for="(link, index) in userLinks" :link="link.link" :path="link.path" :key="index"/>
-        <BaseButton>login</BaseButton>
+        <button-nav
+          v-for="(link, index) in userLinks"
+          :link="link.link"
+          :path="link.path"
+          :key="index"
+        />
+        <BaseButton @click="emit('userLogin')">login</BaseButton>
       </nav>
     </div>
   </div>

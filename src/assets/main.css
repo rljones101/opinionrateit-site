@@ -114,3 +114,7 @@
     margin: 0 auto;
     font-weight: normal;
 }
+
+::backdrop {
+    background-color: rgba(0,0,0, 0.8);
+}
