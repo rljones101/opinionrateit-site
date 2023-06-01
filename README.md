@@ -1,4 +1,4 @@
-Name: **opinionrateit-site** \
+# opinionrateit-site
 Created in May 2023 - by Rick Jones
 
 
@@ -8,10 +8,19 @@ frontend technologies such as `Vue 3, Pinia, HTML CSS / Tailwind CSS`. I am also
 create the backend using Express which then communicates to a MongoDB through a VPC that was created in AWS.
 
 ## Technologies used
-Frontend: Javascript, Vue 3, Typescript, Pinia, HTML, CSS
+**Frontend:** 
+* Javascript
+* Vue 3 
+* Typescript 
+* Pinia 
+* HTML
+* CSS
 
 
-Backend: Node, Express, MongoDB
+**Backend:** 
+* Node
+* Express
+* MongoDB
 
 ### Website
 Website is in development and is located at: https://dev.opinionrateit.com/
