@@ -1,7 +1,11 @@
-import { apiPost } from '@/utils/AppApi'
+import { apiGet, apiPost } from '@/utils/AppApi'
 
 const usersLogin = async (email: string, password: string) => {
   return await apiPost('/users/login', { email, password })
 }
 
-export { usersLogin }
+const getProfile = async (name: string) => {
+  return await apiGet(`/profile/${name}`)
+}
+
+export { usersLogin, getProfile }

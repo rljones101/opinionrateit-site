@@ -21,6 +21,20 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/profile": {
+      "name": "/profile",
+      "lambdaFunction": "reviewersFn",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/reviews": {
+      "name": "/reviews",
+      "lambdaFunction": "reviewersFn",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

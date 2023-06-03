@@ -10,6 +10,7 @@ const globalErrorHandler = require('./controllers/errorController.js')
 
 const reviewerRouter = require('./routes/reviewRoutes.js')
 const userRouter = require('./routes/userRoutes.js')
+const profileRouter = require('./routes/profileRoutes.js')
 
 const connectToDatabase = async () => {
   if (process.env.NODE_ENV === 'development') {
@@ -66,6 +67,7 @@ app.use((req, res, next) => {
 
 app.use('/api/v1/reviewers', reviewerRouter)
 app.use('/api/v1/users', userRouter)
+app.use('/api/v1/profile', profileRouter)
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))

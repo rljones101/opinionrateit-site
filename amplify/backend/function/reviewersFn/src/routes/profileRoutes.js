@@ -4,10 +4,6 @@ const userController = require('../controllers/userController')
 
 const router = express.Router()
 
-router.post('/signup', authController.signup)
-router.post('/login', authController.login)
-
-router.route('/').get(userController.getAll)
-router.route('/:id').delete(userController.deleteUser)
+router.get('/:name', authController.protect, userController.getUserByName)
 
 module.exports = router

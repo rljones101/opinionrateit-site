@@ -33,11 +33,10 @@ const router = createRouter({
       component: ContactView
     },
     {
-      path: '/reviewers/:name',
-      name: 'reviewer-name',
+      path: '/profile/:name',
+      name: 'profile-name',
       component: ReviewerProfile
     }
-
   ]
 })
 

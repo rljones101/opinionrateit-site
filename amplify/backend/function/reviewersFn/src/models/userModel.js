@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const validate = require('validator')
 const bcrypt = require('bcryptjs')
 const tokenUtils = require('../utils/tokenUtils.js')
+const slugify = require('slugify')
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -57,6 +58,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
     select: false
+  },
+  slug: {
+    type: String,
+    select: false
   }
 })
 
@@ -77,6 +82,11 @@ userSchema.pre('save', async function (next) {
   // Set the passwordConfirm to undefined
   this.passwordConfirm = undefined
   // done, proceed
+  next()
+})
+
+userSchema.pre('save', function (next) {
+  this.slug = slugify(this.name, { lower: true })
   next()
 })
 

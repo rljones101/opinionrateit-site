@@ -1,17 +1,14 @@
-<script setup lang="ts">
-
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <button class=" btn">
-    <span class="font-bold uppercase"><slot/></span>
+  <button class="btn">
+    <span class="font-bold uppercase"><slot /></span>
   </button>
 </template>
 
 <style scoped>
 .btn {
-  @apply
-  border
+  @apply border
   border-slate-500
   pt-2
   pb-2
@@ -23,8 +20,8 @@
   rounded-full
   text-white;
   transform: translateY(0);
-  transition: transform .3s ease-in-out;
-  box-shadow: rgba(0,0,0, 0.2) 0 10px 10px
+  transition: transform 0.3s ease-in-out;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 10px 10px;
 }
 
 .btn:hover {
