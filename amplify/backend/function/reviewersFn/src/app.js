@@ -5,6 +5,8 @@ const mongoose = require('mongoose')
 const mongoSanitize = require('express-mongo-sanitize')
 const helmet = require('helmet')
 const xss = require('xss-clean')
+const cookieParser = require('cookie-parser')
+const cors = require('cors')
 const AppError = require('./utils/appError.js')
 const globalErrorHandler = require('./controllers/errorController.js')
 
@@ -33,11 +35,21 @@ connectToDatabase().then(() => {
 // declare a new express app
 const app = express()
 
+// Implement CORS
+//app.use(cors())
+app.use(
+  cors({
+    origin: 'http://localhost:5173'
+  })
+)
+//app.options('*', cors())
+
 // Set security HTTP Headers
 app.use(helmet())
 
 // Body parser, reading data from the body into req.body
 app.use(bodyParser.json())
+app.use(cookieParser())
 
 // Data sanitization against NoSQL query inject
 app.use(mongoSanitize())
@@ -50,18 +62,19 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 // Enable CORS for all methods
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header('Access-Control-Allow-Headers', '*')
-  next()
-})
+// app.use(function (req, res, next) {
+//   res.header('Access-Control-Allow-Origin', '*')
+//   res.header('Access-Control-Allow-Headers', '*')
+//   next()
+// })
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString()
-  console.log('REQ HEADERS ======')
-  console.log(req.url)
-  console.log('REQ HEADERS ======')
-  console.log(req.headers)
+  console.log(req.cookies)
+  // console.log('REQ HEADERS ======')
+  // console.log(req.url)
+  // console.log('REQ HEADERS ======')
+  // console.log(req.headers)
   next()
 })
 

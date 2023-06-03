@@ -1,20 +1,32 @@
 import axios from 'axios'
-import type { AxiosError, AxiosResponse } from 'axios'
+import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import type { AppApiResponse, AppApiErrorResponse } from '@/types'
+import { useUserStore } from '@/stores/user'
 
 const appApi = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/v1`
 })
 
+appApi.interceptors.request.use((config: InternalAxiosRequestConfig) => {
+  const { getToken } = useUserStore()
+  const jwtToken = getToken()
+
+  if (jwtToken) {
+    config.headers.Authorization = `Bearer ${jwtToken}`
+  }
+  return config
+})
+
 const apiSuccessResponse = (statusCode: number, data: any): AppApiResponse => {
-  return { status: 'success', statusCode, data: data.data }
+  return { status: 'success', statusCode, data: data.data, originalData: data }
 }
 
 const apiErrorResponse = (
+  data: any,
   statusCode = 500,
   message = 'Unknown error has occurred!'
 ): AppApiErrorResponse => {
-  return { status: 'error', statusCode, message }
+  return { status: 'error', statusCode, message, originalData: data }
 }
 
 const handleError = (error: AxiosError) => {
@@ -31,11 +43,11 @@ const handleError = (error: AxiosError) => {
     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
     // http.ClientRequest in node.js
     //console.log(error.request)
-    return apiErrorResponse(500, 'Request was made, but response may of timed out')
+    return apiErrorResponse(error, 500, 'Request was made, but response may of timed out')
   } else {
     // Something happened in setting up the request that triggered an Error
     //console.log('Error', error.message)
-    return apiErrorResponse(500, error.message)
+    return apiErrorResponse(error, 500, error.message)
   }
   //console.log(error.config)
 }

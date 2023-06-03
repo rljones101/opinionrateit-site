@@ -1,40 +1,83 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch, reactive } from 'vue'
 import buttonNav from './buttons/buttonNav.vue'
 import siteLogo from './siteLogo.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
+import { useUserStore } from '@/stores/user'
 
-const emit = defineEmits(['userLogin', 'userSignup'])
+const user = reactive(useUserStore())
+const emit = defineEmits(['userLogin', 'userSignup', 'userProfile'])
 const showMenu = ref(false)
+const navLinks = ref([])
+const userLinks = ref([])
 
-const navLinks = ref([
-  {
-    link: 'Home',
-    path: '/'
-  },
-  {
-    link: 'Reviewers',
-    path: '/reviewers'
-  },
-  {
-    link: 'About',
-    path: '/about'
-  },
-  {
-    link: 'Contact',
-    path: '/contact'
-  }
-])
-
-const userLinks = ref([
-  {
-    link: 'Sign Up',
-    path: '/signup',
-    command: () => {
-      emit('userSignup')
+const setDefaultLinks = () => {
+  return [
+    {
+      link: 'Home',
+      path: '/'
+    },
+    {
+      link: 'Reviewers',
+      path: '/reviewers'
+    },
+    {
+      link: 'About',
+      path: '/about'
+    },
+    {
+      link: 'Contact',
+      path: '/contact'
     }
-  }
-])
+  ]
+}
+
+const setUserLinks = (userStore) => {
+  console.log('store is:', userStore)
+  console.log('user name is:', userStore.user.name)
+  return [
+    {
+      link: 'Profile',
+      path: `/profile/${userStore.user.name}`
+    },
+    {
+      link: 'Reviewers',
+      path: '/reviewers'
+    },
+    {
+      link: 'About',
+      path: '/about'
+    },
+    {
+      link: 'Contact',
+      path: '/contact'
+    }
+  ]
+}
+
+watch(
+  () => user.isLoggedIn,
+  (val) => {
+    console.log('user.isLoggedIn:', val)
+    userLinks.value = []
+    if (!val) {
+      userLinks.value.push({
+        link: 'Sign Up',
+        path: '/signup',
+        command: () => {
+          emit('userSignup')
+        }
+      })
+      navLinks.value = setDefaultLinks()
+    } else {
+      navLinks.value = setUserLinks(user)
+    }
+  },
+  { immediate: true }
+)
+// const userLinks = ref([
+
+// ])
 </script>
 
 <template>
@@ -59,14 +102,14 @@ const userLinks = ref([
             :path="link.path"
             :key="index"
           />
-          <span>|</span>
+          <span v-if="!user.isLoggedIn">|</span>
           <button-nav
             v-for="(link, index) in userLinks"
             :link="link.link"
             :path="link.path"
             :key="index"
           />
-          <BaseButton @click="emit('userLogin')">login</BaseButton>
+          <BaseButton @click="emit('userLogin')" v-if="!user.isLoggedIn">login</BaseButton>
         </nav>
       </div>
     </div>

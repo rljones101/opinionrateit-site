@@ -3,9 +3,13 @@ import BaseButton from '@/components/buttons/BaseButton.vue'
 import ButtonClose from '@/components/buttons/ButtonClose.vue'
 import { useDialog } from '@/controllers/dialogController'
 import { ref } from 'vue'
-import { usersLogin } from '@/services/UserService'
+import { useUserStore } from '@/stores/user'
 import type { AppApiResponse, AppApiErrorResponse } from '@/types'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
+
+const { loginUser } = useUserStore()
 const { close } = useDialog('#UserLoginDialog')
 
 const email = ref('')
@@ -20,10 +24,7 @@ const login = async () => {
   } else {
     try {
       // call service to log in the user
-      const res: AppApiResponse | AppApiErrorResponse = await usersLogin(
-        email.value,
-        password.value
-      )
+      const res: AppApiResponse | AppApiErrorResponse = await loginUser(email.value, password.value)
       console.log(res)
       if (res.status === 'success') {
         // close dialog and clear fields and any error messages
@@ -33,6 +34,9 @@ const login = async () => {
         // const token = cookie.jwt
         // console.log(token)
         close()
+        if ('data' in res) {
+          await router.push({ name: 'profile-name', params: { name: res.data.user.name } })
+        }
       } else {
         showError.value = true
         if ('message' in res) {

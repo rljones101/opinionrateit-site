@@ -12,10 +12,12 @@ export interface AppApiResponse {
   status: string
   statusCode: number
   data: any
+  originalData: any
 }
 
 export interface AppApiErrorResponse {
   status: string
   statusCode: number
   message: string
+  originalData: any
 }
