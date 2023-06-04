@@ -46,7 +46,7 @@ getProfile(name as string).then((res) => {
 
 <template>
   <PageContainer class="md:flex gap-4">
-    <aside class="h-screen pl-8 pr-8" aria-label="Sidebar">
+    <aside class="md:h-screen mb-24 md:pr-8 md:mb-0" aria-label="Sidebar">
       <div class="w-full bg-slate-700 rounded-lg p-8">
         <div class="flex justify-end">
           <button
@@ -117,14 +117,16 @@ getProfile(name as string).then((res) => {
           <h1 class="text-4xl font-bold text-white">65%</h1>
         </div>
       </div>
-      <BaseBarMetric label="Presentation" :percentage="70" />
-      <BaseBarMetric label="Clarity" :percentage="25" />
-      <BaseBarMetric label="Product Viewablity" :percentage="70" />
-      <BaseBarMetric label="Detail Explanation" :percentage="30" />
-      <BaseBarMetric label="Non Bias Review" :percentage="20" />
-      <BaseBarMetric label="Review Time" :percentage="50" />
-      <BaseBarMetric label="Product Focus" :percentage="80" />
-      <BaseBarMetric label="Resources" :percentage="15" />
+      <div class="hidden md:flex flex-col">
+        <BaseBarMetric label="Presentation" :percentage="70" />
+        <BaseBarMetric label="Clarity" :percentage="25" />
+        <BaseBarMetric label="Product Viewablity" :percentage="70" />
+        <BaseBarMetric label="Detail Explanation" :percentage="30" />
+        <BaseBarMetric label="Non Bias Review" :percentage="20" />
+        <BaseBarMetric label="Review Time" :percentage="50" />
+        <BaseBarMetric label="Product Focus" :percentage="80" />
+        <BaseBarMetric label="Resources" :percentage="15" />
+      </div>
     </aside>
     <main class="w-full">
       <div class="flex w-full gap-8 mb-8">

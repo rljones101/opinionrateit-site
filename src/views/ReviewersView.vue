@@ -30,7 +30,7 @@ const clearSearch = () => {
 <template>
   <PageContainer class="reveal fade-top">
     <AppTitle>Reviewers</AppTitle>
-    <div class="flex items-center w-full p-8">
+    <div class="flex items-center w-full pb-8">
       <label for="simple-search" class="sr-only">Search</label>
       <div class="relative w-full">
         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
