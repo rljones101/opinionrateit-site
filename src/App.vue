@@ -2,16 +2,11 @@
 import { RouterView } from 'vue-router'
 import AppHeader from './components/appHeader.vue'
 import AppFooter from '@/components/AppFooter.vue'
-import UserLogin from '@/components/forms/UserLogin.vue'
-import { useDialog } from '@/controllers/dialogController'
-
-const { show } = useDialog('#UserLoginDialog')
 </script>
 
 <template>
   <div class="flex flex-col h-full w-full">
-    <UserLogin />
-    <AppHeader class="sticky-header" @user-login="show" />
+    <AppHeader class="sticky-header" />
     <div class="flex flex-auto flex-col">
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">

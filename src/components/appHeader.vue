@@ -1,27 +1,39 @@
 <script setup lang="ts">
-import { ref, watch, reactive } from 'vue'
+import { ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import buttonNav from './buttons/buttonNav.vue'
 import siteLogo from './siteLogo.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import { useUserStore } from '@/stores/user'
+import UserLogin from '@/components/forms/UserLogin.vue'
+import { useDialog } from '@/controllers/dialogController'
 
-const user = reactive(useUserStore())
+const router = useRouter()
+const route = useRoute()
+const userStore = useUserStore()
+const { show } = useDialog('#UserLoginDialog')
+
 const emit = defineEmits(['userLogin', 'userSignup', 'userProfile'])
 const showMenu = ref(false)
 const navLinks = ref([])
 const userLinks = ref([])
 
-const setDefaultLinks = () => {
-  return [
+// 1) check if user is logged in
+if (userStore.isLoggedIn) {
+  // 2) Check if the current route is NOT the profile route
+  if (route.name !== 'reviewers') {
+    // 3) Go to the profile route
+    router.push({ name: 'reviewers' })
+  }
+}
+
+const setDefaultLinks = (isLoggedIn = false) => {
+  let links = [
     {
       link: 'Home',
       path: '/'
     },
     {
-      link: 'Reviewers',
-      path: '/reviewers'
-    },
-    {
       link: 'About',
       path: '/about'
     },
@@ -30,58 +42,56 @@ const setDefaultLinks = () => {
       path: '/contact'
     }
   ]
+
+  if (isLoggedIn) {
+    links = [
+      {
+        link: 'Reviewers',
+        path: '/reviewers'
+      }
+    ]
+  }
+
+  return links
 }
 
-const setUserLinks = (userStore) => {
-  console.log('store is:', userStore)
-  console.log('user name is:', userStore.user.name)
-  return [
+const setUserLinks = (userName?: string) => {
+  let links = [
     {
-      link: 'Profile',
-      path: `/profile/${userStore.user.name}`
-    },
-    {
-      link: 'Reviewers',
-      path: '/reviewers'
-    },
-    {
-      link: 'About',
-      path: '/about'
-    },
-    {
-      link: 'Contact',
-      path: '/contact'
+      link: 'Sign Up',
+      path: '/signup',
+      command: () => {
+        emit('userSignup')
+      }
     }
   ]
+
+  if (userName !== '') {
+    links = [{ link: 'Profile', path: `/profile/${userName}`, command: null }]
+  }
+
+  return links
+}
+
+const logout = () => {
+  userStore.logoutUser()
+  router.push({ name: 'home' })
 }
 
 watch(
-  () => user.isLoggedIn,
-  (val) => {
-    console.log('user.isLoggedIn:', val)
-    userLinks.value = []
-    if (!val) {
-      userLinks.value.push({
-        link: 'Sign Up',
-        path: '/signup',
-        command: () => {
-          emit('userSignup')
-        }
-      })
-      navLinks.value = setDefaultLinks()
-    } else {
-      navLinks.value = setUserLinks(user)
-    }
+  () => userStore.isLoggedIn,
+  (isTruthy) => {
+    navLinks.value = setDefaultLinks(isTruthy)
+    const userName = isTruthy ? userStore.user.name : ''
+    userLinks.value = setUserLinks(userName)
   },
   { immediate: true }
 )
-// const userLinks = ref([
-
-// ])
 </script>
 
 <template>
   <div class="flex flex-col w-full items-center justify-between pt-4 pb-4 pl-8 pr-8 transition">
+    <UserLogin />
     <div class="flex justify-between items-center w-full">
       <div class="flex flex-row items-center justify-center">
         <site-logo class="-mt-5" />
@@ -102,14 +112,15 @@ watch(
             :path="link.path"
             :key="index"
           />
-          <span v-if="!user.isLoggedIn">|</span>
+          <span v-if="!userStore.isLoggedIn">|</span>
           <button-nav
             v-for="(link, index) in userLinks"
             :link="link.link"
             :path="link.path"
             :key="index"
           />
-          <BaseButton @click="emit('userLogin')" v-if="!user.isLoggedIn">login</BaseButton>
+          <BaseButton @click="show" v-if="!userStore.isLoggedIn">login</BaseButton>
+          <BaseButton v-if="userStore.isLoggedIn" @click="logout">logout</BaseButton>
         </nav>
       </div>
     </div>
@@ -129,7 +140,8 @@ watch(
           :path="link.path"
           :key="index"
         />
-        <BaseButton @click="emit('userLogin')">login</BaseButton>
+        <BaseButton @click="show" v-if="!userStore.isLoggedIn">login</BaseButton>
+        <BaseButton v-if="userStore.isLoggedIn" @click="logout">logout</BaseButton>
       </nav>
     </div>
   </div>

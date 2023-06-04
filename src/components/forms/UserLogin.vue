@@ -31,12 +31,8 @@ const login = async () => {
         showError.value = false
         email.value = ''
         password.value = ''
-        // const token = cookie.jwt
-        // console.log(token)
         close()
-        if ('data' in res) {
-          await router.push({ name: 'profile-name', params: { name: res.data.user.name } })
-        }
+        await router.push({ name: 'reviewers' })
       } else {
         showError.value = true
         if ('message' in res) {

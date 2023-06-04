@@ -6,6 +6,9 @@ import ButtonReviews from '@/components/buttons/ButtonReviews.vue'
 import StringUtils from '../utils/StringUtils'
 import reviewerController from '@/controllers/reviewerController'
 import type { ChartData } from 'chart.js'
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
 
 // Define Props
 const props = defineProps<{
@@ -212,7 +215,11 @@ getChannelDetails()
         </div>
       </div>
     </div>
-    <ButtonReviews class="mt-8 w-full" :youtube-channel-id="channelDetails.id" />
+    <ButtonReviews
+      v-if="userStore.isLoggedIn"
+      class="mt-8 w-full"
+      :youtube-channel-id="channelDetails.id"
+    />
   </div>
 </template>
 
