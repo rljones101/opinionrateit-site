@@ -7,15 +7,20 @@ const appApi = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/v1`
 })
 
-appApi.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const { getToken } = useUserStore()
-  const jwtToken = getToken()
+appApi.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    const { getToken } = useUserStore()
+    const jwtToken = getToken()
 
-  if (jwtToken) {
-    config.headers.Authorization = `Bearer ${jwtToken}`
+    if (jwtToken) {
+      config.headers.Authorization = `Bearer ${jwtToken}`
+    }
+    return config
+  },
+  function (error) {
+    return Promise.reject(error)
   }
-  return config
-})
+)
 
 const apiSuccessResponse = (statusCode: number, data: any): AppApiResponse => {
   return { status: 'success', statusCode, data: data.data, originalData: data }

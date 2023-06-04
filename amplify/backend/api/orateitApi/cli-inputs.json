@@ -22,15 +22,15 @@
         "setting": "open"
       }
     },
-    "/profile": {
-      "name": "/profile",
+    "/api/v1/profile": {
+      "name": "/api/v1/profile",
       "lambdaFunction": "reviewersFn",
       "permissions": {
         "setting": "open"
       }
     },
-    "/reviews": {
-      "name": "/reviews",
+    "/api/v1/reviews": {
+      "name": "/api/v1/reviews",
       "lambdaFunction": "reviewersFn",
       "permissions": {
         "setting": "open"

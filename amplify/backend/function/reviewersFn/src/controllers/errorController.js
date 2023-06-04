@@ -1,4 +1,4 @@
-const AppError = require('../utils/appError')
+const AppError = require('../utils/appError.js')
 
 // Catch all errors and return errors based on type that is cast
 

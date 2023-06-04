@@ -5,13 +5,12 @@ const AppError = require('../utils/appError.js')
 const tokenUtils = require('../utils/tokenUtils.js')
 const User = require('../models/userModel.js')
 
-const createAndSendToken = (user, statusCode, res, req) => {
+const createAndSendToken = (user, statusCode, res) => {
   const token = tokenUtils.signToken(user._id)
   const cookieOptions = {
     expires: new Date((Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60) ^ (60 * 1000)),
     httpOnly: true,
-    secure: req.secure || req.headers['x-forwarded-proto'] === 'https',
-    origin: process.env.COOKIE_ORIGIN
+    secure: true
   }
 
   if (process.env.NODE_ENV === 'production') cookieOptions.secure = true
@@ -40,7 +39,7 @@ exports.signup = catchAsSync(async (req, res) => {
     role: req.body.role
   })
 
-  createAndSendToken(user, 201, res, req)
+  createAndSendToken(user, 201, res)
 })
 
 exports.login = catchAsSync(async (req, res, next) => {
@@ -59,19 +58,17 @@ exports.login = catchAsSync(async (req, res, next) => {
   }
 
   // 3) If everything is ok, send token to client
-  createAndSendToken(user, 200, res, req)
+  createAndSendToken(user, 200, res)
 })
 
 exports.protect = catchAsSync(async (req, res, next) => {
-  // 1) Getting token and check if it is there
-  // const hasToken = !!req.headers?.authorization?.startsWith('Bearer')
-  const cookie = req.cookies.jwt
-  //const token = hasToken ? req.headers.authorization.split(' ')[1] : ''
-  const token = cookie
-    ? cookie
-    : req.headers.authorization && req.headers.authorization.startsWith('Bearer')
-    ? req.headers.authorization.split(' ')[1]
-    : null
+  // 1) Getting token and check of it's there
+  let token
+  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+    token = req.headers.authorization.split(' ')[1]
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt
+  }
 
   if (!token) {
     return next('You are not logged in! Please log in to get access.', 401)

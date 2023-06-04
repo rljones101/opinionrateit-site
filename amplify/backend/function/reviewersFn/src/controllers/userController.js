@@ -1,6 +1,6 @@
 const factory = require('./handlerFactory.js')
 const User = require('../models/userModel.js')
-const catchAsync = require('../utils/catchAsync')
+const catchAsync = require('../utils/catchAsync.js')
 
 exports.getAll = factory.getAll(User)
 exports.getOne = factory.getOne(User)
