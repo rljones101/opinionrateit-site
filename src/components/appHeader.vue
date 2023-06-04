@@ -32,15 +32,15 @@ const setDefaultLinks = (isLoggedIn = false) => {
     {
       link: 'Home',
       path: '/'
-    },
-    {
-      link: 'About',
-      path: '/about'
-    },
-    {
-      link: 'Contact',
-      path: '/contact'
     }
+    // {
+    //   link: 'About',
+    //   path: '/about'
+    // },
+    // {
+    //   link: 'Contact',
+    //   path: '/contact'
+    // }
   ]
 
   if (isLoggedIn) {
@@ -92,39 +92,40 @@ watch(
 <template>
   <div class="flex flex-col w-full items-center justify-between pt-4 pb-4 pl-8 pr-8 transition">
     <UserLogin />
-    <div class="flex justify-between items-center w-full">
-      <div class="flex flex-row items-center justify-center">
-        <site-logo class="-mt-5" />
-      </div>
-      <div>
-        <div id="menu-button" class="md:hidden">
-          <button @click="showMenu = !showMenu" v-if="!showMenu">
-            <i class="material-icons">menu</i>
-          </button>
-          <button @click="showMenu = !showMenu" v-if="showMenu">
-            <i class="material-icons">close</i>
-          </button>
+    <div class="flex items-center w-full max-w-7xl mx-auto">
+      <div class="flex justify-between items-center w-full">
+        <div class="flex flex-row items-center justify-center">
+          <site-logo class="-mt-5" />
         </div>
-        <nav id="nav" class="hidden md:flex flex-row items-center justify-end w-full transition">
-          <button-nav
-            v-for="(link, index) in navLinks"
-            :link="link.link"
-            :path="link.path"
-            :key="index"
-          />
-          <span v-if="!userStore.isLoggedIn">|</span>
-          <button-nav
-            v-for="(link, index) in userLinks"
-            :link="link.link"
-            :path="link.path"
-            :key="index"
-          />
-          <BaseButton @click="show" v-if="!userStore.isLoggedIn">login</BaseButton>
-          <BaseButton v-if="userStore.isLoggedIn" @click="logout">logout</BaseButton>
-        </nav>
+        <div>
+          <div id="menu-button" class="md:hidden">
+            <button @click="showMenu = !showMenu" v-if="!showMenu">
+              <i class="material-icons">menu</i>
+            </button>
+            <button @click="showMenu = !showMenu" v-if="showMenu">
+              <i class="material-icons">close</i>
+            </button>
+          </div>
+          <nav id="nav" class="hidden md:flex flex-row items-center justify-end w-full transition">
+            <button-nav
+              v-for="(link, index) in navLinks"
+              :link="link.link"
+              :path="link.path"
+              :key="index"
+            />
+            <span v-if="!userStore.isLoggedIn">|</span>
+            <button-nav
+              v-for="(link, index) in userLinks"
+              :link="link.link"
+              :path="link.path"
+              :key="index"
+            />
+            <BaseButton @click="show" v-if="!userStore.isLoggedIn">login</BaseButton>
+            <BaseButton v-if="userStore.isLoggedIn" @click="logout">logout</BaseButton>
+          </nav>
+        </div>
       </div>
     </div>
-
     <div class="dropdown-nav-menu" :class="{ show: showMenu }">
       <nav id="hiddenNav" class="flex flex-col items-start">
         <button-nav

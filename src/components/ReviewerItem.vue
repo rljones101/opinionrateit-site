@@ -188,22 +188,13 @@ getChannelDetails()
     <a :href="`/reviewers/${channelDetails.name}`" class="font-bold text-orange-500">{{
       channelDetails.title
     }}</a>
-    <div class="flex items-center flex-grow gap-4">
-      <div class="chart-container">
-        <div class="graph-card">
-          <div>
-            <div class="metrics-chart-container">
-              <div class="metrics-chart-container-value">
-                <div class="actual-value">
-                  {{ metricScore }}
-                </div>
-                <!--                <div class="actual-label">-->
-                <!--                  Review Score-->
-                <!--                </div>-->
-              </div>
-              <PieChart :chart-data="chartData" :options="chartOptions" />
-            </div>
+    <div class="flex flex-auto items-center flex-grow gap-4">
+      <div class="chart-container flex-auto w-24" v-show="userStore.isLoggedIn">
+        <div class="flex-auto relative">
+          <div class="absolute w-full h-full flex items-center justify-center">
+            {{ metricScore }}
           </div>
+          <PieChart :chart-data="chartData" :options="chartOptions" />
         </div>
       </div>
       <div class="details">
@@ -224,43 +215,19 @@ getChannelDetails()
 </template>
 
 <style scoped>
+.chart-container {
+  display: flex;
+}
+
+.chart-container > * {
+  flex-basis: 100%;
+}
+
 .reviewer-image-container {
   border-radius: 50%;
   width: 88px;
   height: 88px;
   overflow: hidden;
   margin-bottom: 20px;
-}
-
-.metrics-chart-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  place-items: center;
-  position: relative;
-  margin: 0 auto;
-}
-
-.metrics-chart-container .metrics-chart-container-value {
-  position: absolute;
-  left: 20%;
-  right: 20%;
-  top: 20%;
-  bottom: 20%;
-  text-transform: uppercase;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
-
-.metrics-chart-container-value .actual-value {
-  padding: 10px;
-}
-
-.metrics-chart-container-value .actual-label {
-  color: rgba(255, 255, 255, 0.5);
 }
 </style>
