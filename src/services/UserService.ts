@@ -8,4 +8,8 @@ const getProfile = async (name: string) => {
   return await apiGet(`/profile/${name}`)
 }
 
-export { usersLogin, getProfile }
+const usersSignup = async (data: any) => {
+  return await apiPost('/users/signup', data)
+}
+
+export { usersLogin, usersSignup, getProfile }

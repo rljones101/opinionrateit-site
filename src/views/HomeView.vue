@@ -32,7 +32,7 @@ useRevealObserver()
               Interact with other members and ensure your reviews are engaging while providing
               valuable information.
             </p>
-            <ReadMoreLink />
+            <!--            <ReadMoreLink />-->
           </div>
           <div class="flex flex-col gap-4">
             <div class="icon-wrapper"><IconDocumentation /></div>
@@ -41,7 +41,7 @@ useRevealObserver()
               Increase awareness in latest tech trends, connect with merchants that share your
               interest.
             </p>
-            <ReadMoreLink />
+            <!--            <ReadMoreLink />-->
           </div>
           <div class="flex flex-col gap-4">
             <div class="icon-wrapper"><IconEcosystem /></div>
@@ -50,7 +50,7 @@ useRevealObserver()
               Daily analysis is provided that will give you a deep understanding of how you can
               reach your target audience.
             </p>
-            <ReadMoreLink />
+            <!--            <ReadMoreLink />-->
           </div>
         </div>
       </div>

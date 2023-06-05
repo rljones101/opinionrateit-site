@@ -1,0 +1,60 @@
+<script setup lang="ts">
+import BaseButton from '@/components/buttons/BaseButton.vue'
+
+defineProps<{
+  active: boolean
+  planName: string
+  pricing?: string
+  annualDiscountPrice?: string
+}>()
+
+const emit = defineEmits(['selected'])
+</script>
+
+<template>
+  <div
+    :class="{ 'active-plan': active }"
+    class="w-full flex flex-col max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
+  >
+    <h5 class="mb-4 text-xl font-medium text-gray-500 dark:text-gray-400">{{ planName }}</h5>
+    <div class="flex items-baseline text-gray-900 dark:text-white">
+      <span class="text-3xl font-semibold" v-if="pricing">$</span>
+      <span class="text-5xl font-extrabold tracking-tight" v-if="pricing">{{ pricing }}</span>
+      <span class="text-5xl font-extrabold tracking-tight" v-if="!pricing">Free</span>
+      <span class="ml-1 text-xl font-normal text-gray-500 dark:text-gray-400">/month</span>
+    </div>
+    <div class="h-4 pt-4 pb-4">
+      <div v-if="annualDiscountPrice" class="italic">
+        ${{ annualDiscountPrice }} yearly discount
+      </div>
+    </div>
+
+    <!-- List -->
+    <ul role="list" class="space-y-5 my-7">
+      <slot name="list"></slot>
+    </ul>
+    <BaseButton
+      :class="{ 'active-button': active }"
+      class="flex w-full justify-center"
+      @click="emit('selected')"
+      :disabled="active"
+      >{{ active ? 'Selected' : 'Choose Plan' }}</BaseButton
+    >
+    <!--    <p class="text-sm mt-8 text-center">( 30 day trial run )</p>-->
+  </div>
+</template>
+
+<style scoped>
+.active-plan {
+  @apply border border-orange-500;
+}
+.active-button {
+  @apply bg-orange-500
+  shadow-none
+  border-none
+  disabled:bg-slate-700
+  hover:transition-none
+  hover:translate-y-0
+  text-orange-500;
+}
+</style>

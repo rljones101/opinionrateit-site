@@ -1,40 +1,44 @@
-import axios from "axios";
+import axios from 'axios'
 
 const baseUrl = import.meta.env.VITE_G_URL
 const apiKey = import.meta.env.VITE_G_API
 
 const config = {
   baseUrl,
-  apiKey,
-};
+  apiKey
+}
 
 class ApiUtils {
   generateQueryParams(entity: any): string {
     if (!entity) {
-      throw new Error("[entity] param is not defined");
+      throw new Error('[entity] param is not defined')
     }
 
-    let endpoint = "";
+    let endpoint = ''
 
     for (const prop in entity) {
       if (entity[prop]) {
-        endpoint += prop + "=" + entity[prop] + "&";
+        console.log(entity[prop])
+        const paramValues = [entity[prop]].toString().split(', ')
+        console.log('paramValues:', paramValues)
+        paramValues.forEach((value) => {
+          endpoint += prop + '=' + value + '&'
+        })
       }
     }
-    endpoint = endpoint.substr(0, endpoint.length - 1);
+    endpoint = endpoint.substring(0, endpoint.length - 1)
+    console.log('URL:', endpoint)
 
-    return endpoint;
+    return endpoint
   }
 
   get(endpoint: string, params: any) {
-    endpoint = config.baseUrl + endpoint + "?key=" + config.apiKey;
-    endpoint = params
-      ? endpoint + "&" + this.generateQueryParams(params)
-      : endpoint;
+    endpoint = config.baseUrl + endpoint + '?key=' + config.apiKey
+    endpoint = params ? endpoint + '&' + this.generateQueryParams(params) : endpoint
 
     return axios.get(endpoint).then((youTubeData) => {
-      return youTubeData;
-    });
+      return youTubeData
+    })
   }
 }
-export default new ApiUtils();
+export default new ApiUtils()

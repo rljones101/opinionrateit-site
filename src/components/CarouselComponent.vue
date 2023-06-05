@@ -5,6 +5,7 @@ import type { Slide } from '@/types'
 
 const props = defineProps<{
   slides: Slide[]
+  hideButtons?: boolean
 }>()
 
 const { slides, next, previous } = useCarousel(props.slides)
@@ -17,7 +18,7 @@ const { slides, next, previous } = useCarousel(props.slides)
         <slot name="slide" v-bind="slide.data"></slot>
       </div>
     </transition-group>
-    <div class="controls">
+    <div class="controls" v-if="!hideButtons">
       <button class="controls_button" @click="previous">
         <IconArrow />
       </button>

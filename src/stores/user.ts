@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { usersLogin } from '@/services/UserService'
+import { usersLogin, usersSignup } from '@/services/UserService'
 
 export const useUserStore = defineStore('user', () => {
   const jwtToken = ref('')
@@ -54,6 +54,15 @@ export const useUserStore = defineStore('user', () => {
     return res
   }
 
+  const signupUser = async (data: any) => {
+    const res = await usersSignup(data)
+    if (res.status === 'success') {
+      if ('data' in res) {
+        saveUserAndToken(res.data.user, res.originalData.token)
+      }
+    }
+  }
+
   const logoutUser = () => {
     localStorage.removeItem('jwt')
     localStorage.removeItem('orateit-user')
@@ -70,5 +79,15 @@ export const useUserStore = defineStore('user', () => {
 
   checkIfLoggedIn()
 
-  return { jwtToken, saveToken, getToken, loginUser, logoutUser, isLoggedIn, user, checkIfLoggedIn }
+  return {
+    jwtToken,
+    saveToken,
+    getToken,
+    loginUser,
+    logoutUser,
+    signupUser,
+    isLoggedIn,
+    user,
+    checkIfLoggedIn
+  }
 })

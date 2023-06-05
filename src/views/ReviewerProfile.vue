@@ -7,12 +7,16 @@ import BaseButton from '@/components/buttons/BaseButton.vue'
 import { getProfile } from '@/services/UserService'
 import { useRoute } from 'vue-router'
 import { computed, ref } from 'vue'
+import GoogleAPIService from '@/services/GoogleAPIService'
 
+const googleAPI = new GoogleAPIService()
 const route = useRoute()
 const name = route.params.name
+const videos = ref([])
 let profile = ref({
   name: 'Foo Bar',
-  email: 'foobar@company.com'
+  email: 'foobar@company.com',
+  youTubeChannelId: ''
 })
 
 const profileInitials = computed(() => {
@@ -22,23 +26,41 @@ const profileInitials = computed(() => {
     : initialsArr[0].charAt(0)
 })
 
-const searchHandler = (val) => {
-  console.log('search for:', val)
+const searchVideos = async (searchParams) => {
+  //const reformattedSearchString = searchParams.split(' ');
+  if (profile.value.youTubeChannelId) {
+    const query = searchParams.split(' ').join('+')
+    videos.value = [
+      ...(await googleAPI.getVideosByChannelId(profile.value.youTubeChannelId, query))
+    ]
+  }
 }
 
-getProfile(name as string).then((res) => {
+const searchHandler = (val) => {
+  console.log('search for:', val)
+  searchVideos(val)
+}
+
+getProfile(name as string).then(async (res) => {
   console.log(res)
 
   if (res.status === 'success') {
-    let name = 'Undefined'
-    let email = 'Undefined'
+    let email = ''
+    let name = ''
+    let youTubeChannelId = ''
     if ('data' in res) {
-      email = res?.data?.data?.email
-      name = res?.data?.data?.name
+      email = res?.data?.data?.email ?? ''
+      name = res?.data?.data?.name ?? ''
+      youTubeChannelId = res?.data?.data?.youTubeChannelId ?? ''
+
+      // Get youtube videos
+      videos.value = [...(await googleAPI.getVideosByChannelId(youTubeChannelId))]
     }
+
     profile.value = {
       name,
-      email
+      email,
+      youTubeChannelId
     }
   }
 })
@@ -134,15 +156,15 @@ getProfile(name as string).then((res) => {
         <SearchInput @change="searchHandler" class="flex-1" />
       </div>
       <div class="grid-layout w-full">
-        <VideoItem label="LA90 Descrete" />
-        <VideoItem label="ZMF Caldera" />
-        <VideoItem label="Ferrum Oor" />
-        <VideoItem label="Feliks Audio Euforia" />
-        <VideoItem label="Meze Audio" />
-        <VideoItem label="Meze Audio" />
-        <VideoItem label="HD 6XX" />
-        <VideoItem label="HyperX Microphone" />
-        <VideoItem label="Topping A90" />
+        <VideoItem label="LA90 Descrete" v-for="video in videos" :key="video.id" :video="video" />
+        <!--        <VideoItem label="ZMF Caldera" />-->
+        <!--        <VideoItem label="Ferrum Oor" />-->
+        <!--        <VideoItem label="Feliks Audio Euforia" />-->
+        <!--        <VideoItem label="Meze Audio" />-->
+        <!--        <VideoItem label="Meze Audio" />-->
+        <!--        <VideoItem label="HD 6XX" />-->
+        <!--        <VideoItem label="HyperX Microphone" />-->
+        <!--        <VideoItem label="Topping A90" />-->
       </div>
     </main>
   </PageContainer>

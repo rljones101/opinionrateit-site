@@ -95,7 +95,7 @@ watch(
     <div class="flex items-center w-full max-w-7xl mx-auto">
       <div class="flex justify-between items-center w-full">
         <div class="flex flex-row items-center justify-center">
-          <site-logo class="-mt-5" />
+          <site-logo />
         </div>
         <div>
           <div id="menu-button" class="md:hidden">

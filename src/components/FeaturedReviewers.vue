@@ -24,7 +24,7 @@ reviewerController.getReviewers().then((reviewers) => {
   <div>
     <AppTitle>Featured Reviewers</AppTitle>
     <transition name="fade">
-      <CarouselComponent :slides="slides" v-if="slides.length">
+      <CarouselComponent :slides="slides" v-if="slides.length" :hide-buttons="true">
         <template #slide="{ id, name, channelId, social, metrics }">
           <ReviewerItem
             :key="id"

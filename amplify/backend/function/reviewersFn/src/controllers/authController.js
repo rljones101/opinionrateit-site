@@ -31,6 +31,7 @@ const createAndSendToken = (user, statusCode, res) => {
 
 exports.signup = catchAsSync(async (req, res) => {
   const user = await User.create({
+    youTubeChannelId: req.body.youTubeChannelId,
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,

@@ -28,7 +28,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['user', 'reviewer', 'admin'],
+    enum: ['user', 'reviewer-basic', 'reviewer-plus', 'admin'],
     default: 'user'
   },
   password: {
@@ -57,11 +57,15 @@ const userSchema = new mongoose.Schema({
   active: {
     type: Boolean,
     default: true,
+
     select: false
   },
   slug: {
     type: String,
     select: false
+  },
+  youTubeChannelId: {
+    type: String
   }
 })
 

@@ -8,6 +8,7 @@ const AboutView = () => import('@/views/AboutView.vue')
 const ReviewersView = () => import('@/views/ReviewersView.vue')
 const ContactView = () => import('@/views/ContactView.vue')
 const ReviewerProfile = () => import('@/views/ReviewerProfile.vue')
+const SignupView = () => import('@/views/SignupView.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -36,6 +37,11 @@ const router = createRouter({
       path: '/profile/:name',
       name: 'profile-name',
       component: ReviewerProfile
+    },
+    {
+      path: '/signup',
+      name: 'signup',
+      component: SignupView
     }
   ]
 })

@@ -185,9 +185,10 @@ getChannelDetails()
       <img :alt="channelDetails.title" :src="reviewerImage" class="reviewer-image" />
     </div>
     <!--    <router-link :to="`/reviewers/${channelDetails.name}`" class="font-bold text-orange-500">{{channelDetails.title}}</router-link>-->
-    <a :href="`/reviewers/${channelDetails.name}`" class="font-bold text-orange-500">{{
-      channelDetails.title
-    }}</a>
+    <!--    <a :href="`/reviewers/${channelDetails.name}`" class="font-bold text-orange-500">{{-->
+    <!--      channelDetails.title-->
+    <!--    }}</a>-->
+    <p class="font-bold text-white">{{ channelDetails.title }}</p>
     <div class="flex flex-auto items-center flex-grow gap-4">
       <div class="chart-container flex-auto w-24" v-show="userStore.isLoggedIn">
         <div class="flex-auto relative">
