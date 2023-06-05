@@ -17,17 +17,15 @@ class ApiUtils {
     let endpoint = ''
 
     for (const prop in entity) {
-      if (entity[prop]) {
-        console.log(entity[prop])
-        const paramValues = [entity[prop]].toString().split(', ')
-        console.log('paramValues:', paramValues)
-        paramValues.forEach((value) => {
+      const paramValue = entity[prop]
+      if (paramValue) {
+        const paramValues = paramValue.toString().split(', ')
+        paramValues.forEach((value: string) => {
           endpoint += prop + '=' + value + '&'
         })
       }
     }
     endpoint = endpoint.substring(0, endpoint.length - 1)
-    console.log('URL:', endpoint)
 
     return endpoint
   }

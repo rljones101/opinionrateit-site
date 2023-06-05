@@ -4,66 +4,13 @@ import BaseBarMetric from '@/components/BaseBarMetric.vue'
 import VideoItem from '@/components/VideoItem.vue'
 import SearchInput from '@/components/inputs/SearchInput.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
-import { getProfile } from '@/services/UserService'
-import { useRoute } from 'vue-router'
-import { computed, ref } from 'vue'
-import GoogleAPIService from '@/services/GoogleAPIService'
+import { useProfile } from '@/controllers/profileController'
 
-const googleAPI = new GoogleAPIService()
-const route = useRoute()
-const name = route.params.name
-const videos = ref([])
-let profile = ref({
-  name: 'Foo Bar',
-  email: 'foobar@company.com',
-  youTubeChannelId: ''
-})
-
-const profileInitials = computed(() => {
-  let initialsArr: string[] = profile.value.name.split(' ')
-  return initialsArr.length > 1
-    ? initialsArr[0].charAt(0) + initialsArr[1].charAt(0)
-    : initialsArr[0].charAt(0)
-})
-
-const searchVideos = async (searchParams) => {
-  //const reformattedSearchString = searchParams.split(' ');
-  if (profile.value.youTubeChannelId) {
-    const query = searchParams.split(' ').join('+')
-    videos.value = [
-      ...(await googleAPI.getVideosByChannelId(profile.value.youTubeChannelId, query))
-    ]
-  }
-}
+const { searchVideos, profile, profileInitials, videos } = useProfile()
 
 const searchHandler = (val) => {
-  console.log('search for:', val)
   searchVideos(val)
 }
-
-getProfile(name as string).then(async (res) => {
-  console.log(res)
-
-  if (res.status === 'success') {
-    let email = ''
-    let name = ''
-    let youTubeChannelId = ''
-    if ('data' in res) {
-      email = res?.data?.data?.email ?? ''
-      name = res?.data?.data?.name ?? ''
-      youTubeChannelId = res?.data?.data?.youTubeChannelId ?? ''
-
-      // Get youtube videos
-      videos.value = [...(await googleAPI.getVideosByChannelId(youTubeChannelId))]
-    }
-
-    profile.value = {
-      name,
-      email,
-      youTubeChannelId
-    }
-  }
-})
 </script>
 
 <template>
@@ -91,34 +38,34 @@ getProfile(name as string).then(async (res) => {
             </svg>
           </button>
           <!-- Dropdown menu -->
-          <!--          <div-->
-          <!--            id="dropdown"-->
-          <!--            class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"-->
-          <!--          >-->
-          <!--            <ul class="py-2" aria-labelledby="dropdownButton">-->
-          <!--              <li>-->
-          <!--                <a-->
-          <!--                  href="#"-->
-          <!--                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"-->
-          <!--                  >Edit</a-->
-          <!--                >-->
-          <!--              </li>-->
-          <!--              <li>-->
-          <!--                <a-->
-          <!--                  href="#"-->
-          <!--                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"-->
-          <!--                  >Export Data</a-->
-          <!--                >-->
-          <!--              </li>-->
-          <!--              <li>-->
-          <!--                <a-->
-          <!--                  href="#"-->
-          <!--                  class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"-->
-          <!--                  >Delete</a-->
-          <!--                >-->
-          <!--              </li>-->
-          <!--            </ul>-->
-          <!--          </div>-->
+          <div
+            id="dropdown"
+            class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
+          >
+            <ul class="py-2" aria-labelledby="dropdownButton">
+              <li>
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >Edit</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >Export Data</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >Delete</a
+                >
+              </li>
+            </ul>
+          </div>
         </div>
         <div class="flex gap-8 w-full">
           <div
@@ -131,15 +78,15 @@ getProfile(name as string).then(async (res) => {
           <div>
             <h3 class="font-bold text-2xl text-white">{{ profile.name }}</h3>
             <a href="" class="text-orange-500">{{ profile.email }}</a>
-            <p>Reviews: 1.2k</p>
+            <p v-if="profile.isReviewer">Reviews: 1.2k</p>
           </div>
         </div>
-        <div class="flex flex-col items-center p-8 pb-0">
+        <div class="flex flex-col items-center p-8 pb-0" v-if="profile.isReviewer">
           <p>Metric Score</p>
           <h1 class="text-4xl font-bold text-white">65%</h1>
         </div>
       </div>
-      <div class="hidden md:flex flex-col">
+      <div class="hidden md:flex flex-col" v-if="profile.isReviewer">
         <BaseBarMetric label="Presentation" :percentage="70" />
         <BaseBarMetric label="Clarity" :percentage="25" />
         <BaseBarMetric label="Product Viewablity" :percentage="70" />
@@ -152,7 +99,7 @@ getProfile(name as string).then(async (res) => {
     </aside>
     <main class="w-full">
       <div class="flex w-full gap-8 mb-8">
-        <BaseButton class="flex-2 bg-orange-500">Add Review</BaseButton>
+        <BaseButton class="flex-2 bg-orange-500" v-if="profile.isReviewer">Add Review</BaseButton>
         <SearchInput @change="searchHandler" class="flex-1" />
       </div>
       <div class="grid-layout w-full">
