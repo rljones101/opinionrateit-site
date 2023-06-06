@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import type { Ref } from 'vue'
+import { useRouter } from 'vue-router'
 import buttonNav from './buttons/buttonNav.vue'
 import siteLogo from './siteLogo.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
@@ -8,27 +9,23 @@ import { useUserStore } from '@/stores/user'
 import UserLogin from '@/components/forms/UserLogin.vue'
 import { useDialog } from '@/controllers/dialogController'
 
+interface linkItem {
+  link: string
+  path: string
+  command?: any
+}
+
 const router = useRouter()
-const route = useRoute()
 const userStore = useUserStore()
 const { show } = useDialog('#UserLoginDialog')
 
 const emit = defineEmits(['userLogin', 'userSignup', 'userProfile'])
 const showMenu = ref(false)
-const navLinks = ref([])
-const userLinks = ref([])
-
-// 1) check if user is logged in
-if (route.name === 'home' && route.name === 'signup' && userStore.isLoggedIn) {
-  // 2) Check if the current route is NOT the profile route
-  if (route.name !== 'reviewers') {
-    // 3) Go to the profile route
-    router.push({ name: 'reviewers' })
-  }
-}
+const navLinks: Ref<linkItem[]> = ref([])
+const userLinks: Ref<linkItem[]> = ref([])
 
 const setDefaultLinks = (isLoggedIn = false) => {
-  let links = [
+  let links: linkItem[] = [
     {
       link: 'Home',
       path: '/'
@@ -56,7 +53,7 @@ const setDefaultLinks = (isLoggedIn = false) => {
 }
 
 const setUserLinks = (userName?: string) => {
-  let links = [
+  let links: linkItem[] = [
     {
       link: 'Sign Up',
       path: '/signup',

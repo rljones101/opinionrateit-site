@@ -6,7 +6,7 @@ const router = useRouter()
 const props = defineProps<{
   link: string
   path: string
-  command?: () => {}
+  command?: () => {} | null
 }>()
 const goToPath = () => {
   if (!props.command) {

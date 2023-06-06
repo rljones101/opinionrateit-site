@@ -27,7 +27,10 @@ const router = createRouter({
     {
       path: '/reviewers',
       name: 'reviewers',
-      component: ReviewersView
+      component: ReviewersView,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/contact',
@@ -37,7 +40,10 @@ const router = createRouter({
     {
       path: '/profile/:name',
       name: 'profile-name',
-      component: ReviewerProfile
+      component: ReviewerProfile,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/signup',
@@ -47,9 +53,26 @@ const router = createRouter({
     {
       path: '/videos',
       name: 'videos',
-      component: ReviewerVideos
+      component: ReviewerVideos,
+      meta: {
+        requiresAuth: true
+      }
     }
   ]
+})
+
+const isAuthenticated = () => {
+  return localStorage.getItem('jwt') || ''
+}
+
+router.beforeEach((to, from, next) => {
+  if (!isAuthenticated() && to?.meta?.requiresAuth) {
+    next({ name: 'home' })
+  } else if (isAuthenticated() && to.name === 'home') {
+    next({ name: 'reviewers' })
+  } else {
+    next()
+  }
 })
 
 export default router

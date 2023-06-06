@@ -16,7 +16,7 @@ const selectedTabHandler = (index: number) => {
 
 const { searchVideos, profile, profileInitials, videos } = useProfile()
 
-const searchHandler = (val) => {
+const searchHandler = (val: string) => {
   searchVideos(val)
 }
 </script>
