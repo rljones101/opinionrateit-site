@@ -7,7 +7,7 @@ import AppFooter from '@/components/AppFooter.vue'
 <template>
   <div class="flex flex-col h-full w-full">
     <AppHeader class="sticky-header" />
-    <div class="flex flex-auto flex-col">
+    <div class="flex flex-auto flex-col relative">
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
           <component :is="Component" />

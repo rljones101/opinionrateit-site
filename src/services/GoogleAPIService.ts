@@ -1,13 +1,5 @@
 import apiUtils from '@/utils/ApiUtils'
-
-type VideoChannelDetails = {
-  videoId: string
-  title: string
-  description: string
-  creator: string
-  thumbnail: string
-  reviews?: any[]
-}
+import type { VideoChannelDetails } from '@/types'
 
 export default class GoogleAPIService {
   getVideosByChannelId(youtubeChannelId: string, query: string = '') {
@@ -76,14 +68,13 @@ export default class GoogleAPIService {
     })
   }
 
-  _videoInterface(videoData: any) {
+  _videoInterface(videoData: any): VideoChannelDetails {
     return {
       videoId: videoData['id']['videoId'],
       title: videoData['snippet']['title'],
       description: videoData['snippet']['description'],
       creator: videoData['snippet']['channelTitle'],
-      thumbnail: videoData['snippet']['thumbnails']['medium']['url'],
-      reviews: null
+      thumbnail: videoData['snippet']['thumbnails']['medium']['url']
     }
   }
 }

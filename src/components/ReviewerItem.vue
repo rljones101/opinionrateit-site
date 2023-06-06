@@ -153,7 +153,13 @@ const getChannelDetails = async () => {
   try {
     if (props.channelId !== undefined && props.channelId !== '') {
       const channel = await reviewerController.getChannelDetails(props.channelId)
-      channelDetails.value = setChannelDetails(channel.id, channel.snippet, channel.statistics)
+
+      channelDetails.value = setChannelDetails(
+        channel['id'],
+        channel['snippet'],
+        channel['statistics']
+      )
+      console.log('channelDetails:', channelDetails.value)
     }
   } catch (err) {
     console.error(err)
@@ -170,6 +176,8 @@ const getMetricScore = (weights: any[]) => {
   // console.log('datasets:', this.chartData.datasets[0].data)
   return Math.floor(average) + '%'
 }
+
+const showVideoReviews = (userId: string) => {}
 
 getChannelDetails()
 </script>
@@ -211,6 +219,7 @@ getChannelDetails()
       v-if="userStore.isLoggedIn"
       class="mt-8 w-full"
       :youtube-channel-id="channelDetails.id"
+      @click="showVideoReviews"
     />
   </div>
 </template>

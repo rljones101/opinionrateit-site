@@ -27,7 +27,7 @@ const apiSuccessResponse = (statusCode: number, data: any): AppApiResponse => {
 }
 
 const apiErrorResponse = (
-  data: any,
+  data: any = [],
   statusCode = 500,
   message = 'Unknown error has occurred!'
 ): AppApiErrorResponse => {

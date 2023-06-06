@@ -19,7 +19,7 @@ const navLinks = ref([])
 const userLinks = ref([])
 
 // 1) check if user is logged in
-if (userStore.isLoggedIn) {
+if (route.name === 'home' && route.name === 'signup' && userStore.isLoggedIn) {
   // 2) Check if the current route is NOT the profile route
   if (route.name !== 'reviewers') {
     // 3) Go to the profile route

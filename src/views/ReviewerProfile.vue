@@ -5,6 +5,14 @@ import VideoItem from '@/components/VideoItem.vue'
 import SearchInput from '@/components/inputs/SearchInput.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import { useProfile } from '@/controllers/profileController'
+import TabsComponent from '@/components/forms/TabsComponent.vue'
+import { ref } from 'vue'
+
+const tabs = [{ label: 'User Access' }, { label: 'My Youtube Videos' }]
+const selectedTabIndex = ref(0)
+const selectedTabHandler = (index: number) => {
+  selectedTabIndex.value = index
+}
 
 const { searchVideos, profile, profileInitials, videos } = useProfile()
 
@@ -97,22 +105,40 @@ const searchHandler = (val) => {
         <BaseBarMetric label="Resources" :percentage="15" />
       </div>
     </aside>
-    <main class="w-full">
-      <div class="flex w-full gap-8 mb-8">
-        <BaseButton class="flex-2 bg-orange-500" v-if="profile.isReviewer">Add Review</BaseButton>
-        <SearchInput @change="searchHandler" class="flex-1" />
-      </div>
-      <div class="grid-layout w-full">
-        <VideoItem label="LA90 Descrete" v-for="video in videos" :key="video.id" :video="video" />
-        <!--        <VideoItem label="ZMF Caldera" />-->
-        <!--        <VideoItem label="Ferrum Oor" />-->
-        <!--        <VideoItem label="Feliks Audio Euforia" />-->
-        <!--        <VideoItem label="Meze Audio" />-->
-        <!--        <VideoItem label="Meze Audio" />-->
-        <!--        <VideoItem label="HD 6XX" />-->
-        <!--        <VideoItem label="HyperX Microphone" />-->
-        <!--        <VideoItem label="Topping A90" />-->
-      </div>
+    <main class="w-full relative" v-if="profile.isReviewer">
+      <TabsComponent :tabs="tabs" class="mb-8" @selected-index="selectedTabHandler" />
+      <transition-group name="fade">
+        <div v-if="selectedTabIndex === 0">
+          <div v-if="profile.publishedVideos.length === 0">
+            <h3 class="text-2xl font-bold text-white">No published videos found</h3>
+            <p>
+              You have not published any videos for review. Please start by selecting one from your
+              <span class="font-bold text-white">My Youtube Videos</span> tab.
+            </p>
+          </div>
+          <div class="grid-layout w-full" v-if="profile.publishedVideos.length">
+            <VideoItem
+              v-for="video in profile.publishedVideos"
+              :key="video.videoId"
+              :video="video"
+            />
+          </div>
+        </div>
+        <div v-if="selectedTabIndex === 1">
+          <p class="mb-8">
+            Here you can search and select what videos you would like to have reviewed.
+          </p>
+          <div class="flex w-full gap-8 mb-8">
+            <BaseButton class="flex-2 bg-orange-500" v-if="profile.isReviewer"
+              >Add Review</BaseButton
+            >
+            <SearchInput @change="searchHandler" class="flex-1" />
+          </div>
+          <div class="grid-layout w-full">
+            <VideoItem v-for="video in videos" :key="video.videoId" :video="video" />
+          </div>
+        </div>
+      </transition-group>
     </main>
   </PageContainer>
 </template>

@@ -35,6 +35,13 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/api/v1/publishedVideos": {
+      "name": "/api/v1/publishedVideos",
+      "lambdaFunction": "reviewersFn",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

@@ -18,6 +18,40 @@ export interface AppApiResponse {
 export interface AppApiErrorResponse {
   status: string
   statusCode: number
+  data?: any[]
   message: string
   originalData: any
+}
+
+export interface ChannelDetailsInterface {
+  id: string
+  name: string
+  title: string
+  description?: string
+  channelThumbnail?: string
+  publishedAt: string
+  thumbnails: {
+    default: {
+      url: string
+    }
+    high?: {
+      url?: string
+    }
+  }
+  statistics: {
+    commentCount: number
+    hiddenSubscriberCount: boolean
+    subscriberCount: number
+    videoCount: number
+    viewCount: number
+  }
+}
+
+export interface VideoChannelDetails {
+  videoId: string
+  title: string
+  description?: string
+  creator?: string
+  thumbnail: string
+  reviews?: any[]
 }
