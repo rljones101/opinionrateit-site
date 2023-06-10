@@ -74,7 +74,8 @@ export default class GoogleAPIService {
       title: videoData['snippet']['title'],
       description: videoData['snippet']['description'],
       creator: videoData['snippet']['channelTitle'],
-      thumbnail: videoData['snippet']['thumbnails']['medium']['url']
+      thumbnail: videoData['snippet']['thumbnails']['medium']['url'],
+      selected: false
     }
   }
 }

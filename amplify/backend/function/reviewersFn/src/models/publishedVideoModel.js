@@ -9,6 +9,11 @@ const PublishedVideoSchema = new Schema(
       ref: 'User',
       required: [true, 'A user Id is required']
     },
+    title: {
+      type: String,
+      required: [true, 'A video title is required'],
+      minlength: [8, 'A title must be at least 8 characters long']
+    },
     videoId: {
       type: String,
       unique: true,
@@ -32,6 +37,7 @@ const PublishedVideoSchema = new Schema(
 
 PublishedVideoSchema.index({ userId: 1 })
 PublishedVideoSchema.index({ videoId: 1 })
+PublishedVideoSchema.index({ title: 1 })
 
 // QUERY MIDDLEWARE ===========================================================
 PublishedVideoSchema.pre(/^find/, function (next) {

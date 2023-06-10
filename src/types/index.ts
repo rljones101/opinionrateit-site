@@ -54,4 +54,5 @@ export interface VideoChannelDetails {
   creator?: string
   thumbnail: string
   reviews?: any[]
+  selected: boolean
 }

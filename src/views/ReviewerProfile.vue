@@ -6,18 +6,25 @@ import SearchInput from '@/components/inputs/SearchInput.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import { useProfile } from '@/controllers/profileController'
 import TabsComponent from '@/components/forms/TabsComponent.vue'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import type { VideoChannelDetails } from '@/types'
+import RadioCheckIcon from '@/components/forms/controls/RadioCheckIcon.vue'
 
-const tabs = [{ label: 'User Access' }, { label: 'My Youtube Videos' }]
+const tabs = [{ label: 'My Published Videos' }, { label: 'My Youtube Videos' }]
 const selectedTabIndex = ref(0)
+const { searchVideos, profile, profileInitials, videos } = useProfile()
+const selectedVideos = computed(() => videos.value.filter((video) => video.selected))
+
 const selectedTabHandler = (index: number) => {
   selectedTabIndex.value = index
 }
 
-const { searchVideos, profile, profileInitials, videos } = useProfile()
-
 const searchHandler = (val: string) => {
   searchVideos(val)
+}
+
+const selectVideoHandler = (video: VideoChannelDetails) => {
+  video.selected = !video.selected
 }
 </script>
 
@@ -116,26 +123,44 @@ const searchHandler = (val: string) => {
               <span class="font-bold text-white">My Youtube Videos</span> tab.
             </p>
           </div>
-          <div class="grid-layout w-full" v-if="profile.publishedVideos.length">
-            <VideoItem
-              v-for="video in profile.publishedVideos"
-              :key="video.videoId"
-              :video="video"
-            />
+
+          <div v-if="profile.publishedVideos.length > 0" class="mb-8">
+            <p>Below is a list of videos that have been published and are ready for review.</p>
           </div>
+          <transition name="fade">
+            <div class="grid-layout w-full" v-if="profile.publishedVideos.length">
+              <VideoItem
+                v-for="video in profile.publishedVideos"
+                :key="video.videoId"
+                :video="video"
+              />
+            </div>
+          </transition>
         </div>
         <div v-if="selectedTabIndex === 1">
           <p class="mb-8">
             Here you can search and select what videos you would like to have reviewed.
           </p>
           <div class="flex w-full gap-8 mb-8">
-            <BaseButton class="flex-2 bg-orange-500" v-if="profile.isReviewer"
-              >Add Review</BaseButton
+            <BaseButton
+              class="flex-2 bg-orange-500"
+              v-if="profile.isReviewer"
+              :disabled="selectedVideos.length === 0"
+              >Publish Selected ({{ selectedVideos.length }})</BaseButton
             >
             <SearchInput @change="searchHandler" class="flex-1" />
           </div>
+          <!--          <p class="mb-4">selected videos: {{ selectedVideos }}</p>-->
           <div class="grid-layout w-full">
-            <VideoItem v-for="video in videos" :key="video.videoId" :video="video" />
+            <div
+              class="video-wrapper"
+              @click="selectVideoHandler(video)"
+              v-for="video in videos"
+              :key="video.videoId"
+            >
+              <VideoItem :video="video" />
+              <RadioCheckIcon :is-checked="video.selected" class="absolute top-5 right-5 z-20" />
+            </div>
           </div>
         </div>
       </transition-group>
@@ -143,4 +168,8 @@ const searchHandler = (val: string) => {
   </PageContainer>
 </template>
 
-<style scoped></style>
+<style scoped>
+.video-wrapper {
+  position: relative;
+}
+</style>

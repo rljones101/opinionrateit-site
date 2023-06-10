@@ -27,4 +27,7 @@
 .btn:hover {
   transform: translate(0, -0.5em);
 }
+.btn:disabled {
+  @apply bg-slate-300 text-slate-500 border-none transition-none transform-none;
+}
 </style>

@@ -11,18 +11,19 @@ function _videoInterface(videoData: any): VideoChannelDetails {
     title: videoData['snippet']['title'],
     description: videoData['snippet']['description'],
     creator: videoData['snippet']['channelTitle'],
-    thumbnail: videoData['snippet']['thumbnails']['medium']['url']
+    thumbnail: videoData['snippet']['thumbnails']['medium']['url'],
+    selected: false
   }
 }
 
-const getParams = (url: string) => {
-  let params = new URLSearchParams()
-  if (url.indexOf('?') !== -1) {
-    const urlArr = url.split('?')
-    params = new URLSearchParams(urlArr[1])
-  }
-  return params
-}
+// const getParams = (url: string) => {
+//   let params = new URLSearchParams()
+//   if (url.indexOf('?') !== -1) {
+//     const urlArr = url.split('?')
+//     params = new URLSearchParams(urlArr[1])
+//   }
+//   return params
+// }
 
 const get = async (url: string, config = {}) => {
   let path = url

@@ -1,11 +1,9 @@
-import GoogleAPIService from '@/services/GoogleAPIService'
 import { useRoute } from 'vue-router'
 import { ref, computed } from 'vue'
 import type { Ref } from 'vue'
 import { getProfile as userGetProfile } from '@/services/UserService'
-import { getMultipleVideos } from '@/utils/googleAPI'
-import { apiGet } from '@/utils/AppApi'
 import type { VideoChannelDetails } from '@/types'
+import reviewerController from '@/controllers/reviewerController'
 
 interface Profile {
   id: string
@@ -17,10 +15,12 @@ interface Profile {
 }
 
 const useProfile = () => {
-  const googleAPI = new GoogleAPIService()
   const route = useRoute()
   const name = route.params.name as string
   const videos = ref<VideoChannelDetails[]>([])
+  const getPublishedVideos = reviewerController.getPublishedVideos
+  const publishVideo = reviewerController.publishVideo
+  const getVideosByChannelId = reviewerController.getVideosByChannelId
 
   const profile: Ref<Profile> = ref({
     id: '',
@@ -39,24 +39,16 @@ const useProfile = () => {
   })
 
   const searchVideos = async (searchParams: string) => {
-    //const reformattedSearchString = searchParams.split(' ');
     if (profile.value.youTubeChannelId) {
-      const query = searchParams.split(' ').join('+')
       videos.value = [
-        ...(await googleAPI.getVideosByChannelId(profile.value.youTubeChannelId, query))
+        ...(await reviewerController.searchVideos(profile.value.youTubeChannelId, searchParams))
       ]
     }
   }
 
-  const getPublishedVideos = async (userId: string) => {
-    const res = await apiGet(`/publishedVideos/${userId}`)
-    const publishedVideos = [...res.data.data].map((video) => video.videoId)
-    return await getMultipleVideos(publishedVideos)
-  }
-
+  // Init user profile data
   userGetProfile(name).then(async (res) => {
     // console.log(res)
-
     if (res.status === 'success') {
       if ('data' in res) {
         const profileData = res.data?.data
@@ -69,21 +61,19 @@ const useProfile = () => {
 
         // Get youtube videos
         if (profile.value.isReviewer) {
-          videos.value = [...(await googleAPI.getVideosByChannelId(profile.value.youTubeChannelId))]
+          videos.value = [...(await getVideosByChannelId(profile.value.youTubeChannelId))]
 
           // Get the published videos
-          if (profile.value.id) {
-            const publishedVideos = await getPublishedVideos(profile.value.id)
-            if (publishedVideos) {
-              profile.value.publishedVideos = publishedVideos
-            }
+          const publishedVideos = await getPublishedVideos(profile.value.id)
+          if (publishedVideos) {
+            profile.value.publishedVideos = publishedVideos
           }
         }
       }
     }
   })
 
-  return { profile, profileInitials, videos, searchVideos, getPublishedVideos }
+  return { profile, profileInitials, videos, searchVideos, getPublishedVideos, publishVideo }
 }
 
 export { useProfile }
