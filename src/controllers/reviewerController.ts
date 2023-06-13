@@ -2,6 +2,7 @@ import GoogleAPIService from '@/services/GoogleAPIService'
 import ReviewerService from '@/services/ReviewerService'
 import { apiGet, apiPost } from '@/utils/AppApi'
 import { getMultipleVideos } from '@/utils/googleAPI'
+import type { PublishedVideo } from '@/types'
 
 const googleApiService = new GoogleAPIService()
 const reviewerService = new ReviewerService()
@@ -52,12 +53,8 @@ const getPublishedVideos = async (userId: string) => {
   return await getMultipleVideos(publishedVideos)
 }
 
-const publishVideo = async (user: string, title: string, videoId: string) => {
-  return await apiPost('/publishedVideos', {
-    user,
-    title,
-    videoId
-  })
+const publishVideos = async (videos: PublishedVideo[]) => {
+  return await apiPost('/publishedVideos', { videos })
 }
 
 export default {
@@ -66,6 +63,6 @@ export default {
   getVideosByChannelId,
   getReviewers,
   getPublishedVideos,
-  publishVideo,
+  publishVideos,
   searchVideos
 }

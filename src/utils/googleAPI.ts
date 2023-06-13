@@ -7,7 +7,7 @@ const googleAPI = axios.create({
 
 function _videoInterface(videoData: any): VideoChannelDetails {
   return {
-    videoId: videoData['id']['videoId'],
+    videoId: videoData['id']['videoId'] || videoData['id'],
     title: videoData['snippet']['title'],
     description: videoData['snippet']['description'],
     creator: videoData['snippet']['channelTitle'],

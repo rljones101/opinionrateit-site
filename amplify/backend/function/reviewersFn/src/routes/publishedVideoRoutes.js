@@ -7,7 +7,7 @@ router
   .route('/')
   .get(publishedVideoController.getAll)
   .get(publishedVideoController.getOne)
-  .post(publishedVideoController.createOne)
+  .post(publishedVideoController.createMultiple)
 
 router.route('/:userId').get(publishedVideoController.getVideosByUser)
 

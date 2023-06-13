@@ -55,4 +55,11 @@ export interface VideoChannelDetails {
   thumbnail: string
   reviews?: any[]
   selected: boolean
+  isPublished?: boolean
+}
+
+export interface PublishedVideo {
+  user: string
+  title: string
+  videoId: string
 }

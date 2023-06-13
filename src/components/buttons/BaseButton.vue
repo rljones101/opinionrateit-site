@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <button class="btn">
+  <button class="btn" type="button">
     <span class="font-bold uppercase"><slot /></span>
   </button>
 </template>
