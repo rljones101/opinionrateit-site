@@ -33,6 +33,14 @@ const router = createRouter({
       }
     },
     {
+      path: '/reviewers/:channelId',
+      name: 'videos',
+      component: ReviewerVideos,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
       path: '/contact',
       name: 'contact',
       component: ContactView
@@ -49,14 +57,6 @@ const router = createRouter({
       path: '/signup',
       name: 'signup',
       component: SignupView
-    },
-    {
-      path: '/videos',
-      name: 'videos',
-      component: ReviewerVideos,
-      meta: {
-        requiresAuth: true
-      }
     }
   ]
 })

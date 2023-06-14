@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive, computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { DateTime } from 'luxon'
 import PieChart from '@/components/charts/PieChart.vue'
 import ButtonReviews from '@/components/buttons/ButtonReviews.vue'
@@ -10,6 +11,7 @@ import { useUserStore } from '@/stores/user'
 import type { Reviewer } from '@/types'
 
 const userStore = useUserStore()
+const router = useRouter()
 
 // Define Props
 const props = defineProps<{
@@ -173,7 +175,9 @@ const getMetricScore = () => {
   return Math.floor(props.reviewer.metric) + '%'
 }
 
-const showVideoReviews = (userId: string) => {}
+const showVideoReviews = () => {
+  router.push({ name: 'videos', params: { channelId: props.reviewer.channelId } })
+}
 
 getChannelDetails()
 </script>

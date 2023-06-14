@@ -1,11 +1,9 @@
 import GoogleAPIService from '@/services/GoogleAPIService'
-import ReviewerService from '@/services/ReviewerService'
-import { apiGet, apiPost } from '@/utils/AppApi'
+import * as reviewerService from '@/services/ReviewerService'
 import { getMultipleVideos } from '@/utils/googleAPI'
 import type { PublishedVideo } from '@/types'
 
 const googleApiService = new GoogleAPIService()
-const reviewerService = new ReviewerService()
 
 const getReviewers = async (query?: URLSearchParams) => await reviewerService.getReviewers(query)
 
@@ -14,7 +12,6 @@ const getVideos = async (youtubeChannelId: string) => {
     let videos = []
     if (youtubeChannelId) {
       videos = await googleApiService.getVideosByChannelId(youtubeChannelId)
-      // console.log(videos);
     }
     return videos
   } catch (err) {
@@ -47,14 +44,14 @@ const searchVideos = async (youTubeChannelId: string, searchParams: string) => {
   }
 }
 
-const getPublishedVideos = async (userId: string) => {
-  const res = await apiGet(`/publishedVideos/${userId}`)
+const getPublishedVideos = async (id: string, type = 'user') => {
+  const res = await reviewerService.getPublishedVideos(id, type)
   const publishedVideos = [...res.data.data].map((video) => video.videoId)
   return await getMultipleVideos(publishedVideos)
 }
 
 const publishVideos = async (videos: PublishedVideo[]) => {
-  return await apiPost('/publishedVideos', { videos })
+  return await reviewerService.publishVideos(videos)
 }
 
 export default {

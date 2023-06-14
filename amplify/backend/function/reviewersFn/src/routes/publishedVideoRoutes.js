@@ -9,7 +9,8 @@ router
   .get(publishedVideoController.getOne)
   .post(publishedVideoController.createMultiple)
 
-router.route('/:userId').get(publishedVideoController.getVideosByUser)
+router.route('/user/:userId').get(publishedVideoController.getVideosByUser)
+router.route('/channel/:channelId').get(publishedVideoController.getVideosByChannel)
 
 router
   .route('/:id')

@@ -1,25 +1,41 @@
 <script setup lang="ts">
-import { getMultipleVideos } from '@/utils/googleAPI'
-import VideoItem from '@/components/VideoItem.vue'
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+// types
 import type { Ref } from 'vue'
-import PageContainer from '@/components/containers/PageContainer.vue'
 import type { VideoChannelDetails } from '@/types'
+// controllers
+import reviewerController from '@/controllers/reviewerController'
+// templates
+import PageContainer from '@/components/containers/PageContainer.vue'
+import VideoItem from '@/components/VideoItem.vue'
 
-const channelId = 'UC3XdYJjWliOdKuZMNaTiP8Q' // Zeos
-const videoIds = ['KiFAHwD0pHE', 'RAKBTX34H6k', '8ZJHbGO3a44']
+// Route instance
+const route = useRoute()
+
+// reactive variables
 const videos: Ref<VideoChannelDetails[]> = ref([])
 
-getMultipleVideos(videoIds).then((res) => {
-  console.log(res)
-  videos.value = res
-})
+// route params
+const channelId = route.params.channelId as string
+
+if (channelId) {
+  reviewerController.getPublishedVideos(channelId, 'channel').then((res) => {
+    videos.value = res
+  })
+}
 </script>
 
 <template>
   <PageContainer>
-    <div class="grid-layout w-full">
+    <div class="grid-layout w-full" v-if="channelId && videos.length">
       <VideoItem v-for="video in videos" :key="video.videoId" :video="video" />
+    </div>
+    <div v-else-if="channelId && videos.length === 0">
+      This user has not submitted any videos for review yet.
+    </div>
+    <div v-else-if="!channelId">
+      You did not select a user. Please choose a user from the reviewers list.
     </div>
   </PageContainer>
 </template>

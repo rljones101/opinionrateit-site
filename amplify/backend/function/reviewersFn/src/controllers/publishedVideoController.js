@@ -19,6 +19,19 @@ exports.createMultiple = catchAsync(async (req, res) => {
   })
 })
 
+exports.getVideosByChannel = catchAsync(async (req, res) => {
+  const channelId = req.params.channelId
+  const videos = [...(await PublishedVideo.find({ channelId: channelId }))]
+
+  res.status(200).json({
+    status: 'success',
+    results: videos.length,
+    data: {
+      data: videos
+    }
+  })
+})
+
 exports.getVideosByUser = catchAsync(async (req, res) => {
   const userId = req.params.userId
   const videos = [...(await PublishedVideo.find({ user: userId }))]
