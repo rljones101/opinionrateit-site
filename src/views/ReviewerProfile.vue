@@ -47,7 +47,7 @@ const selectVideoHandler = (video: VideoChannelDetails) => {
 const setSelectedVideosToPublish = async () => {
   try {
     // Publish the videos that were selected
-    await publishVideos(selectedVideos.value)
+    await publishVideos(profile.value.youTubeChannelId, selectedVideos.value)
     // hide the modal
     hide()
   } catch (err) {
@@ -126,18 +126,21 @@ const setSelectedVideosToPublish = async () => {
         </div>
         <div class="flex flex-col items-center p-8 pb-0" v-if="profile.isReviewer">
           <p>Metric Score</p>
-          <h1 class="text-4xl font-bold text-white">65%</h1>
+          <h1 class="text-4xl font-bold text-white">{{ profile.metric }}%</h1>
         </div>
       </div>
       <div class="hidden md:flex flex-col" v-if="profile.isReviewer">
-        <BaseBarMetric label="Presentation" :percentage="70" />
-        <BaseBarMetric label="Clarity" :percentage="25" />
-        <BaseBarMetric label="Product Viewablity" :percentage="70" />
-        <BaseBarMetric label="Detail Explanation" :percentage="30" />
-        <BaseBarMetric label="Non Bias Review" :percentage="20" />
-        <BaseBarMetric label="Review Time" :percentage="50" />
-        <BaseBarMetric label="Product Focus" :percentage="80" />
-        <BaseBarMetric label="Resources" :percentage="15" />
+        <BaseBarMetric label="Presentation" :percentage="profile.avgOverallPresentation" />
+        <BaseBarMetric label="Clarity" :percentage="profile.avgClarity" />
+        <BaseBarMetric label="Product Viewablity" :percentage="profile.avgProductView" />
+        <BaseBarMetric
+          label="Detail Explanation"
+          :percentage="profile.avgProductDetailExplanation"
+        />
+        <BaseBarMetric label="Non Bias Review" :percentage="profile.avgNonBias" />
+        <BaseBarMetric label="Review Time" :percentage="profile.avgAverageReviewTime" />
+        <BaseBarMetric label="Product Focus" :percentage="profile.avgProductFocus" />
+        <BaseBarMetric label="Resources" :percentage="profile.avgProvidedResources" />
       </div>
     </aside>
     <main class="w-full">

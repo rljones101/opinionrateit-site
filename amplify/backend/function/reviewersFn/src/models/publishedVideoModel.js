@@ -9,6 +9,10 @@ const PublishedVideoSchema = new Schema(
       ref: 'User',
       required: [true, 'A user Id is required']
     },
+    channelId: {
+      type: String,
+      required: [true, 'A published video requires a channel Id']
+    },
     title: {
       type: String,
       required: [true, 'A video title is required'],
@@ -38,6 +42,7 @@ const PublishedVideoSchema = new Schema(
 PublishedVideoSchema.index({ userId: 1 })
 PublishedVideoSchema.index({ videoId: 1 })
 PublishedVideoSchema.index({ title: 1 })
+PublishedVideoSchema.index({ channelId: 1 })
 
 // QUERY MIDDLEWARE ===========================================================
 PublishedVideoSchema.pre(/^find/, function (next) {

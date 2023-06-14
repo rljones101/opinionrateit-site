@@ -62,4 +62,21 @@ export interface PublishedVideo {
   user: string
   title: string
   videoId: string
+  channelId: string
+}
+
+export interface Reviewer {
+  id: string
+  name: string
+  channelId: string
+  avgAverageReviewTime: number
+  avgClarity: number
+  avgNonBias: number
+  avgOverallPresentation: number
+  avgProductDetailExplanation: number
+  avgProductFocus: number
+  avgProductView: number
+  avgProvidedResources: number
+  avgShare: number
+  metric: number
 }

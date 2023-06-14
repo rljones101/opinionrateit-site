@@ -1,7 +1,7 @@
 import { useRoute } from 'vue-router'
 import { ref, computed } from 'vue'
 import type { Ref } from 'vue'
-import { getProfile as userGetProfile } from '@/services/UserService'
+import * as userService from '@/services/UserService'
 import type { PublishedVideo, VideoChannelDetails } from '@/types'
 import reviewerController from '@/controllers/reviewerController'
 
@@ -13,6 +13,16 @@ interface Profile {
   isReviewer: boolean
   videos: VideoChannelDetails[]
   publishedVideos: VideoChannelDetails[]
+  avgAverageReviewTime: number
+  avgClarity: number
+  avgNonBias: number
+  avgOverallPresentation: number
+  avgProductDetailExplanation: number
+  avgProductFocus: number
+  avgProductView: number
+  avgProvidedResources: number
+  avgShare: number
+  metric: number
 }
 
 const useProfile = () => {
@@ -27,7 +37,17 @@ const useProfile = () => {
     youTubeChannelId: '',
     isReviewer: false,
     videos: [],
-    publishedVideos: []
+    publishedVideos: [],
+    avgAverageReviewTime: 0,
+    avgClarity: 0,
+    avgNonBias: 0,
+    avgOverallPresentation: 0,
+    avgProductDetailExplanation: 0,
+    avgProductFocus: 0,
+    avgProductView: 0,
+    avgProvidedResources: 0,
+    avgShare: 0,
+    metric: 0
   })
 
   // Computed
@@ -92,13 +112,14 @@ const useProfile = () => {
     }
   }
 
-  const publishVideos = async (selectedVideos: VideoChannelDetails[]) => {
+  const publishVideos = async (channelId: string, selectedVideos: VideoChannelDetails[]) => {
     const videos: PublishedVideo[] = []
     selectedVideos.forEach((video: VideoChannelDetails) => {
       const publishedVideo: PublishedVideo = {
         user: profile.value.id,
         title: video.title,
-        videoId: video.videoId
+        videoId: video.videoId,
+        channelId: profile.value.youTubeChannelId
       }
       videos.push(publishedVideo)
     })
@@ -125,8 +146,25 @@ const useProfile = () => {
     })
   }
 
+  const getReviewerChannel = async (channelId: string) => {
+    if (profile.value.youTubeChannelId) {
+      const res = await userService.getReviewerChannel(channelId)
+      console.log(res)
+      profile.value.metric = res.data.metric
+      profile.value.avgAverageReviewTime = res.data.avgAverageReviewTime
+      profile.value.avgClarity = res.data.avgClarity
+      profile.value.avgNonBias = res.data.avgNonBias
+      profile.value.avgOverallPresentation = res.data.avgOverallPresentation
+      profile.value.avgProductDetailExplanation = res.data.avgProductDetailExplanation
+      profile.value.avgProductFocus = res.data.avgProductFocus
+      profile.value.avgProductView = res.data.avgProductView
+      profile.value.avgProvidedResources = res.data.avgProvidedResources
+      profile.value.avgShare = res.data.avgShare
+    }
+  }
+
   // Init user profile data
-  userGetProfile(name).then(async (res) => {
+  userService.getProfile(name).then(async (res) => {
     // console.log(res)
     if (res.status === 'success') {
       if ('data' in res) {
@@ -137,6 +175,8 @@ const useProfile = () => {
         profile.value.email = profileData.email ?? ''
         profile.value.name = profileData.name ?? ''
         profile.value.youTubeChannelId = profileData.youTubeChannelId ?? ''
+
+        await getReviewerChannel(profile.value.youTubeChannelId)
 
         // Get the published videos
         await getPublishedVideos()

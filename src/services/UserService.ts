@@ -12,4 +12,8 @@ const usersSignup = async (data: any) => {
   return await apiPost('/users/signup', data)
 }
 
-export { usersLogin, usersSignup, getProfile }
+const getReviewerChannel = async (channelId: string) => {
+  return await apiGet(`/reviewers/${channelId}`)
+}
+
+export { usersLogin, usersSignup, getProfile, getReviewerChannel }

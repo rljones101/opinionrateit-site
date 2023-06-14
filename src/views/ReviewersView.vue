@@ -5,13 +5,14 @@ import ReviewerItem from '@/components/ReviewerItem.vue'
 import PageContainer from '@/components/containers/PageContainer.vue'
 import { useRevealObserver } from '@/controllers/observerController'
 import { ref } from 'vue'
+import type { Reviewer } from '@/types'
 
 useRevealObserver()
 
-let list = ref<any[]>([])
+let list = ref<Reviewer[]>([])
 let search = ref('')
 
-reviewerController.getReviewers().then((reviewers: any[]) => {
+reviewerController.getReviewers().then((reviewers: Reviewer[]) => {
   list.value = reviewers
 })
 
@@ -108,11 +109,7 @@ const clearSearch = () => {
         <ReviewerItem
           v-for="reviewer in list"
           :key="reviewer.id"
-          :id="reviewer.id"
-          :social="reviewer.social"
-          :name="reviewer.name"
-          :metrics="reviewer.metrics"
-          :channel-id="reviewer.channelId"
+          :reviewer="reviewer"
           class="border border-slate-700 rounded"
         />
       </div>

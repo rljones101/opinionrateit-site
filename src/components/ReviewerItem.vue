@@ -7,16 +7,13 @@ import StringUtils from '../utils/StringUtils'
 import reviewerController from '@/controllers/reviewerController'
 import type { ChartData } from 'chart.js'
 import { useUserStore } from '@/stores/user'
+import type { Reviewer } from '@/types'
 
 const userStore = useUserStore()
 
 // Define Props
 const props = defineProps<{
-  name: string
-  id: number | string
-  channelId?: string
-  social?: any[]
-  metrics: any[]
+  reviewer: Reviewer
 }>()
 
 interface ChannelDetailsInterface {
@@ -46,7 +43,7 @@ interface ChannelDetailsInterface {
 // Define data
 let channelDetails = ref<ChannelDetailsInterface>({
   id: '',
-  name: props.name || 'name here..',
+  name: props.reviewer.name || 'name here..',
   title: 'Default',
   publishedAt: '',
   thumbnails: {
@@ -117,9 +114,8 @@ const formattedVideoCount = computed(() => {
 })
 
 const metricScore = computed(() => {
-  if (props.metrics.length) {
-    const metricWeights = props.metrics.map((metric) => metric.value)
-    return getMetricScore(metricWeights)
+  if (props.reviewer.metric) {
+    return getMetricScore()
   }
   return 0
 })
@@ -127,7 +123,7 @@ const metricScore = computed(() => {
 const setChannelDetails = (id: string, snippet: any, stats: any): ChannelDetailsInterface => {
   return {
     id,
-    name: props.name,
+    name: props.reviewer.name,
     title: snippet.title,
     description: snippet.description,
     channelThumbnail: '',
@@ -151,8 +147,8 @@ const setChannelDetails = (id: string, snippet: any, stats: any): ChannelDetails
 }
 const getChannelDetails = async () => {
   try {
-    if (props.channelId !== undefined && props.channelId !== '') {
-      const channel = await reviewerController.getChannelDetails(props.channelId)
+    if (props.reviewer.channelId !== undefined && props.reviewer.channelId !== '') {
+      const channel = await reviewerController.getChannelDetails(props.reviewer.channelId)
 
       channelDetails.value = setChannelDetails(
         channel['id'],
@@ -166,15 +162,15 @@ const getChannelDetails = async () => {
   }
 }
 
-const getMetricScore = (weights: any[]) => {
-  const sum = weights.reduce((acc, cur) => acc + cur)
-  const average = Math.floor(sum / weights.length)
+const getMetricScore = () => {
+  // const sum = weights.reduce((acc, cur) => acc + cur)
+  // const average = Math.floor(sum / weights.length)
   if (chartData?.value?.datasets?.[0]?.data) {
-    chartData.value.datasets[0].data.push(average)
-    chartData.value.datasets[0].data.push(Math.floor(100 - average))
+    chartData.value.datasets[0].data.push(props.reviewer.metric)
+    chartData.value.datasets[0].data.push(Math.floor(100 - props.reviewer.metric))
   }
   // console.log('datasets:', this.chartData.datasets[0].data)
-  return Math.floor(average) + '%'
+  return Math.floor(props.reviewer.metric) + '%'
 }
 
 const showVideoReviews = (userId: string) => {}
