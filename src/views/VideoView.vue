@@ -98,23 +98,23 @@ const userProfile = computed(() => {
                       focusable="false"
                     >
                       <use
-                        xlink:href="/img/icons/social-icons.svg#social-facebook"
+                        xlink:href="../assets/img/icons/social-icons.svg#social-facebook"
                         v-if="socialItem.type === 'facebook'"
                       ></use>
                       <use
-                        xlink:href="/img/icons/social-icons.svg#social-twitter"
+                        xlink:href="../assets/img/icons/social-icons.svg#social-twitter"
                         v-if="socialItem.type === 'twitter'"
                       ></use>
                       <use
-                        xlink:href="/img/icons/social-icons.svg#social-youtube"
+                        xlink:href="../assets/img/icons/social-icons.svg#social-youtube"
                         v-if="socialItem.type === 'youtube'"
                       ></use>
                       <use
-                        xlink:href="/img/icons/social-icons.svg#social-instagram"
+                        xlink:href="../assets/img/icons/social-icons.svg#social-instagram"
                         v-if="socialItem.type === 'instagram'"
                       ></use>
                       <use
-                        xlink:href="/img/icons/social-icons.svg#social-patreon"
+                        xlink:href="../assets/img/icons/social-icons.svg#social-patreon"
                         v-if="socialItem.type === 'patreon'"
                       ></use>
                     </svg>
