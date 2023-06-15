@@ -1,14 +1,16 @@
 const express = require('express')
-const reviewerController = require('../controllers/reviewController.js')
+const reviewController = require('../controllers/reviewController.js')
 
 const reviewRoutes = express.Router()
 
-reviewRoutes.route('/').get(reviewerController.getAllReviews).post(reviewerController.createReview)
+reviewRoutes.route('/').get(reviewController.getAllReviews).post(reviewController.createReview)
+
+reviewRoutes.route('/:videoId/byVideo').get(reviewController.getReviewsByVideo)
 
 reviewRoutes
   .route('/:id')
-  .get(reviewerController.getOne)
-  .patch(reviewerController.updateOne)
-  .delete(reviewerController.deleteOne)
+  .get(reviewController.getOne)
+  .patch(reviewController.updateOne)
+  .delete(reviewController.deleteOne)
 
 module.exports = reviewRoutes

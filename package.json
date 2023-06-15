@@ -20,9 +20,11 @@
     "flowbite": "^1.6.5",
     "luxon": "^3.3.0",
     "pinia": "^2.0.36",
+    "tailwind-scrollbar": "^3.0.4",
     "vue": "^3.3.2",
     "vue-chart-3": "^3.1.8",
-    "vue-router": "^4.2.0"
+    "vue-router": "^4.2.0",
+    "vue-youtube-vue-3": "^1.5.0"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",

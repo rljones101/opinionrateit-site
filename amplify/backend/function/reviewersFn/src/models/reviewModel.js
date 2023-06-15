@@ -12,6 +12,10 @@ const reviewSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'Review must have a user']
     },
+    videoId: {
+      type: String,
+      required: [true, 'A review requires a video id']
+    },
     commit: String,
     clarity: Number,
     product_view: Number,
@@ -31,6 +35,7 @@ const reviewSchema = new mongoose.Schema(
 
 reviewSchema.index({ channelId: 1 })
 reviewSchema.index({ user: 1 })
+reviewSchema.index({ videoId: 1 })
 
 reviewSchema.statics.calcReviewAvgs = async function (channelId) {
   const stats = await this.aggregate([

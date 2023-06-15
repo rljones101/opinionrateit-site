@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 // types
 import type { Ref } from 'vue'
 import type { VideoChannelDetails } from '@/types'
@@ -12,12 +12,18 @@ import VideoItem from '@/components/VideoItem.vue'
 
 // Route instance
 const route = useRoute()
+const router = useRouter()
 
 // reactive variables
 const videos: Ref<VideoChannelDetails[]> = ref([])
 
 // route params
 const channelId = route.params.channelId as string
+
+// methods
+const showReview = (video) => {
+  router.push({ name: 'reviewers-channelId-reviews-videoId', params: { videoId: video.videoId } })
+}
 
 if (channelId) {
   reviewerController.getPublishedVideos(channelId, 'channel').then((res) => {
@@ -29,7 +35,12 @@ if (channelId) {
 <template>
   <PageContainer>
     <div class="grid-layout w-full" v-if="channelId && videos.length">
-      <VideoItem v-for="video in videos" :key="video.videoId" :video="video" />
+      <VideoItem
+        v-for="video in videos"
+        :key="video.videoId"
+        :video="video"
+        @click="showReview(video)"
+      />
     </div>
     <div v-else-if="channelId && videos.length === 0">
       This user has not submitted any videos for review yet.

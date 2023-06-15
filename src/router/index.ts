@@ -11,6 +11,8 @@ const ReviewerProfile = () => import('@/views/ReviewerProfile.vue')
 const SignupView = () => import('@/views/SignupView.vue')
 const ReviewerVideos = () => import('@/views/ReviewerVideos.vue')
 
+const VideoView = () => import('@/views/VideoView.vue')
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -33,9 +35,17 @@ const router = createRouter({
       }
     },
     {
-      path: '/reviewers/:channelId',
+      path: '/reviewers/:channelId/reviews',
       name: 'videos',
       component: ReviewerVideos,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: '/reviewers/:channelId/reviews/:videoId',
+      name: 'reviewers-channelId-reviews-videoId',
+      component: VideoView,
       meta: {
         requiresAuth: true
       }
