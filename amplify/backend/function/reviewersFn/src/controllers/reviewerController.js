@@ -10,7 +10,7 @@ exports.updateOne = factory.updateOne(Reviewer)
 exports.deleteOne = factory.deleteOne(Reviewer)
 
 exports.getReviewerChannel = catchAsync(async (req, res, next) => {
-  let query = Reviewer.findOne({ channelId: req.params.channelId })
+  let query = Reviewer.findOne({ channelId: req.params.channelId }).populate('user')
   const doc = await query
 
   if (!doc) {

@@ -1,0 +1,207 @@
+[{
+  "name": "zReviews",
+  "user": "648b07e73960ee669b8cb31f",
+  "channelId": "UC3XdYJjWliOdKuZMNaTiP8Q",
+  "social": [
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/c/ZeosReviews"
+    },
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/Zeos"
+    }
+  ],
+  "avgAverageReviewTime": 66,
+  "avgClarity": 69,
+  "avgNonBias": 53,
+  "avgOverallPresentation": 64,
+  "avgProductDetailExplanation": 56,
+  "avgProductFocus": 58,
+  "avgProductView": 61,
+  "avgProvidedResources": 58,
+  "avgShare": 77,
+  "metric": 62
+},
+{
+  "name": "Bitwit",
+  "user": "648b07e73960ee669b8cb320",
+  "channelId": "UCftcLVz-jtPXoH3cWUUDwYw",
+  "social": [
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/c/BitWit"
+    },
+    {
+      "type": "twitter",
+      "url": "https://twitter.com/bitwitkyle"
+    },
+    {
+      "type": "instagram",
+      "url": "https://www.instagram.com/bitwitkyle/?hl=en"
+    }
+  ],
+  "avgAverageReviewTime": 85,
+  "avgClarity": 76,
+  "avgNonBias": 67,
+  "avgOverallPresentation": 92,
+  "avgProductDetailExplanation": 90,
+  "avgProductFocus": 77,
+  "avgProductView": 80,
+  "avgProvidedResources": 73,
+  "avgShare": 87,
+  "metric": 81
+},
+{
+  "name": "Badseed Tech",
+  "user": "648b07e73960ee669b8cb321",
+  "channelId": "UCOFH59uoSs8SUF0L_p3W0sg",
+  "social": [
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/c/badseedtech"
+    },
+    {
+      "type": "twitter",
+      "url": "https://twitter.com/badseedtech"
+    }
+  ],
+  "avgAverageReviewTime": 85,
+  "avgClarity": 76,
+  "avgNonBias": 67,
+  "avgOverallPresentation": 92,
+  "avgProductDetailExplanation": 25,
+  "avgProductFocus": 66,
+  "avgProductView": 55,
+  "avgProvidedResources": 73,
+  "avgShare": 87,
+  "metric": 69
+},
+{
+  "name": "randomfrankp",
+  "user": "648b07e73960ee669b8cb322",
+  "channelId": "UChnN9MPURwKV2PbEoT2vhTQ",
+  "social": [],
+  "avgAverageReviewTime": 85,
+  "avgClarity": 75,
+  "avgNonBias": 67,
+  "avgOverallPresentation": 92,
+  "avgProductDetailExplanation": 25,
+  "avgProductFocus": 77,
+  "avgProductView": 88,
+  "avgProvidedResources": 80,
+  "avgShare": 87,
+  "metric": 75
+},
+{
+  "name": "Josh Valour",
+  "user": "648b07e73960ee669b8cb323",
+  "channelId": "UCx9bOYEjkevIDYONBAstK-A",
+  "social": [
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/c/JoshuaValour"
+    }
+  ],
+  "avgAverageReviewTime": 85,
+  "avgClarity": 22,
+  "avgNonBias": 67,
+  "avgOverallPresentation": 92,
+  "avgProductDetailExplanation": 55,
+  "avgProductFocus": 77,
+  "avgProductView": 99,
+  "avgProvidedResources": 80,
+  "avgShare": 82,
+  "metric": 80
+},
+{
+  "name": "Hardware Canucks",
+  "user": "648b07e73960ee669b8cb324",
+  "channelId": "UCTzLRZUgelatKZ4nyIKcAbg",
+  "social": [],
+  "avgAverageReviewTime": 67,
+  "avgClarity": 94,
+  "avgNonBias": 67,
+  "avgOverallPresentation": 68,
+  "avgProductDetailExplanation": 55,
+  "avgProductFocus": 77,
+  "avgProductView": 62,
+  "avgProvidedResources": 76,
+  "avgShare": 82,
+  "metric": 69
+},
+{
+  "name": "JayzTwoCents",
+  "user": "648b07e73960ee669b8cb325",
+  "channelId": "UCkWQ0gDrqOCarmUKmppD7GQ",
+  "social": [
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/c/Jayztwocents"
+    },
+    {
+      "type": "twitter",
+      "url": "https://twitter.com/jayztwocents"
+    }
+  ],
+  "avgAverageReviewTime": 67,
+  "avgClarity": 34,
+  "avgNonBias": 67,
+  "avgOverallPresentation": 68,
+  "avgProductDetailExplanation": 90,
+  "avgProductFocus": 84,
+  "avgProductView": 63,
+  "avgProvidedResources": 76,
+  "avgShare": 82,
+  "metric": 75
+},
+{
+  "name": "DMS",
+  "user": "648b07e73960ee669b8cb326",
+  "channelId": "UC7WtLipHnndkqwSxvL0oyVQ",
+  "social": [
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/c/DMS3TV"
+    },
+    {
+      "type": "twitter",
+      "url": "https://twitter.com/dms3tv"
+    },
+    {
+      "type": "patreon",
+      "url": "https://www.patreon.com/DMS3TV"
+    }
+  ],
+  "avgAverageReviewTime": 67,
+  "avgClarity": 66,
+  "avgNonBias": 67,
+  "avgOverallPresentation": 88,
+  "avgProductDetailExplanation": 76,
+  "avgProductFocus": 84,
+  "avgProductView": 63,
+  "avgProvidedResources": 76,
+  "avgShare": 82,
+  "metric": 75
+},
+{
+  "name": "Paul's Hardware",
+  "user": "648b07e73960ee669b8cb327",
+  "channelId": "UCvWWf-LYjaujE50iYai8WgQ",
+  "social": [
+    {
+      "type": "twitter",
+      "url": "https://twitter.com/paulhardware"
+    }
+  ],
+  "avgAverageReviewTime": 95,
+  "avgClarity": 69,
+  "avgNonBias": 67,
+  "avgOverallPresentation": 88,
+  "avgProductDetailExplanation": 88,
+  "avgProductFocus": 84,
+  "avgProductView": 63,
+  "avgProvidedResources": 76,
+  "avgShare": 75,
+  "metric": 80
+}]

@@ -8,7 +8,7 @@ defineProps<{
 
 <template>
   <div
-    class="flex flex-col items-center overflow-hidden transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-xl"
+    class="flex flex-col items-center overflow-hidden transition-all duration-300 ease-in-out hover:scale-105"
   >
     <div class="overflow-hidden relative">
       <div

@@ -36,7 +36,7 @@ const router = createRouter({
     },
     {
       path: '/reviewers/:channelId/reviews',
-      name: 'videos',
+      name: 'reviewers-channelId-reviews',
       component: ReviewerVideos,
       meta: {
         requiresAuth: true

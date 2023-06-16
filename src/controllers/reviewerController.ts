@@ -2,6 +2,7 @@ import GoogleAPIService from '@/services/GoogleAPIService'
 import * as reviewerService from '@/services/ReviewerService'
 import { getMultipleVideos } from '@/utils/googleAPI'
 import type { PublishedVideo } from '@/types'
+import type { Reviewer } from '@/types'
 
 const googleApiService = new GoogleAPIService()
 
@@ -54,6 +55,24 @@ const publishVideos = async (videos: PublishedVideo[]) => {
   return await reviewerService.publishVideos(videos)
 }
 
+const convertDataToReviewer = (slideData: any): Reviewer => {
+  return {
+    _id: slideData._id,
+    name: slideData.name,
+    channelId: slideData.channelId,
+    avgAverageReviewTime: slideData.avgAverageReviewTime,
+    avgClarity: slideData.avgClarity,
+    avgNonBias: slideData.avgNonBias,
+    avgOverallPresentation: slideData.avgOverallPresentation,
+    avgProductDetailExplanation: slideData.avgProductDetailExplanation,
+    avgProductFocus: slideData.avgProductFocus,
+    avgProductView: slideData.avgProductView,
+    avgProvidedResources: slideData.avgProvidedResources,
+    avgShare: slideData.avgShare,
+    metric: slideData.metric
+  }
+}
+
 export default {
   getVideos,
   getChannelDetails,
@@ -61,5 +80,6 @@ export default {
   getReviewers,
   getPublishedVideos,
   publishVideos,
-  searchVideos
+  searchVideos,
+  convertDataToReviewer
 }

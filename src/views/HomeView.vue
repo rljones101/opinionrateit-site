@@ -13,13 +13,13 @@ useRevealObserver()
 
 <template>
   <div>
-    <section class="section-info bg-slate-700 text-white shadow-lg reveal fade-top">
-      <AppHero />
+    <section class="section-info bg-slate-800 text-white shadow-lg reveal fade-top">
+      <AppHero class="relative z-30" />
     </section>
     <section>
-      <FeaturedReviewers class="max-w-7xl mx-auto reveal fade-right" />
+      <FeaturedReviewers class="reveal fade-right overflow-hidden relative z-20" />
     </section>
-    <section class="section-info mt-8 bg-slate-700 reveal fade-bottom">
+    <section class="section-info mt-8 bg-slate-800 reveal fade-bottom">
       <div class="max-w-7xl mx-auto">
         <h1 class="pt-16 flex justify-center font-bold text-4xl text-white text-center">
           Activate more effective reviews

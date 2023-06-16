@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { DateTime } from 'luxon'
 import PieChart from '@/components/charts/PieChart.vue'
 import ButtonReviews from '@/components/buttons/ButtonReviews.vue'
-import StringUtils from '../utils/StringUtils'
+import * as StringUtils from '../utils/StringUtils'
 import reviewerController from '@/controllers/reviewerController'
 import type { ChartData } from 'chart.js'
 import { useUserStore } from '@/stores/user'
@@ -157,7 +157,7 @@ const getChannelDetails = async () => {
         channel['snippet'],
         channel['statistics']
       )
-      console.log('channelDetails:', channelDetails.value)
+      // console.log('channelDetails:', channelDetails.value)
     }
   } catch (err) {
     console.error(err)
@@ -176,7 +176,10 @@ const getMetricScore = () => {
 }
 
 const showVideoReviews = () => {
-  router.push({ name: 'videos', params: { channelId: props.reviewer.channelId } })
+  router.push({
+    name: 'reviewers-channelId-reviews',
+    params: { channelId: props.reviewer.channelId }
+  })
 }
 
 getChannelDetails()
@@ -184,7 +187,7 @@ getChannelDetails()
 
 <template>
   <div
-    class="flex flex-col gap-4 items-center p-8 transition-all duration-300 group hover:bg-gray-800 hover:font-bold hover:shadow-lg hover:scale-105 rounded"
+    class="flex flex-col gap-4 bg-slate-800 items-center p-8 transition-all duration-300 group hover:bg-slate-700 hover:font-bold hover:text-white hover:shadow-lg hover:scale-105 rounded"
   >
     <!--    <div class="flex w-full">-->
     <!--      <social-links :social="social" />-->

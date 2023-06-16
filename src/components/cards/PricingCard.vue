@@ -14,10 +14,10 @@ const emit = defineEmits(['selected'])
 <template>
   <div
     :class="{ 'active-plan': active }"
-    class="w-full flex flex-col max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
+    class="w-full flex flex-col max-w-sm p-4 bg-slate-800 text-white rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
   >
-    <h5 class="mb-4 text-xl font-medium text-gray-500 dark:text-gray-400">{{ planName }}</h5>
-    <div class="flex items-baseline text-gray-900 dark:text-white">
+    <h5 class="mb-4 text-xl font-medium dark:text-gray-400">{{ planName }}</h5>
+    <div class="flex items-baseline dark:text-white">
       <span class="text-3xl font-semibold" v-if="pricing">$</span>
       <span class="text-5xl font-extrabold tracking-tight" v-if="pricing">{{ pricing }}</span>
       <span class="text-5xl font-extrabold tracking-tight" v-if="!pricing">Free</span>
@@ -52,7 +52,7 @@ const emit = defineEmits(['selected'])
   @apply bg-orange-500
   shadow-none
   border-none
-  disabled:bg-slate-700
+  disabled:bg-app-blue
   hover:transition-none
   hover:translate-y-0
   text-orange-500;

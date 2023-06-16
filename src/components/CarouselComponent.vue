@@ -13,7 +13,7 @@ const { slides, next, previous } = useCarousel(props.slides)
 
 <template>
   <div class="carousel_container">
-    <transition-group class="carousel flex overflow-hidden justify-center gap-4" tag="div">
+    <transition-group class="carousel overflow-hidden w-full flex justify-center gap-4" tag="div">
       <div v-for="slide in slides" :key="slide.id" class="slide" :style="slide.style">
         <slot name="slide" v-bind="slide.data"></slot>
       </div>
@@ -41,7 +41,6 @@ const { slides, next, previous } = useCarousel(props.slides)
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
   border-radius: 10px;
   padding: 4rem 0;
   margin: -4rem 0;
@@ -76,7 +75,7 @@ const { slides, next, previous } = useCarousel(props.slides)
   justify-center
   items-center
   border
-  border-slate-700
+  border-slate-800
   font-bold
   bg-orange-500
   hover:bg-orange-600

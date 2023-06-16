@@ -66,6 +66,11 @@ const userSchema = new mongoose.Schema({
   },
   youTubeChannelId: {
     type: String
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+    select: false
   }
 })
 

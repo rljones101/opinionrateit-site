@@ -27,8 +27,8 @@ export const useYouTube = (iframe: string, videoId: string) => {
 
   const onYouTubeIframeAPIReady = () => {
     player = createPlayer(iframe, {
-      height: '390',
-      width: '640',
+      height: '270',
+      width: '480',
       videoId: videoId,
       playerVars: {
         playsinline: 1
@@ -51,8 +51,8 @@ export const useYouTube = (iframe: string, videoId: string) => {
   onMounted(() => {
     if (!player) {
       player = createPlayer('player', {
-        height: '390',
-        width: '640',
+        height: '100%',
+        width: '100%',
         videoId: videoId,
         playerVars: {
           playsinline: 1, // fullscreen on IOS = 0, inline = 1

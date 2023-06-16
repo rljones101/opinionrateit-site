@@ -16,7 +16,7 @@ const reviewSchema = new mongoose.Schema(
       type: String,
       required: [true, 'A review requires a video id']
     },
-    commit: String,
+    comment: String,
     clarity: Number,
     product_view: Number,
     product_detail_explanation: Number,
@@ -25,92 +25,83 @@ const reviewSchema = new mongoose.Schema(
     product_focus: Number,
     provided_resources: Number,
     share: Number,
-    overall_presentation: Number
+    overall_presentation: Number,
+    createdAt: {
+      type: Date,
+      default: Date.now()
+    }
   },
   {
     toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    toObject: { virtuals: true },
+    statics: {
+      async calcReviewAvgs(channelId) {
+        const stats = await this.aggregate([
+          {
+            // Match all documents by channelId
+            $match: { channelId }
+          },
+          {
+            // Group by the channelId and get the avg for each value
+            $group: {
+              _id: '$channelId',
+              avg_clarity: { $avg: '$clarity' },
+              avg_product_view: { $avg: '$product_view' },
+              avg_product_detail_explanation: { $avg: '$product_detail_explanation' },
+              avg_non_bias: { $avg: '$non_bias' },
+              avg_average_review_time: { $avg: '$average_review_time' },
+              avg_product_focus: { $avg: '$product_focus' },
+              avg_provided_resources: { $avg: '$provided_resources' },
+              avg_share: { $avg: '$share' },
+              avg_overall_presentation: { $avg: '$overall_presentation' }
+            }
+          },
+          {
+            // Get the metric overall average
+            $addFields: {
+              metric: {
+                $avg: [
+                  '$avg_clarity',
+                  '$avg_product_view',
+                  '$avg_product_detail_explanation',
+                  '$avg_non_bias',
+                  '$avg_average_review_time',
+                  '$avg_product_focus',
+                  '$avg_provided_resources',
+                  '$avg_share',
+                  '$avg_overall_presentation'
+                ]
+              }
+            }
+          }
+        ])
+
+        // Take these aggregated values and apply them to another model
+        if (stats.length > 0) {
+          await Reviewer.findOneAndUpdate(
+            { channelId },
+            {
+              avgClarity: stats[0].avg_clarity,
+              avgProductView: stats[0].avg_product_view,
+              avgProductDetailExplanation: stats[0].avg_product_detail_explanation,
+              avgNonBias: stats[0].avg_non_bias,
+              avgAverageReviewTime: stats[0].avg_average_review_time,
+              avgProductFocus: stats[0].avg_product_focus,
+              avgProvidedResources: stats[0].avg_provided_resources,
+              avgShare: stats[0].avg_share,
+              avgOverallPresentation: stats[0].avg_overall_presentation,
+              metric: stats[0].metric
+            }
+          )
+        }
+      }
+    }
   }
 )
 
 reviewSchema.index({ channelId: 1 })
 reviewSchema.index({ user: 1 })
 reviewSchema.index({ videoId: 1 })
-
-reviewSchema.statics.calcReviewAvgs = async function (channelId) {
-  const stats = await this.aggregate([
-    {
-      // Match all documents by channelId
-      $match: { channelId }
-    },
-    {
-      // Group by the channelId and get the avg for each value
-      $group: {
-        _id: '$channelId',
-        avg_clarity: { $avg: '$clarity' },
-        avg_product_view: { $avg: '$product_view' },
-        avg_product_detail_explanation: { $avg: '$product_detail_explanation' },
-        avg_non_bias: { $avg: '$non_bias' },
-        avg_average_review_time: { $avg: '$average_review_time' },
-        avg_product_focus: { $avg: '$product_focus' },
-        avg_provided_resources: { $avg: '$provided_resources' },
-        avg_share: { $avg: '$share' },
-        avg_overall_presentation: { $avg: '$overall_presentation' }
-      }
-    },
-    {
-      // Get the metric overall average
-      $addFields: {
-        metric: {
-          $avg: [
-            'avg_clarity',
-            '$avg_product_view',
-            '$avg_product_detail_explanation',
-            '$avg_non_bias',
-            '$avg_average_review_time',
-            '$avg_product_focus',
-            '$avg_provided_resources',
-            '$avg_share',
-            '$avg_overall_presentation'
-          ]
-        }
-      }
-    }
-  ])
-  // console.log(stats)
-
-  // Take these aggregated values and apply them to another model
-
-  if (stats.length > 0) {
-    await Reviewer.findOneAndUpdate(
-      { channelId },
-      {
-        avgClarity: stats[0].avg_clarity,
-        avgProductView: stats[0].avg_product_view,
-        avgProductDetailExplanation: stats[0].avg_product_detail_explanation,
-        avgNonBias: stats[0].avg_non_bias,
-        avgAverageReviewTime: stats[0].avg_average_review_time,
-        avgProductFocus: stats[0].avg_product_focus,
-        avgProvidedResources: stats[0].avg_provided_resources,
-        avgShare: stats[0].avg_share,
-        avgOverallPresentation: stats[0].avg_overall_presentation,
-        metric: stats[0].metric
-      }
-    )
-  }
-
-  // if (stats.length > 0) {
-  //   await Review.findByIdAndUpdate(reviewer, {
-  //     ratingsQuantity: stats[0].nRating,
-  //     ratingsAverage: stats[0].avgRating
-  //   });
-  // } else {
-  //   await Tour.findByIdAndUpdate(tourId, {
-  //     ratingsQuantity: 0,
-  //     ratingsAverage: 4.5
-  //   });
-  // }
-}
 
 reviewSchema.post('save', function () {
   // calculate averages

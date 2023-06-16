@@ -40,7 +40,7 @@ defineProps<{
     </svg>
     <span
       v-if="!lineThrough"
-      class="text-base font-normal leading-tight text-gray-500 dark:text-gray-400"
+      class="text-base font-normal leading-tight text-slate-300 dark:text-slate-300"
       ><slot
     /></span>
     <span

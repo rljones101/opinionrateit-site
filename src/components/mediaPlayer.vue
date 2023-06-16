@@ -9,9 +9,16 @@ useYouTube('player', props.videoId)
 </script>
 
 <template>
-  <div>
+  <div class="video-wrapper">
     <div id="player"></div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.video-wrapper {
+  @apply flex items-center justify-center w-full;
+  aspect-ratio: 16/9;
+  overflow: hidden;
+  position: relative;
+}
+</style>

@@ -66,7 +66,7 @@ export interface PublishedVideo {
 }
 
 export interface Reviewer {
-  id: string
+  _id?: string
   name: string
   channelId: string
   avgAverageReviewTime: number
@@ -79,4 +79,25 @@ export interface Reviewer {
   avgProvidedResources: number
   avgShare: number
   metric: number
+}
+
+export interface Review {
+  _id?: string
+  channelId: string
+  videoId: string
+  user: {
+    email: string
+    name: string
+  }
+  createdAt: string
+  comment?: string
+  average_review_time: number
+  clarity: number
+  non_bias: number
+  overall_presentation: number
+  product_focus: number
+  product_detail_explanation: number
+  product_view: number
+  provided_resources: number
+  share: number
 }

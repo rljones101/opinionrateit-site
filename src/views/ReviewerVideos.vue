@@ -16,6 +16,10 @@ const router = useRouter()
 
 // reactive variables
 const videos: Ref<VideoChannelDetails[]> = ref([])
+const channelDetails = ref({
+  title: '',
+  description: ''
+})
 
 // route params
 const channelId = route.params.channelId as string
@@ -30,19 +34,39 @@ if (channelId) {
     videos.value = res
   })
 }
+
+reviewerController.getChannelDetails(channelId).then((res) => {
+  console.log(res)
+  const snippet = res.snippet
+  channelDetails.value.title = snippet.localized.title ? snippet.localized.title : snippet.title
+  channelDetails.value.description = snippet.localized.description
+    ? snippet.localized.description
+    : snippet.description
+})
 </script>
 
 <template>
   <PageContainer>
-    <div class="grid-layout w-full" v-if="channelId && videos.length">
-      <VideoItem
-        v-for="video in videos"
-        :key="video.videoId"
-        :video="video"
-        @click="showReview(video)"
-      />
+    <div class="mb-8">
+      <router-link to="/reviewers" class="text-orange-500 hover:underline">Reviewers</router-link>
+      / {{ channelDetails.title }}
+    </div>
+
+    <div v-if="channelId && videos.length">
+      <h2 class="font-bold text-white mb-4">{{ channelDetails.title }}</h2>
+
+      <p class="mb-8">{{ channelDetails.description }}</p>
+      <div class="grid-layout w-full">
+        <VideoItem
+          v-for="video in videos"
+          :key="video.videoId"
+          :video="video"
+          @click="showReview(video)"
+        />
+      </div>
     </div>
     <div v-else-if="channelId && videos.length === 0">
+      <h2 class="font-bold text-white mb-4">No videos found</h2>
       This user has not submitted any videos for review yet.
     </div>
     <div v-else-if="!channelId">
