@@ -7,7 +7,6 @@ import type { VideoChannelDetails } from '@/types'
 // controllers
 import reviewerController from '@/controllers/reviewerController'
 // templates
-import PageContainer from '@/components/containers/PageContainer.vue'
 import VideoItem from '@/components/VideoItem.vue'
 
 // Route instance
@@ -46,33 +45,31 @@ reviewerController.getChannelDetails(channelId).then((res) => {
 </script>
 
 <template>
-  <PageContainer>
-    <div class="mb-8">
-      <router-link to="/reviewers" class="text-orange-500 hover:underline">Reviewers</router-link>
-      / {{ channelDetails.title }}
-    </div>
+  <div class="mb-8">
+    <router-link to="/reviewers" class="text-orange-500 hover:underline">Reviewers</router-link>
+    / {{ channelDetails.title }}
+  </div>
 
-    <div v-if="channelId && videos.length">
-      <h2 class="font-bold text-white mb-4">{{ channelDetails.title }}</h2>
+  <div v-if="channelId && videos.length">
+    <h2 class="font-bold text-white mb-4">{{ channelDetails.title }}</h2>
 
-      <p class="mb-8">{{ channelDetails.description }}</p>
-      <div class="grid-layout w-full">
-        <VideoItem
-          v-for="video in videos"
-          :key="video.videoId"
-          :video="video"
-          @click="showReview(video)"
-        />
-      </div>
+    <p class="mb-8">{{ channelDetails.description }}</p>
+    <div class="grid-layout w-full">
+      <VideoItem
+        v-for="video in videos"
+        :key="video.videoId"
+        :video="video"
+        @click="showReview(video)"
+      />
     </div>
-    <div v-else-if="channelId && videos.length === 0">
-      <h2 class="font-bold text-white mb-4">No videos found</h2>
-      This user has not submitted any videos for review yet.
-    </div>
-    <div v-else-if="!channelId">
-      You did not select a user. Please choose a user from the reviewers list.
-    </div>
-  </PageContainer>
+  </div>
+  <div v-else-if="channelId && videos.length === 0">
+    <h2 class="font-bold text-white mb-4">No videos found</h2>
+    This user has not submitted any videos for review yet.
+  </div>
+  <div v-else-if="!channelId">
+    You did not select a user. Please choose a user from the reviewers list.
+  </div>
 </template>
 
 <style scoped></style>

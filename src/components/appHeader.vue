@@ -1,100 +1,49 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { useRouter } from 'vue-router'
 import buttonNav from './buttons/buttonNav.vue'
 import siteLogo from './siteLogo.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import { useUserStore } from '@/stores/user'
-import UserLogin from '@/components/forms/UserLogin.vue'
-import { useDialog } from '@/controllers/dialogController'
+import SearchInput from '@/components/inputs/SearchInput.vue'
 
 interface linkItem {
-  link: string
-  path: string
-  command?: any
+  label: string
+  name: string
+  params?: any
 }
 
 const router = useRouter()
 const userStore = useUserStore()
-const { show } = useDialog('#UserLoginDialog')
-
-const emit = defineEmits(['userLogin', 'userSignup', 'userProfile'])
 const showMenu = ref(false)
-const navLinks: Ref<linkItem[]> = ref([])
-const userLinks: Ref<linkItem[]> = ref([])
-
-const setDefaultLinks = (isLoggedIn = false) => {
-  let links: linkItem[] = [
-    {
-      link: 'Home',
-      path: '/'
-    }
-    // {
-    //   link: 'About',
-    //   path: '/about'
-    // },
-    // {
-    //   link: 'Contact',
-    //   path: '/contact'
-    // }
-  ]
-
-  if (isLoggedIn) {
-    links = [
-      {
-        link: 'Reviewers',
-        path: '/reviewers'
-      }
-    ]
-  }
-
-  return links
-}
-
-const setUserLinks = (userName?: string) => {
-  let links: linkItem[] = [
-    {
-      link: 'Sign Up',
-      path: '/signup',
-      command: () => {
-        emit('userSignup')
-      }
-    }
-  ]
-
-  if (userName !== '') {
-    links = [{ link: 'Profile', path: `/profile/${userName}`, command: null }]
-  }
-
-  return links
-}
-
-const logout = () => {
-  userStore.logoutUser()
-  router.push({ name: 'home' })
-}
-
-watch(
-  () => userStore.isLoggedIn,
-  (isTruthy) => {
-    navLinks.value = setDefaultLinks(isTruthy)
-    const userName = isTruthy ? userStore.user.name : ''
-    userLinks.value = setUserLinks(userName)
+const navLinks: Ref<linkItem[]> = ref([
+  {
+    label: 'Home',
+    name: 'home'
   },
-  { immediate: true }
-)
+  {
+    label: 'Sign Up',
+    name: 'signup'
+  }
+])
+
+const showLogin = () => {
+  router.push({ name: 'login' })
+}
 </script>
 
 <template>
-  <div class="flex flex-col w-full items-center justify-between pt-4 pb-4 pl-8 pr-8 transition">
-    <UserLogin />
-    <div class="flex items-center w-full max-w-7xl mx-auto">
+  <div class="w-full flex flex-col relative">
+    <div class="w-full p-4 h-20">
       <div class="flex justify-between items-center w-full">
-        <div class="flex flex-row items-center justify-center">
-          <site-logo />
+        <div class="flex flex-row items-center justify-center pl-4 pr-4">
+          <site-logo v-if="!userStore.isLoggedIn" />
         </div>
-        <div>
+        <div class="hidden md:block max-w-4xl w-full ml-4">
+          <SearchInput v-if="userStore.isLoggedIn" />
+        </div>
+        <div class="pl-4">
           <div id="menu-button" class="md:hidden">
             <button @click="showMenu = !showMenu" v-if="!showMenu">
               <i class="material-icons">menu</i>
@@ -106,40 +55,27 @@ watch(
           <nav id="nav" class="hidden md:flex flex-row items-center justify-end w-full transition">
             <button-nav
               v-for="(link, index) in navLinks"
-              :link="link.link"
-              :path="link.path"
+              :label="link.label"
+              :name="link.name"
               :key="index"
             />
             <span v-if="!userStore.isLoggedIn">|</span>
-            <button-nav
-              v-for="(link, index) in userLinks"
-              :link="link.link"
-              :path="link.path"
-              :key="index"
-            />
-            <BaseButton @click="show" v-if="!userStore.isLoggedIn">login</BaseButton>
-            <BaseButton v-if="userStore.isLoggedIn" @click="logout">logout</BaseButton>
+            <BaseButton @click="showLogin" v-if="!userStore.isLoggedIn" class="ml-4"
+              >login</BaseButton
+            >
           </nav>
         </div>
       </div>
     </div>
     <div class="dropdown-nav-menu" :class="{ show: showMenu }">
-      <nav id="hiddenNav" class="flex flex-col items-start">
+      <nav id="hiddenNav" class="flex flex-col bg-app-blue w-full p-8 space-y-6">
         <button-nav
           v-for="(link, index) in navLinks"
-          :link="link.link"
-          :path="link.path"
+          :label="link.label"
+          :name="link.name"
           :key="index"
         />
-        <span class="hidden md:inline">|</span>
-        <button-nav
-          v-for="(link, index) in userLinks"
-          :link="link.link"
-          :path="link.path"
-          :key="index"
-        />
-        <BaseButton @click="show" v-if="!userStore.isLoggedIn">login</BaseButton>
-        <BaseButton v-if="userStore.isLoggedIn" @click="logout">logout</BaseButton>
+        <BaseButton @click="showLogin" v-if="!userStore.isLoggedIn">login</BaseButton>
       </nav>
     </div>
   </div>
@@ -147,14 +83,27 @@ watch(
 
 <style scoped>
 .dropdown-nav-menu {
-  transition: height 0ms 400ms, opacity 400ms 0ms;
-  height: 0;
+  position: absolute;
+  top: 4rem;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  transition: opacity 400ms 0ms;
   opacity: 0;
   overflow: hidden;
 }
+
 .dropdown-nav-menu.show {
   opacity: 1;
-  height: auto;
-  transition: height 0ms 0ms, opacity 600ms 0ms;
+  transition: opacity 1s;
+}
+
+.dropdown-nav-menu #hiddenNav {
+  max-height: 4rem;
+  transition: max-height 1s;
+}
+
+.dropdown-nav-menu.show #hiddenNav {
+  max-height: 250px;
 }
 </style>

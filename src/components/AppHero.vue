@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import BaseButton from '@/components/buttons/BaseButton.vue'
+import { useNavRoutes } from '@/composables/useNavRoutes'
+
+const { goToSignup } = useNavRoutes()
 </script>
 
 <template>
@@ -12,7 +15,9 @@ import BaseButton from '@/components/buttons/BaseButton.vue'
         Need to know what content is right for you? Get on demand information that will help you
         grow and be a better tech reviewer!
       </p>
-      <BaseButton class="mt-4 w-40 bg-orange-500 hover:bg-orange-600">Let's do this!</BaseButton>
+      <BaseButton class="mt-4 w-40 bg-orange-500 hover:bg-orange-600" @click="goToSignup"
+        >Let's do this!</BaseButton
+      >
     </div>
     <div class="hero-image-container flex-1 hidden md:flex">
       <div class="desktop-background image-block slide-in-right-animation-1"></div>

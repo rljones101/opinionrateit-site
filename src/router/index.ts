@@ -10,8 +10,11 @@ const ContactView = () => import('@/views/ContactView.vue')
 const ReviewerProfile = () => import('@/views/ReviewerProfile.vue')
 const SignupView = () => import('@/views/SignupView.vue')
 const ReviewerVideos = () => import('@/views/ReviewerVideos.vue')
-
 const VideoView = () => import('@/views/VideoView.vue')
+const LoginView = () => import('@/views/LoginView.vue')
+const UserHomeView = () => import('@/views/UserHomeView.vue')
+const VideoListView = () => import('@/views/VideoListView.vue')
+const MySavedVideos = () => import('@/views/MySavedReviews.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,51 +25,72 @@ const router = createRouter({
       component: HomeView
     },
     {
-      path: '/about',
-      name: 'about',
-      component: AboutView
-    },
-    {
-      path: '/reviewers',
-      name: 'reviewers',
-      component: ReviewersView,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/reviewers/:channelId/reviews',
-      name: 'reviewers-channelId-reviews',
-      component: ReviewerVideos,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/reviewers/:channelId/reviews/:videoId',
-      name: 'reviewers-channelId-reviews-videoId',
-      component: VideoView,
-      meta: {
-        requiresAuth: true
-      }
-    },
-    {
-      path: '/contact',
-      name: 'contact',
-      component: ContactView
-    },
-    {
-      path: '/profile/:name',
-      name: 'profile-name',
-      component: ReviewerProfile,
-      meta: {
-        requiresAuth: true
-      }
+      path: '/login',
+      name: 'login',
+      component: LoginView
     },
     {
       path: '/signup',
       name: 'signup',
       component: SignupView
+    },
+    {
+      path: '/access',
+      name: 'user-home',
+      component: UserHomeView,
+      meta: {
+        requiresAuth: true
+      },
+      children: [
+        {
+          path: '/videos',
+          name: 'videos',
+          component: VideoListView,
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/my-saved-reviews',
+          name: 'my-saved-reviews',
+          component: MySavedVideos,
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/reviewers',
+          name: 'reviewers',
+          component: ReviewersView,
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/reviewers/:channelId/reviews',
+          name: 'reviewers-channelId-reviews',
+          component: ReviewerVideos,
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/reviewers/:channelId/reviews/:videoId',
+          name: 'reviewers-channelId-reviews-videoId',
+          component: VideoView,
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/profile/:name',
+          name: 'profile',
+          component: ReviewerProfile,
+          meta: {
+            requiresAuth: true
+          }
+        }
+      ]
     }
   ]
 })

@@ -168,8 +168,11 @@ const getMetricScore = () => {
   // const sum = weights.reduce((acc, cur) => acc + cur)
   // const average = Math.floor(sum / weights.length)
   if (chartData?.value?.datasets?.[0]?.data) {
+    const dataColor = `hsl(${props.reviewer.metric},100%,50%)`
+
     chartData.value.datasets[0].data.push(props.reviewer.metric)
     chartData.value.datasets[0].data.push(Math.floor(100 - props.reviewer.metric))
+    chartData.value.datasets[0].backgroundColor = [dataColor, 'rgba(247,114,22,0.2)']
   }
   // console.log('datasets:', this.chartData.datasets[0].data)
   return Math.floor(props.reviewer.metric) + '%'

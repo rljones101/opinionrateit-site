@@ -2,7 +2,7 @@
 
 <template>
   <div class="flex items-center">
-    <p class="font-bold mt-8 mb-8 text-white"><slot></slot></p>
+    <p class="font-bold text-white"><slot></slot></p>
   </div>
 </template>
 

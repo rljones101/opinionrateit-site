@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import AppTitle from '@/components/AppTitle.vue'
+import { useNavRoutes } from '@/composables/useNavRoutes'
+const { goToSignup } = useNavRoutes()
 </script>
 
 <template>
@@ -61,7 +63,9 @@ import AppTitle from '@/components/AppTitle.vue'
         others one of your favorites!
       </p>
       <div class="flex gap-4">
-        <BaseButton class="mt-4 w-40 bg-orange-500 hover:bg-orange-600">Sign Up</BaseButton>
+        <BaseButton class="mt-4 w-40 bg-orange-500 hover:bg-orange-600" @click="goToSignup"
+          >Sign Up</BaseButton
+        >
       </div>
     </div>
   </div>

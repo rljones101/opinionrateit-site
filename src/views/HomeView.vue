@@ -7,12 +7,14 @@ import IconEcosystem from '@/components/icons/IconEcosystem.vue'
 import AppHero from '@/components/AppHero.vue'
 import ReadMoreLink from '@/components/links/ReadMoreLink.vue'
 import { useRevealObserver } from '@/controllers/observerController'
-
+import AppHeader from '@/components/appHeader.vue'
+import AppFooter from '@/components/AppFooter.vue'
 useRevealObserver()
 </script>
 
 <template>
-  <div>
+  <AppHeader class="sticky-header" />
+  <div class="flex flex-col overflow-y-auto">
     <section class="section-info bg-slate-800 text-white shadow-lg reveal fade-top">
       <AppHero class="relative z-30" />
     </section>
@@ -58,6 +60,7 @@ useRevealObserver()
     <section class="mt-8 reveal fade-left">
       <JoinMessage class="max-w-7xl mx-auto" />
     </section>
+    <AppFooter />
   </div>
 </template>
 

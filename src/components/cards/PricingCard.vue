@@ -6,6 +6,7 @@ defineProps<{
   planName: string
   pricing?: string
   annualDiscountPrice?: string
+  isDisabled?: boolean
 }>()
 
 const emit = defineEmits(['selected'])
@@ -14,17 +15,20 @@ const emit = defineEmits(['selected'])
 <template>
   <div
     :class="{ 'active-plan': active }"
-    class="w-full flex flex-col max-w-sm p-4 bg-slate-800 text-white rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
+    class="w-full flex flex-col max-w-full p-4 bg-slate-800 text-white rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
   >
     <h5 class="mb-4 text-xl font-medium dark:text-gray-400">{{ planName }}</h5>
-    <div class="flex items-baseline dark:text-white">
+    <div class="flex items-baseline dark:text-white" v-if="!isDisabled">
       <span class="text-3xl font-semibold" v-if="pricing">$</span>
       <span class="text-5xl font-extrabold tracking-tight" v-if="pricing">{{ pricing }}</span>
       <span class="text-5xl font-extrabold tracking-tight" v-if="!pricing">Free</span>
       <span class="ml-1 text-xl font-normal text-gray-500 dark:text-gray-400">/month</span>
     </div>
+    <div v-else>
+      <span class="text-5xl font-extrabold tracking-tight">TBD</span>
+    </div>
     <div class="h-4 pt-4 pb-4">
-      <div v-if="annualDiscountPrice" class="italic">
+      <div v-if="annualDiscountPrice && !isDisabled" class="italic">
         ${{ annualDiscountPrice }} yearly discount
       </div>
     </div>
@@ -35,10 +39,10 @@ const emit = defineEmits(['selected'])
     </ul>
     <BaseButton
       :class="{ 'active-button': active }"
-      class="flex w-full justify-center"
+      class="flex w-full justify-center md:max-w-full"
       @click="emit('selected')"
-      :disabled="active"
-      >{{ active ? 'Selected' : 'Choose Plan' }}</BaseButton
+      :disabled="active || isDisabled"
+      >{{ active ? 'Selected' : isDisabled ? 'Comming Soon' : 'Choose Plan' }}</BaseButton
     >
     <!--    <p class="text-sm mt-8 text-center">( 30 day trial run )</p>-->
   </div>

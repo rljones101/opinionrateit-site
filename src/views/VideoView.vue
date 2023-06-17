@@ -6,7 +6,6 @@ import { useRoute } from 'vue-router'
 import type { Review } from '@/types'
 import { reviewDate } from '@/utils/DateUtils'
 import { replaceNewlines, urlify } from '@/utils/StringUtils'
-import PageContainer from '@/components/containers/PageContainer.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 
 const route = useRoute()
@@ -44,20 +43,20 @@ const userProfile = computed(() => {
 </script>
 
 <template>
-  <PageContainer>
+  <div class="mb-8">
+    <router-link to="/reviewers" class="text-orange-500 hover:underline">Reviewers</router-link>
+    /
+    <router-link
+      :to="{ name: 'reviewers-channelId-reviews', params: { channelId } }"
+      class="text-orange-500 hover:underline"
+      >{{ itemDetail.creator }}</router-link
+    >
+    /
+    {{ itemDetail.title }}
+    review
+  </div>
+  <div class="max-w-7xl mx-auto">
     <div class="product-buttons">
-      <div class="mb-8">
-        <router-link to="/reviewers" class="text-orange-500 hover:underline">Reviewers</router-link>
-        /
-        <router-link
-          :to="{ name: 'reviewers-channelId-reviews', params: { channelId } }"
-          class="text-orange-500 hover:underline"
-          >{{ itemDetail.creator }}</router-link
-        >
-        /
-        {{ itemDetail.title }}
-        review
-      </div>
       <!--      <div><button class="item-buy-button md-primary md-raised" v-on:click="purchaseProduct" v-if="itemDetail.buyUrl">BUY</button></div>-->
     </div>
     <div class="border border-slate-800 p-8 rounded">
@@ -146,7 +145,7 @@ const userProfile = computed(() => {
         </div>
       </div>
     </div>
-  </PageContainer>
+  </div>
 </template>
 
 <style scoped>
