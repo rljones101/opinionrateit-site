@@ -1,5 +1,5 @@
 import { useRoute } from 'vue-router'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import type { Ref } from 'vue'
 import * as userService from '@/services/UserService'
 import type { PublishedVideo, VideoChannelDetails } from '@/types'
@@ -13,6 +13,7 @@ interface Profile {
   isReviewer: boolean
   videos: VideoChannelDetails[]
   publishedVideos: VideoChannelDetails[]
+  numberOfPublishedVideos?: number
   avgAverageReviewTime: number
   avgClarity: number
   avgNonBias: number
@@ -27,17 +28,19 @@ interface Profile {
 
 const useProfile = () => {
   const route = useRoute()
-  const name = route.params.name as string
+
+  const profileLoaded = ref(false)
 
   // Reactive variables
   const profile: Ref<Profile> = ref({
     id: '',
-    name: 'Foo Bar',
-    email: 'foobar@company.com',
+    name: 'Loading',
+    email: '',
     youTubeChannelId: '',
     isReviewer: false,
     videos: [],
     publishedVideos: [],
+    numberOfPublishedVideos: 0,
     avgAverageReviewTime: 0,
     avgClarity: 0,
     avgNonBias: 0,
@@ -163,33 +166,42 @@ const useProfile = () => {
     }
   }
 
-  // Init user profile data
-  userService.getProfile(name).then(async (res) => {
-    // console.log(res)
-    if (res.status === 'success') {
-      if ('data' in res) {
-        const profileData = res.data?.data
-        profile.value.id = profileData._id
-        profile.value.isReviewer =
-          profileData?.role === 'reviewer-basic' || profileData?.role === 'reviewer-plus'
-        profile.value.email = profileData.email ?? ''
-        profile.value.name = profileData.name ?? ''
-        profile.value.youTubeChannelId = profileData.youTubeChannelId ?? ''
+  const isReviewer = (role: string) => {
+    return ['reviewer-basic', 'reviewer-plus'].includes(role)
+  }
 
-        await getReviewerChannel(profile.value.youTubeChannelId)
+  const setProfile = async (name: string) => {
+    if (name) {
+      profileLoaded.value = false
+      const res = await userService.getProfile(name)
+      if (res.status === 'success') {
+        if ('data' in res) {
+          const profileData = res.data?.data
+          profile.value.id = profileData._id
+          profile.value.isReviewer = isReviewer(profileData.role)
+          profile.value.email = profileData.email ?? ''
+          profile.value.name = profileData.name ?? ''
+          profile.value.youTubeChannelId = profileData.youTubeChannelId ?? ''
 
-        // Get the published videos
-        await getPublishedVideos()
+          await getReviewerChannel(profile.value.youTubeChannelId)
 
-        // Get youtube videos
-        await getVideos()
+          // Get the published videos
+          await getPublishedVideos()
+
+          // Get youtube videos
+          await getVideos()
+        }
       }
+      profileLoaded.value = true
     }
-  })
+  }
+
+  watch(() => route.params.name as string, setProfile, { immediate: true })
 
   return {
     profile,
     profileInitials,
+    profileLoaded,
     searchVideos,
     getVideos,
     publishVideos

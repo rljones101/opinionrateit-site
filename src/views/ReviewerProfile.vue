@@ -14,6 +14,7 @@ import type { VideoChannelDetails } from '@/types'
 import { useProfile } from '@/controllers/profileController'
 import { useModal } from '@/controllers/modalController'
 import videoViewController from '@/controllers/videoViewController'
+import ComponentSpinner from '@/components/spinners/ComponentSpinner.vue'
 
 // Variables
 const tabs = [
@@ -30,7 +31,7 @@ const modal = ref(null)
 
 // Composables
 const { hide, show } = useModal(modal)
-const { searchVideos, publishVideos, profile } = useProfile()
+const { searchVideos, publishVideos, profile, profileLoaded } = useProfile()
 
 // Computed methods
 const selectedVideos = computed(() => profile.value.videos.filter((video) => video.selected))
@@ -61,7 +62,7 @@ const setSelectedVideosToPublish = async () => {
 </script>
 
 <template>
-  <div>
+  <div class="relative">
     <div class="flex items-center justify-between w-full bg-slate-800 rounded-lg p-8">
       <div class="flex gap-8 items-center w-full">
         <div v-if="profile.isReviewer">
@@ -75,7 +76,7 @@ const setSelectedVideosToPublish = async () => {
         <div>
           <h3 class="font-bold text-2xl text-white">{{ profile.name }}</h3>
           <a href="" class="text-orange-500">{{ profile.email }}</a>
-          <p v-if="profile.isReviewer">Reviews: 1.2k</p>
+          <!--          <p v-if="profile.isReviewer">Reviews: 1.2k</p>-->
         </div>
       </div>
       <!--          <div class="flex flex-col items-center" v-if="profile.isReviewer">-->
@@ -270,6 +271,7 @@ const setSelectedVideosToPublish = async () => {
         </div>
       </transition-group>
     </div>
+    <ComponentSpinner class="-left-8 -right-8 -top-8" v-if="!profileLoaded" />
   </div>
 </template>
 
