@@ -7,7 +7,7 @@ import HomeView from '@/views/HomeView.vue'
 const AboutView = () => import('@/views/AboutView.vue')
 const ReviewersView = () => import('@/views/ReviewersView.vue')
 const ContactView = () => import('@/views/ContactView.vue')
-const ReviewerProfile = () => import('@/views/ReviewerProfile.vue')
+const MyProfile = () => import('@/views/MyProfile.vue')
 const SignupView = () => import('@/views/SignupView.vue')
 const ReviewerVideos = () => import('@/views/ReviewerVideos.vue')
 const VideoView = () => import('@/views/VideoView.vue')
@@ -15,6 +15,8 @@ const LoginView = () => import('@/views/LoginView.vue')
 const UserHomeView = () => import('@/views/UserHomeView.vue')
 const VideoListView = () => import('@/views/VideoListView.vue')
 const MySavedVideos = () => import('@/views/MySavedReviews.vue')
+const MyStats = () => import('@/views/MyStats.vue')
+const MyVideos = () => import('@/views/MyVideos.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -83,9 +85,25 @@ const router = createRouter({
           }
         },
         {
-          path: '/profile/:name',
-          name: 'profile',
-          component: ReviewerProfile,
+          path: '/u/:name/my-stats',
+          name: 'my-stats',
+          component: MyStats,
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/u/:name/profile',
+          name: 'my-profile',
+          component: MyProfile,
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/u/:name/my-videos',
+          name: 'my-videos',
+          component: MyVideos,
           meta: {
             requiresAuth: true
           }

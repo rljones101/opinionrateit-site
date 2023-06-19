@@ -8,15 +8,9 @@
 
 <style scoped>
 .btn {
-  @apply border
-  border-slate-500
-  pt-2
-  pb-2
-  pl-4
-  pr-4
-  hover:border-orange-500
+  @apply py-2
+  px-4
   hover:bg-orange-500
-  transition-all
   rounded-full
   text-white;
   transform: translateY(0);

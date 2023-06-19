@@ -3,7 +3,7 @@ import AppTitle from '@/components/AppTitle.vue'
 </script>
 
 <template>
-  <AppTitle>Videos</AppTitle>
+  <AppTitle class="mb-8">Videos</AppTitle>
   <p>A list of all videos will go here...</p>
 </template>
 

@@ -6,7 +6,7 @@ import SearchInput from '@/components/inputs/SearchInput.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '@/stores/user'
-import ButtonNav from '@/components/buttons/buttonNav.vue'
+import SiteLogo from '@/components/siteLogo.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -21,23 +21,32 @@ const logout = () => {
 
 <template>
   <div class="w-full h-full flex">
-    <div id="left" class="column flex-shrink">
-      <div class="flex-shrink"></div>
+    <div id="left" class="column flex-shrink-0 hidden md:flex">
+      <div class="flex-shrink-0 bg-app-blue-soft px-8 pt-4">
+        <SiteLogo class="hidden lg:flex" />
+      </div>
       <div class="bottom">
-        <UserNav class="bg-slate-800 h-full" />
-        <slot name="aside"></slot>
+        <UserNav class="bg-app-blue-soft h-full" />
       </div>
     </div>
-    <div id="right" class="column w-full">
-      <div class="flex flex-shrink">
-        <div class="w-full flex items-center justify-between gap-8 p-8 border-b border-b-slate-800">
-          <SearchInput class="max-w-4xl" />
-          <ButtonNav name="profile" label="Profile" :params="{ name: userStore.user.name }" />
-          <BaseButton @click="logout">Logout</BaseButton>
+    <div id="right" class="column w-full flex">
+      <div class="flex-shrink-0 bg-app-blue-soft py-4 space-y-4 md:space-y-0">
+        <div class="flex flex-col items-center lg:hidden">
+          <SiteLogo />
+        </div>
+        <div class="flex">
+          <div class="w-full flex flex-row items-center px-4 gap-4 border-b border-b-slate-800">
+            <div class="w-full flex items-center justify-center">
+              <SearchInput class="max-w-4xl" />
+            </div>
+            <div class="justify-self-end gap-8 hidden md:flex">
+              <BaseButton @click="logout">Logout</BaseButton>
+            </div>
+          </div>
         </div>
       </div>
       <div class="bottom">
-        <PageContainer class="w-full reveal fade-top p-8">
+        <PageContainer>
           <slot name="main" />
         </PageContainer>
       </div>
@@ -48,7 +57,6 @@ const logout = () => {
 <style scoped>
 .column {
   height: 100%;
-  display: flex;
   flex-direction: column;
 }
 .bottom {

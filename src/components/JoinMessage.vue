@@ -6,7 +6,7 @@ const { goToSignup } = useNavRoutes()
 </script>
 
 <template>
-  <div class="md:flex items-center p-8 gap-4 rounded">
+  <div class="md:flex items-center p-8 gap-4 overflow-hidden">
     <div class="mb-8 md:mb-0">
       <AppTitle>What analytics are measured?</AppTitle>
       <p class="p-4">Below you will find the metrics that we help collect:</p>
@@ -55,7 +55,7 @@ const { goToSignup } = useNavRoutes()
         </li>
       </ul>
     </div>
-    <div class="flex flex-col items-center gap-4 flex-1 bg-slate-800 p-8 rounded shadow-lg">
+    <div class="flex flex-col items-center gap-4 flex-1 bg-app-blue-soft p-8 rounded shadow-lg">
       <h1 class="p-4 font-bold text-white text-2xl">Become a reviewer!</h1>
       <p>
         Join our online community and help us expand our existing reviewer base! New Tech is being

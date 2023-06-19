@@ -10,6 +10,6 @@
 
 <style scoped>
 .form-container {
-  @apply relative p-4 text-white rounded-lg sm:p-6 md:p-8 bg-slate-800 border border-slate-800 shadow shadow-black;
+  @apply relative p-4 text-white rounded-lg sm:p-6 md:p-8 bg-app-blue-soft shadow shadow-black;
 }
 </style>

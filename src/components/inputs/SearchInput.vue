@@ -34,7 +34,7 @@ const clearSearch = () => {
         v-model="search"
         @keydown.enter="emit('change', search)"
         id="simple-search"
-        class="bg-slate-800 text-slate-300 text-sm rounded-full focus:ring-orange-500 focus:border-orange-500 w-full pl-10 p-2.5"
+        class="bg-app-blue text-slate-300 text-sm rounded-full focus:ring-orange-500 focus:border-orange-500 w-full pl-10 p-2.5"
         placeholder="Search"
         required
       />

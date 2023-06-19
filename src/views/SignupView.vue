@@ -48,145 +48,153 @@ const register = async () => {
 </script>
 
 <template>
-  <app-header />
-  <div class="w-full max-w-7xl mx-auto flex flex-col overflow-y-auto p-4">
-    <div
-      class="flex flex-col items-center space-y-8 lg:space-y-0 lg:flex-row flex-auto lg:space-x-8 justify-between mb-8"
-    >
-      <PricingCard
-        :active="form.role === 'user'"
-        plan-name="Free Plan"
-        @selected="form.role = 'user'"
+  <div class="relative flex flex-col w-full h-full overflow-y-auto">
+    <app-header />
+    <div class="max-w-7xl w-full mx-auto flex flex-col p-8">
+      <div
+        class="flex flex-col items-center space-y-8 lg:space-y-0 lg:flex-row flex-auto lg:space-x-8 justify-between mb-8"
       >
-        <template #list>
-          <CheckListItem :line-through="false" :is-checked="true"
-            >Allowed Reviewer Access</CheckListItem
-          >
-          <CheckListItem :line-through="false" :is-checked="true"
-            >Give Reviewer Feedback</CheckListItem
-          >
-          <CheckListItem :line-through="false" :is-checked="true">Bookmark Reviewers</CheckListItem>
-          <CheckListItem :line-through="true" :is-checked="false">Add Your Reviews</CheckListItem>
-          <CheckListItem :line-through="true" :is-checked="false">Metric analysis</CheckListItem>
-          <CheckListItem :line-through="true" :is-checked="false">Patreon Support</CheckListItem>
-          <CheckListItem :line-through="true" :is-checked="false">Vinmeo</CheckListItem>
-          <CheckListItem :line-through="true" :is-checked="false">Twitter</CheckListItem>
-        </template>
-      </PricingCard>
-      <PricingCard
-        :active="form.role === 'reviewer-basic'"
-        plan-name="Basic Plan"
-        pricing="4.99"
-        annual-discount-price="36"
-        @selected="form.role = 'reviewer-basic'"
-      >
-        <template #list>
-          <CheckListItem :line-through="false" :is-checked="true"
-            >Allowed Reviewer Access</CheckListItem
-          >
-          <CheckListItem :line-through="false" :is-checked="true"
-            >Give Reviewer Feedback</CheckListItem
-          >
-          <CheckListItem :line-through="false" :is-checked="true">Bookmark Reviewers</CheckListItem>
-          <CheckListItem :line-through="false" :is-checked="true">Add Your Reviews</CheckListItem>
-          <CheckListItem :line-through="false" :is-checked="true">Metric analysis</CheckListItem>
-          <CheckListItem :line-through="true" :is-checked="false">Patreon Support</CheckListItem>
-          <CheckListItem :line-through="true" :is-checked="false">Vinmeo</CheckListItem>
-          <CheckListItem :line-through="true" :is-checked="false">Twitter</CheckListItem>
-        </template>
-      </PricingCard>
-      <PricingCard
-        :active="form.role === 'reviewer-plus'"
-        :is-disabled="true"
-        plan-name="Premium Plan"
-        pricing="19.99"
-        annual-discount-price="180"
-        @selected="form.role = 'reviewer-plus'"
-      >
-        <template #list>
-          <CheckListItem :line-through="false" :is-checked="true"
-            >Allowed Reviewer Access</CheckListItem
-          >
-          <CheckListItem :line-through="false" :is-checked="true"
-            >Give Reviewer Feedback</CheckListItem
-          >
-          <CheckListItem :line-through="false" :is-checked="true">Bookmark Reviewers</CheckListItem>
-          <CheckListItem :line-through="false" :is-checked="true">Add Your Reviews</CheckListItem>
-          <CheckListItem :line-through="false" :is-checked="true">Metric analysis</CheckListItem>
-          <CheckListItem :line-through="false" :is-checked="true">Patreon Support</CheckListItem>
-          <CheckListItem :line-through="false" :is-checked="true">Vinmeo</CheckListItem>
-          <CheckListItem :line-through="false" :is-checked="true">Twitter</CheckListItem>
-        </template>
-      </PricingCard>
+        <PricingCard
+          :active="form.role === 'user'"
+          plan-name="Free Plan"
+          @selected="form.role = 'user'"
+        >
+          <template #list>
+            <CheckListItem :line-through="false" :is-checked="true"
+              >Allowed Reviewer Access</CheckListItem
+            >
+            <CheckListItem :line-through="false" :is-checked="true"
+              >Give Reviewer Feedback</CheckListItem
+            >
+            <CheckListItem :line-through="false" :is-checked="true"
+              >Bookmark Reviewers</CheckListItem
+            >
+            <CheckListItem :line-through="true" :is-checked="false">Add Your Reviews</CheckListItem>
+            <CheckListItem :line-through="true" :is-checked="false">Metric analysis</CheckListItem>
+            <CheckListItem :line-through="true" :is-checked="false">Patreon Support</CheckListItem>
+            <CheckListItem :line-through="true" :is-checked="false">Vinmeo</CheckListItem>
+            <CheckListItem :line-through="true" :is-checked="false">Twitter</CheckListItem>
+          </template>
+        </PricingCard>
+        <PricingCard
+          :active="form.role === 'reviewer-basic'"
+          plan-name="Basic Plan"
+          pricing="4.99"
+          annual-discount-price="36"
+          @selected="form.role = 'reviewer-basic'"
+        >
+          <template #list>
+            <CheckListItem :line-through="false" :is-checked="true"
+              >Allowed Reviewer Access</CheckListItem
+            >
+            <CheckListItem :line-through="false" :is-checked="true"
+              >Give Reviewer Feedback</CheckListItem
+            >
+            <CheckListItem :line-through="false" :is-checked="true"
+              >Bookmark Reviewers</CheckListItem
+            >
+            <CheckListItem :line-through="false" :is-checked="true">Add Your Reviews</CheckListItem>
+            <CheckListItem :line-through="false" :is-checked="true">Metric analysis</CheckListItem>
+            <CheckListItem :line-through="true" :is-checked="false">Patreon Support</CheckListItem>
+            <CheckListItem :line-through="true" :is-checked="false">Vinmeo</CheckListItem>
+            <CheckListItem :line-through="true" :is-checked="false">Twitter</CheckListItem>
+          </template>
+        </PricingCard>
+        <PricingCard
+          :active="form.role === 'reviewer-plus'"
+          :is-disabled="true"
+          plan-name="Premium Plan"
+          pricing="19.99"
+          annual-discount-price="180"
+          @selected="form.role = 'reviewer-plus'"
+        >
+          <template #list>
+            <CheckListItem :line-through="false" :is-checked="true"
+              >Allowed Reviewer Access</CheckListItem
+            >
+            <CheckListItem :line-through="false" :is-checked="true"
+              >Give Reviewer Feedback</CheckListItem
+            >
+            <CheckListItem :line-through="false" :is-checked="true"
+              >Bookmark Reviewers</CheckListItem
+            >
+            <CheckListItem :line-through="false" :is-checked="true">Add Your Reviews</CheckListItem>
+            <CheckListItem :line-through="false" :is-checked="true">Metric analysis</CheckListItem>
+            <CheckListItem :line-through="false" :is-checked="true">Patreon Support</CheckListItem>
+            <CheckListItem :line-through="false" :is-checked="true">Vinmeo</CheckListItem>
+            <CheckListItem :line-through="false" :is-checked="true">Twitter</CheckListItem>
+          </template>
+        </PricingCard>
+      </div>
+      <FormContainer class="w-full">
+        <div
+          class="mb-6 flex-1"
+          v-if="form.role === 'reviewer-basic' || form.role === 'reviewer-plus'"
+        >
+          <FormInput
+            id="channelId"
+            v-model="form.youTubeChannelId"
+            type="text"
+            label="YouTube Channel ID"
+          />
+        </div>
+        <div class="flex flex-col md:flex-row flex-auto md:gap-6 w-full">
+          <FormInput
+            id="firstname"
+            v-model="form.firstName"
+            type="text"
+            label="First Name"
+            class="flex-1"
+          />
+          <FormInput
+            id="lastname"
+            v-model="form.lastName"
+            type="text"
+            label="Last Name"
+            class="flex-1"
+          />
+        </div>
+        <FormInput id="email" v-model="form.email" type="email" label="Your email" required />
+        <FormInput
+          id="password"
+          v-model="form.password"
+          type="password"
+          label="Your password"
+          required
+        />
+        <FormInput
+          id="password-repeat"
+          v-model="form.passwordConfirm"
+          type="password"
+          label="Repeat password"
+          required
+        />
+        <div class="flex w-full justify-end">
+          <BaseButton class="bg-orange-500" @click="register">Register</BaseButton>
+        </div>
+      </FormContainer>
+
+      <!--      <div class="flex items-start mb-6">-->
+      <!--        <div class="flex items-center h-5">-->
+      <!--          <input-->
+      <!--            id="terms"-->
+      <!--            type="checkbox"-->
+      <!--            value=""-->
+      <!--            class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"-->
+      <!--            required-->
+      <!--          />-->
+      <!--        </div>-->
+      <!--        <label for="terms" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"-->
+      <!--          >I agree with the-->
+      <!--          <a href="#" class="text-blue-600 hover:underline dark:text-blue-500"-->
+      <!--            >terms and conditions</a-->
+      <!--          >-->
+      <!--        </label>-->
+      <!--      </div>-->
     </div>
 
-    <FormContainer class="w-full">
-      <div
-        class="mb-6 flex-1"
-        v-if="form.role === 'reviewer-basic' || form.role === 'reviewer-plus'"
-      >
-        <FormInput
-          id="channelId"
-          v-model="form.youTubeChannelId"
-          type="text"
-          label="YouTube Channel ID"
-        />
-      </div>
-      <div class="flex flex-col md:flex-row flex-auto md:gap-6 w-full">
-        <FormInput
-          id="firstname"
-          v-model="form.firstName"
-          type="text"
-          label="First Name"
-          class="flex-1"
-        />
-        <FormInput
-          id="lastname"
-          v-model="form.lastName"
-          type="text"
-          label="Last Name"
-          class="flex-1"
-        />
-      </div>
-      <FormInput id="email" v-model="form.email" type="email" label="Your email" required />
-      <FormInput
-        id="password"
-        v-model="form.password"
-        type="password"
-        label="Your password"
-        required
-      />
-      <FormInput
-        id="password-repeat"
-        v-model="form.passwordConfirm"
-        type="password"
-        label="Repeat password"
-        required
-      />
-      <div class="flex w-full justify-end">
-        <BaseButton class="bg-orange-500" @click="register">Register</BaseButton>
-      </div>
-    </FormContainer>
-
-    <!--      <div class="flex items-start mb-6">-->
-    <!--        <div class="flex items-center h-5">-->
-    <!--          <input-->
-    <!--            id="terms"-->
-    <!--            type="checkbox"-->
-    <!--            value=""-->
-    <!--            class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"-->
-    <!--            required-->
-    <!--          />-->
-    <!--        </div>-->
-    <!--        <label for="terms" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-300"-->
-    <!--          >I agree with the-->
-    <!--          <a href="#" class="text-blue-600 hover:underline dark:text-blue-500"-->
-    <!--            >terms and conditions</a-->
-    <!--          >-->
-    <!--        </label>-->
-    <!--      </div>-->
+    <AppFooter />
   </div>
-  <AppFooter />
 </template>
 
 <style scoped></style>

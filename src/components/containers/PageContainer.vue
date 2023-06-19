@@ -1,10 +1,8 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div>
-    <div class="w-full max-w-8xl mx-auto">
-      <slot />
-    </div>
+  <div class="w-full h-full max-w-8xl mx-auto reveal fade-top p-8">
+    <slot />
   </div>
 </template>
 

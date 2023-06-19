@@ -20,7 +20,7 @@ reviewerController.getReviewers().then((reviewers) => {
 </script>
 
 <template>
-  <div class="mt-8">
+  <div class="overflow-hidden">
     <transition name="fade">
       <CarouselComponent :slides="slides" v-if="slides.length" :hide-buttons="true">
         <template #slide="slideData">

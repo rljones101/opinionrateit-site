@@ -1,9 +1,9 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="app-title flex flex-col p-2">
+  <div class="app-title flex flex-col" style="max-width: 200px; min-height: 0; min-width: 0">
     <svg
-      width="260"
+      width="100%"
       height="39"
       viewBox="0 0 260 39"
       fill="none"

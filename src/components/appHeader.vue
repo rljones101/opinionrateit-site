@@ -3,10 +3,8 @@ import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { useRouter } from 'vue-router'
 import buttonNav from './buttons/buttonNav.vue'
-import siteLogo from './siteLogo.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import { useUserStore } from '@/stores/user'
-import SearchInput from '@/components/inputs/SearchInput.vue'
 
 interface linkItem {
   label: string
@@ -34,16 +32,10 @@ const showLogin = () => {
 </script>
 
 <template>
-  <div class="w-full flex flex-col relative">
-    <div class="w-full p-4 h-20">
+  <div class="w-full flex flex-col relative bg-app-blue-soft">
+    <div class="w-full p-4">
       <div class="flex justify-between items-center w-full">
-        <div class="flex flex-row items-center justify-center pl-4 pr-4">
-          <site-logo v-if="!userStore.isLoggedIn" />
-        </div>
-        <div class="hidden md:block max-w-4xl w-full ml-4">
-          <SearchInput v-if="userStore.isLoggedIn" />
-        </div>
-        <div class="pl-4">
+        <div class="pl-4 w-full">
           <div id="menu-button" class="md:hidden">
             <button @click="showMenu = !showMenu" v-if="!showMenu">
               <i class="material-icons">menu</i>
@@ -52,17 +44,17 @@ const showLogin = () => {
               <i class="material-icons">close</i>
             </button>
           </div>
-          <nav id="nav" class="hidden md:flex flex-row items-center justify-end w-full transition">
-            <button-nav
-              v-for="(link, index) in navLinks"
-              :label="link.label"
-              :name="link.name"
-              :key="index"
-            />
-            <span v-if="!userStore.isLoggedIn">|</span>
-            <BaseButton @click="showLogin" v-if="!userStore.isLoggedIn" class="ml-4"
-              >login</BaseButton
-            >
+          <nav id="nav" class="hidden md:flex flex-row items-center justify-between w-full">
+            <div class="flex items-center">
+              <button-nav
+                v-for="(link, index) in navLinks"
+                :label="link.label"
+                :name="link.name"
+                :key="index"
+              />
+            </div>
+
+            <BaseButton @click="showLogin" v-if="!userStore.isLoggedIn">login</BaseButton>
           </nav>
         </div>
       </div>

@@ -3,10 +3,9 @@ import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <div class="flex h-full w-full">
-    <div class="flex flex-col h-full w-full"><router-view /></div>
+  <div class="flex h-full w-full relative">
+    <div class="flex flex-col h-full w-full relative"><router-view /></div>
   </div>
 </template>
 
-<style>
-</style>
+<style></style>

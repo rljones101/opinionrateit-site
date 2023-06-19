@@ -113,7 +113,7 @@ const userProfile = computed(() => {
             </div>
             <BaseButton>Save</BaseButton>
           </div>
-          <div class="mt-8 rounded bg-slate-800 p-8 pt-0">
+          <div class="mt-8 rounded bg-app-blue-soft p-8 pt-0">
             <div class="description">
               <h3 class="font-bold text-white pt-4 pb-4">Description</h3>
               <div class="text-sm description-content" v-html="itemDetail.description"></div>
@@ -122,14 +122,14 @@ const userProfile = computed(() => {
         </div>
       </div>
     </div>
-    <div class="mt-8">
+    <div class="mt-8 mb-8">
       <div class="mb-8 flex gap-4">
         <BaseButton>Add Review</BaseButton>
       </div>
       <div
         v-for="review in reviews"
         :key="review._id"
-        class="flex mb-8 bg-slate-800 rounded p-4 shadow shadow-black"
+        class="flex mb-8 bg-app-blue-soft rounded p-4 shadow shadow-black"
       >
         <div class="rounded-full w-12 h-12 bg-app-blue flex items-center justify-center mr-4">
           <span

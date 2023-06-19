@@ -1,67 +1,105 @@
 <script setup lang="ts">
-import { watch } from 'vue'
-import { HomeIcon, UserGroupIcon, BookmarkIcon } from '@heroicons/vue/20/solid'
+import {
+  HomeIcon,
+  UserGroupIcon,
+  BookmarkIcon,
+  ChartBarIcon,
+  VideoCameraIcon,
+  UserCircleIcon
+} from '@heroicons/vue/20/solid'
 import { useRouter, useRoute } from 'vue-router'
-import SiteLogo from '@/components/siteLogo.vue'
+import { useUserStore } from '@/stores/user'
 
 const router = useRouter()
 const route = useRoute()
+const user = useUserStore()
 
-interface linkItem {
-  link: string
-  path: string
-  name?: string
-  command?: any
+interface userLinkItem {
+  id: number
+  label: string
+  name: string
+  icon: any
+  params?: any
 }
 
-const navLinks = [
+const navLinks: userLinkItem[] = [
   {
     id: 0,
     label: 'Home',
-    path: '/videos',
     name: 'videos',
     icon: HomeIcon
   },
   {
     id: 1,
     label: 'Reviewers',
-    path: '/reviewers',
     name: 'reviewers',
     icon: UserGroupIcon
   },
   {
     id: 2,
     label: 'My Saved Reviews',
-    path: '/my-saved-reviews',
     name: 'my-saved-reviews',
     icon: BookmarkIcon
+  },
+  {
+    id: 3,
+    label: 'My Profile',
+    name: 'my-profile',
+    icon: UserCircleIcon,
+    params: { name: user.user.name }
   }
 ]
 
-watch(
-  () => route.name,
-  (routeName) => {
-    console.log('route name:', routeName)
+const reviewerLinks = [
+  {
+    id: 0,
+    label: 'My Stats',
+    name: 'my-stats',
+    icon: ChartBarIcon,
+    params: { name: user.user.name }
+  },
+  {
+    id: 1,
+    label: 'My Videos',
+    name: 'my-videos',
+    icon: VideoCameraIcon,
+    params: { name: user.user.name }
   }
-)
+]
 
-const goToPath = async (link: any) => {
-  await router.push(link.path)
+const goToPath = async (link: userLinkItem) => {
+  await router.push({ name: link.name, params: link.params })
 }
 </script>
 
 <template>
-  <div class="pl-8 pr-8">
-    <SiteLogo class="pt-8 pb-8" />
-    <nav id="nav" class="hidden md:flex flex-col w-full transition space-y-2">
+  <div class="pl-4 pr-4 relative">
+    <nav id="nav" class="relative z-50 flex flex-col w-full transition space-y-2 pt-4">
       <button
         v-for="link in navLinks"
         :key="link.id"
-        class="user-nav-btn"
+        class="user-nav-btn whitespace-nowrap"
         :class="{ active: route.name === link.name }"
         @click="goToPath(link)"
       >
-        <span v-if="link.icon"><component :is="link.icon" class="w-6 h-6" /></span>{{ link.label }}
+        <span v-if="link.icon"><component :is="link.icon" class="w-6 h-6" /></span>
+        <span class="hidden lg:flex uppercase font-bold">{{ link.label }}</span>
+      </button>
+    </nav>
+    <nav
+      id="reviewerNav"
+      class="flex flex-col w-full transition space-y-2 border-t border-app-blue pt-4 mt-4"
+      v-if="user.isLoggedIn"
+    >
+      <button
+        v-for="link in reviewerLinks"
+        :key="link.id"
+        class="user-nav-btn whitespace-nowrap"
+        :class="{ active: route.name === link.name }"
+        @click="goToPath(link)"
+      >
+        <span v-if="link.icon"><component :is="link.icon" class="w-6 h-6" /></span>
+        <span class="hidden lg:flex uppercase font-bold">{{ link.label }}</span>
       </button>
     </nav>
   </div>
@@ -69,13 +107,15 @@ const goToPath = async (link: any) => {
 
 <style scoped>
 .user-nav-btn {
-  @apply hover:bg-orange-500 font-bold rounded-full p-4 flex items-center gap-4;
+  @apply hover:bg-orange-500 font-bold rounded-lg p-2 pl-4 pr-4 flex items-center gap-4;
+  min-height: 48px;
+  line-height: 1rem;
   transform: translateY(0);
   transition: all 0.3s ease-in-out;
 }
 
 .user-nav-btn.active {
-  @apply bg-app-blue hover:shadow-none;
+  @apply bg-white text-white bg-opacity-10 hover:shadow-none;
 }
 
 .user-nav-btn:hover:not(.active) {

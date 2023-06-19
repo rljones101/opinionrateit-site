@@ -16,17 +16,17 @@ const getColor = (value: number) => {
 </script>
 
 <template>
-  <div class="mb-8">
-    <div class="flex justify-between pb-4">
-      <p class="text-white font-bold">{{ label }}</p>
-      <p :style="{ color: getColor(percentage) }">{{ percentage }}%</p>
-    </div>
-    <div class="w-full h-6 border border-slate-800 rounded-full overflow-hidden relative">
-      <div class="absolute bg-slate-800 h-full w-full"></div>
-      <div
-        class="absolute bg-orange-500 h-full"
-        :style="{ width: barWidth, backgroundColor: getColor(percentage) }"
-      ></div>
+  <div class="mb-4 flex items-center">
+    <div class="basis-1/4 text-white font-bold flex-1">{{ label }}</div>
+    <div class="flex basis-9/12 items-center gap-8">
+      <div :style="{ color: getColor(percentage) }">{{ percentage }}%</div>
+      <div class="w-full h-4 border border-slate-800 rounded-full overflow-hidden relative">
+        <div class="absolute bg-app-blue h-full w-full"></div>
+        <div
+          class="absolute bg-orange-500 h-full"
+          :style="{ width: barWidth, backgroundColor: getColor(percentage) }"
+        ></div>
+      </div>
     </div>
   </div>
 </template>

@@ -26,7 +26,7 @@ const clearSearch = () => {
 </script>
 
 <template>
-  <AppTitle class="mb-4">Reviewers</AppTitle>
+  <AppTitle class="mb-8">Reviewers</AppTitle>
   <!--      <div class="flex items-center w-full pb-8">-->
   <!--        -->
   <!--        <label for="simple-search" class="sr-only">Search</label>-->
