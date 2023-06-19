@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import MediaPlayer from '@/components/mediaPlayer.vue'
 import videoViewController from '@/controllers/videoViewController'
 import { useRoute } from 'vue-router'
@@ -35,10 +35,6 @@ videoViewController.getVideo(videoId).then((res) => {
 
 videoViewController.getReviewsByVideo(videoId).then((res) => {
   reviews.value = res.data.data
-})
-
-const userProfile = computed(() => {
-  return '/profile/' + itemDetail.value.creator
 })
 </script>
 
@@ -108,7 +104,10 @@ const userProfile = computed(() => {
             <div>
               <h3 class="font-bold text-white uppercase">{{ itemDetail.title }}</h3>
               <p class="text-sm" v-if="itemDetail.creator">
-                Review by: <router-link :to="userProfile">{{ itemDetail.creator }}</router-link>
+                Review by:
+                <router-link :to="{ name: 'reviewers-channelId-reviews', params: { channelId } }">{{
+                  itemDetail.creator
+                }}</router-link>
               </p>
             </div>
             <BaseButton>Save</BaseButton>
