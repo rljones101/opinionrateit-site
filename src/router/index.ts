@@ -4,9 +4,7 @@ import HomeView from '@/views/HomeView.vue'
 // route level code-splitting
 // this generates a separate chunk (About.[hash].js) for this route
 // which is lazy-loaded when the route is visited.
-const AboutView = () => import('@/views/AboutView.vue')
 const ReviewersView = () => import('@/views/ReviewersView.vue')
-const ContactView = () => import('@/views/ContactView.vue')
 const MyProfile = () => import('@/views/MyProfile.vue')
 const SignupView = () => import('@/views/SignupView.vue')
 const ReviewerVideos = () => import('@/views/ReviewerVideos.vue')

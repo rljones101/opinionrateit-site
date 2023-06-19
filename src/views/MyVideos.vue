@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 // Import components
-import BaseBarMetric from '@/components/BaseBarMetric.vue'
 import VideoItem from '@/components/VideoItem.vue'
 import SearchInput from '@/components/inputs/SearchInput.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
@@ -13,7 +12,6 @@ import type { VideoChannelDetails } from '@/types'
 // Import controllers or other utils
 import { useProfile } from '@/controllers/profileController'
 import { useModal } from '@/controllers/modalController'
-import videoViewController from '@/controllers/videoViewController'
 import ComponentSpinner from '@/components/spinners/ComponentSpinner.vue'
 
 // Variables

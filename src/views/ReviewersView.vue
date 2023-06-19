@@ -7,22 +7,22 @@ import { ref } from 'vue'
 import type { Reviewer } from '@/types'
 
 let list = ref<Reviewer[]>([])
-let search = ref('')
+// let search = ref('')
 
 reviewerController.getReviewers().then((reviewers: Reviewer[]) => {
   list.value = reviewers
 })
 
-const searchReviewers = async () => {
-  const params = search.value ? { name: search.value } : ''
-  const searchParams = new URLSearchParams(params)
-  list.value = await reviewerController.getReviewers(searchParams)
-}
+// const searchReviewers = async () => {
+//   const params = search.value ? { name: search.value } : ''
+//   const searchParams = new URLSearchParams(params)
+//   list.value = await reviewerController.getReviewers(searchParams)
+// }
 
-const clearSearch = () => {
-  search.value = ''
-  searchReviewers()
-}
+// const clearSearch = () => {
+//   search.value = ''
+//   searchReviewers()
+// }
 </script>
 
 <template>

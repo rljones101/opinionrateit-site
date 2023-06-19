@@ -5,8 +5,6 @@
 
 // Import controllers or other utils
 
-import ComponentSpinner from '@/components/spinners/ComponentSpinner.vue'
-
 // Variables
 
 // Reactive variables

@@ -3,7 +3,7 @@ import AppTitle from '@/components/AppTitle.vue'
 import BaseBarMetric from '@/components/BaseBarMetric.vue'
 import { useProfile } from '@/controllers/profileController'
 import videoViewController from '@/controllers/videoViewController'
-const { profile, profileLoaded } = useProfile()
+const { profile } = useProfile()
 </script>
 
 <template>
