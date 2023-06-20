@@ -8,7 +8,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import SiteLogo from '@/components/siteLogo.vue'
 import { ref, watch } from 'vue'
-import { debounce } from '@/utils/SearchUtils'
+import pageController from '@/controllers/pageController'
 
 const router = useRouter()
 const route = useRoute()
@@ -30,10 +30,8 @@ const searchHandler = async (value: string) => {
   await router.push({ name: 'search', query })
 }
 
-const find = debounce(searchHandler, 500)
-
 watch(searchValue, (value: string) => {
-  find(value)
+  pageController.find(value, searchHandler)
 })
 </script>
 

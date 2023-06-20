@@ -10,7 +10,7 @@ const details = () => {}
 
 <style scoped>
 .btn {
-  @apply bg-app-blue hover:bg-orange-500 hover:text-white hover:font-bold border-gray-700 rounded-full p-2 flex justify-center;
+  @apply bg-app-blue hover:bg-app-orange hover:text-white hover:font-bold border-gray-700 rounded-lg p-2 flex justify-center;
   transform: translateY(0);
   transition: all 0.3s ease-in-out;
 }

@@ -107,7 +107,7 @@ const goToPath = async (link: userLinkItem) => {
 
 <style scoped>
 .user-nav-btn {
-  @apply hover:bg-orange-500 font-bold rounded-lg p-2 pl-4 pr-4 flex items-center gap-4;
+  @apply hover:bg-app-orange font-bold rounded-lg p-2 pl-4 pr-4 flex items-center gap-4;
   min-height: 48px;
   line-height: 1rem;
   transform: translateY(0);

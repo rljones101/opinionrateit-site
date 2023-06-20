@@ -75,7 +75,7 @@ const clearSearch = () => {
     <button
       @click="emitSearchChange($event.target.value)"
       type="submit"
-      class="p-2.5 ml-2 text-sm font-medium text-white bg-orange-700 rounded-lg border border-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
+      class="p-2.5 ml-2 text-sm font-medium text-white bg-app-orange rounded-lg hover:bg-app-orange-muted focus:ring-1 focus:outline-none focus:ring-slate-700"
     >
       <svg
         class="w-5 h-5"

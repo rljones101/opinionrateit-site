@@ -10,16 +10,17 @@
 .btn {
   @apply py-2
   px-4
-  hover:bg-orange-500
-  rounded-full
+  bg-app-orange
+  rounded-lg
   text-white;
   transform: translateY(0);
   transition: transform 0.3s ease-in-out;
-  box-shadow: rgba(0, 0, 0, 0.2) 0 10px 10px;
+  box-shadow: none;
 }
 
 .btn:hover {
   transform: translate(0, -0.5em);
+  box-shadow: rgba(0, 0, 0, 0.2) 0 10px 10px;
 }
 .btn:disabled {
   @apply bg-slate-300 text-slate-500 border-none transition-none transform-none;

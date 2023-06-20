@@ -81,12 +81,12 @@ a:hover {
 }
 
 button[type="button"] {
-  background-color: var(--color-links-and-buttons);
+  @apply bg-app-orange;
   color: #ffffff;
 }
 
 button[type="button"]:hover {
-  background-color: var(--color-links-and-buttons-hover);
+  @apply bg-app-orange-soft;
   color: #ffffff;
 }
 

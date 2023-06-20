@@ -1,12 +1,12 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="absolute left-0 right-0 top-0 bottom-0">
+  <div class="fixed left-0 right-0 top-0 bottom-0">
     <div class="bg-black bg-opacity-20 absolute left-0 right-0 top-0 bottom-0"></div>
     <div role="status" class="absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2">
       <svg
         aria-hidden="true"
-        class="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
+        class="w-8 h-8 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-app-orange"
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
