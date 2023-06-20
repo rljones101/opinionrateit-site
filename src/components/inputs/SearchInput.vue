@@ -1,13 +1,24 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-const search = ref('')
+import { computed } from 'vue'
 
-const emit = defineEmits<{
-  change: [search: string]
-}>()
+const props = defineProps(['modelValue'])
+const emit = defineEmits(['update:modelValue'])
+
+const emitSearchChange = (value: string) => {
+  emit('update:modelValue', value)
+}
+
+const search = computed({
+  get() {
+    return props.modelValue
+  },
+  set(value: string) {
+    emitSearchChange(value)
+  }
+})
+
 const clearSearch = () => {
-  search.value = ''
-  emit('change', '')
+  emitSearchChange('')
 }
 </script>
 
@@ -32,7 +43,7 @@ const clearSearch = () => {
       </div>
       <input
         v-model="search"
-        @keydown.enter="emit('change', search)"
+        @keydown.enter="emitSearchChange($event.target.value)"
         id="simple-search"
         class="bg-app-blue text-slate-300 text-sm rounded-full focus:ring-orange-500 focus:border-orange-500 w-full pl-10 p-2.5"
         placeholder="Search"
@@ -62,7 +73,7 @@ const clearSearch = () => {
       </button>
     </div>
     <button
-      @click="emit('change', search)"
+      @click="emitSearchChange($event.target.value)"
       type="submit"
       class="p-2.5 ml-2 text-sm font-medium text-white bg-orange-700 rounded-lg border border-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none focus:ring-orange-300 dark:bg-orange-600 dark:hover:bg-orange-700 dark:focus:ring-orange-800"
     >

@@ -4,12 +4,16 @@ import UserNav from '@/components/navs/UserNav.vue'
 import { useRevealObserver } from '@/composables/useRevealObserver'
 import SearchInput from '@/components/inputs/SearchInput.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import SiteLogo from '@/components/siteLogo.vue'
+import { ref, watch } from 'vue'
+import { debounce } from '@/utils/SearchUtils'
 
 const router = useRouter()
+const route = useRoute()
 const userStore = useUserStore()
+const searchValue = ref(route.query.value || '')
 
 useRevealObserver()
 
@@ -25,6 +29,12 @@ const searchHandler = async (value: string) => {
   }
   await router.push({ name: 'search', query })
 }
+
+const find = debounce(searchHandler, 500)
+
+watch(searchValue, (value: string) => {
+  find(value)
+})
 </script>
 
 <template>
@@ -45,7 +55,7 @@ const searchHandler = async (value: string) => {
         <div class="flex">
           <div class="w-full flex flex-row items-center px-4 gap-4 border-b border-b-slate-800">
             <div class="w-full flex items-center justify-center">
-              <SearchInput class="max-w-4xl" @change="searchHandler" />
+              <SearchInput v-model="searchValue" class="max-w-4xl" />
             </div>
             <div class="justify-self-end gap-8 hidden md:flex">
               <BaseButton @click="logout">Logout</BaseButton>

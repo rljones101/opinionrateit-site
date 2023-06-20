@@ -2,7 +2,6 @@ import { apiGet } from '@/utils/AppApi'
 import { getMultipleVideos } from '@/utils/googleAPI'
 
 const getAllPublishedVideos = async (query = {}) => {
-  console.log('getAllPublishedVideos')
   let url = '/publishedVideos'
   if (Object.keys(query).length > 0) {
     url += `/search?${new URLSearchParams(query)}`
