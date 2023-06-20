@@ -190,7 +190,7 @@ getChannelDetails()
 
 <template>
   <div
-    class="flex flex-col gap-4 bg-app-blue-soft items-center p-8 transition-all duration-300 group hover:bg-slate-700 hover:font-bold hover:text-white hover:shadow-lg hover:scale-105 rounded"
+    class="flex flex-col gap-4 bg-app-blue-soft items-center p-8 transition-all duration-300 group hover:bg-opacity-70 hover:font-bold hover:text-white hover:shadow-lg hover:scale-105 rounded"
   >
     <!--    <div class="flex w-full">-->
     <!--      <social-links :social="social" />-->

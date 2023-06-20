@@ -8,6 +8,7 @@ import type { VideoChannelDetails } from '@/types'
 import reviewerController from '@/controllers/reviewerController'
 // templates
 import VideoItem from '@/components/VideoItem.vue'
+import videoViewController from '@/controllers/videoViewController'
 
 // Route instance
 const route = useRoute()
@@ -18,6 +19,9 @@ const videos: Ref<VideoChannelDetails[]> = ref([])
 const channelDetails = ref({
   title: '',
   description: ''
+})
+const metrics = ref({
+  metric: 0
 })
 
 // route params
@@ -34,14 +38,22 @@ if (channelId) {
   })
 }
 
-reviewerController.getChannelDetails(channelId).then((res) => {
-  console.log(res)
-  const snippet = res.snippet
-  channelDetails.value.title = snippet.localized.title ? snippet.localized.title : snippet.title
-  channelDetails.value.description = snippet.localized.description
-    ? snippet.localized.description
-    : snippet.description
-})
+const getReviewerDetails = async (channelId: string) => {
+  try {
+    const channelDetailsResponse = await reviewerController.getChannelDetails(channelId)
+    const snippet = channelDetailsResponse.snippet
+    channelDetails.value.title = snippet.localized.title ? snippet.localized.title : snippet.title
+    channelDetails.value.description = snippet.localized.description
+      ? snippet.localized.description
+      : snippet.description
+
+    metrics.value = await reviewerController.getReviewerMetrics(channelId)
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+getReviewerDetails(channelId)
 </script>
 
 <template>
@@ -52,8 +64,20 @@ reviewerController.getChannelDetails(channelId).then((res) => {
 
   <div v-if="channelId && videos.length">
     <h2 class="font-bold text-white mb-4">{{ channelDetails.title }}</h2>
-
-    <p class="mb-8">{{ channelDetails.description }}</p>
+    <div class="flex gap-8">
+      <div class="flex-1 bg-app-blue-soft rounded-lg mb-8 p-8">
+        <div class="rounded-full w-12 h-12 bg-app-blue flex items-center justify-center">
+          <span :style="{ color: videoViewController.getColor(metrics.metric) }"
+            >{{ metrics.metric }}%</span
+          >
+        </div>
+        Metric score
+      </div>
+      <div class="flex-1 bg-app-blue-soft p-8 rounded-lg mb-8">
+        <h2 class="font-bold text-white mb-4">Description</h2>
+        <p class="mb-8">{{ channelDetails.description }}</p>
+      </div>
+    </div>
     <div class="grid-layout w-full">
       <VideoItem
         v-for="video in videos"

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PageContainer from '@/components/containers/PageContainer.vue'
 import UserNav from '@/components/navs/UserNav.vue'
-import { useRevealObserver } from '@/controllers/observerController'
+import { useRevealObserver } from '@/composables/useRevealObserver'
 import SearchInput from '@/components/inputs/SearchInput.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import { useRouter } from 'vue-router'

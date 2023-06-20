@@ -1,18 +1,17 @@
 <script setup lang="ts">
 import AppTitle from '@/components/AppTitle.vue'
 import BaseBarMetric from '@/components/BaseBarMetric.vue'
-import { useProfile } from '@/controllers/profileController'
+import { useProfile } from '@/composables/useProfile'
 import videoViewController from '@/controllers/videoViewController'
 const { profile } = useProfile()
 </script>
 
 <template>
   <AppTitle class="mb-8">My Stats</AppTitle>
-  <div class="flex items-center justify-between w-full bg-slate-800 rounded-lg p-8">
+  <div class="flex items-center justify-between w-full bg-app-blue-soft rounded-lg p-8">
     <div class="flex gap-8 items-center w-full">
       <div v-if="profile.isReviewer">
         <div class="rounded-full w-12 h-12 bg-app-blue flex items-center justify-center">
-          <!--                {{ profileInitials }}-->
           <span :style="{ color: videoViewController.getColor(profile.metric) }"
             >{{ profile.metric }}%</span
           >
@@ -79,7 +78,10 @@ const { profile } = useProfile()
       </div>
     </div>
   </div>
-  <div class="hidden md:flex flex-col bg-slate-800 rounded-lg p-8 mt-8" v-if="profile.isReviewer">
+  <div
+    class="hidden md:flex flex-col bg-app-blue-soft rounded-lg p-8 mt-8"
+    v-if="profile.isReviewer"
+  >
     <BaseBarMetric label="Presentation" :percentage="profile.avgOverallPresentation" />
     <BaseBarMetric label="Clarity" :percentage="profile.avgClarity" />
     <BaseBarMetric label="Product Viewablity" :percentage="profile.avgProductView" />

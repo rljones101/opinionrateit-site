@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import IconArrow from '@/components/icons/IconArrow.vue'
-import { useCarousel } from '@/controllers/carouselController'
+import { useCarousel } from '@/composables/useCarousel'
 import type { Slide } from '@/types'
 
 const props = defineProps<{
@@ -52,7 +52,7 @@ const { slides, next, previous } = useCarousel(props.slides)
   opacity: 1;
   justify-content: center;
   transition: all 0.5s ease-in-out;
-  background: var(--vt-c-blue);
+  background: var(--vt-c-black);
   max-width: 305px;
   max-height: 450px;
   box-shadow: 0 4px 8px 4px rgba(0, 0, 0, 0.2);

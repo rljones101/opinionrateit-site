@@ -10,8 +10,8 @@ import CheckListItem from '@/components/CheckListItem.vue'
 // Import types
 import type { VideoChannelDetails } from '@/types'
 // Import controllers or other utils
-import { useProfile } from '@/controllers/profileController'
-import { useModal } from '@/controllers/modalController'
+import { useProfile } from '@/composables/useProfile'
+import { useModal } from '@/composables/useModal'
 import ComponentSpinner from '@/components/spinners/ComponentSpinner.vue'
 
 // Variables

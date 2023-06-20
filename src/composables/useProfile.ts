@@ -150,19 +150,9 @@ const useProfile = () => {
   }
 
   const getReviewerChannel = async (channelId: string) => {
-    if (profile.value.youTubeChannelId) {
-      const res = await userService.getReviewerChannel(channelId)
-      console.log(res)
-      profile.value.metric = res.data.metric
-      profile.value.avgAverageReviewTime = res.data.avgAverageReviewTime
-      profile.value.avgClarity = res.data.avgClarity
-      profile.value.avgNonBias = res.data.avgNonBias
-      profile.value.avgOverallPresentation = res.data.avgOverallPresentation
-      profile.value.avgProductDetailExplanation = res.data.avgProductDetailExplanation
-      profile.value.avgProductFocus = res.data.avgProductFocus
-      profile.value.avgProductView = res.data.avgProductView
-      profile.value.avgProvidedResources = res.data.avgProvidedResources
-      profile.value.avgShare = res.data.avgShare
+    if (channelId) {
+      const metrics = await reviewerController.getReviewerMetrics(channelId)
+      profile.value = { ...profile.value, ...metrics }
     }
   }
 
