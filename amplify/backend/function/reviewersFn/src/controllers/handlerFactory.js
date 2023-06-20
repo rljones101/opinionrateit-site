@@ -64,6 +64,30 @@ exports.getOne = (Model, popOptions) =>
     })
   })
 
+exports.search = (Model) =>
+  catchAsync(async (req, res) => {
+    let filter = {}
+
+    const field = req.query.field // field
+    const value = req.query.value // field value
+
+    if (field && value) {
+      filter[field] = { $regex: `${value}`, $options: 'i' }
+    }
+
+    // EXECUTE QUERY
+    const doc = await Model.find(filter).collation({ locale: 'en', strength: 2 })
+
+    // SEND RESPONSE
+    res.status(200).json({
+      status: 'success',
+      results: doc.length,
+      data: {
+        data: doc
+      }
+    })
+  })
+
 exports.getAll = (Model) =>
   catchAsync(async (req, res) => {
     // To allow for nested GET reviews on Tour

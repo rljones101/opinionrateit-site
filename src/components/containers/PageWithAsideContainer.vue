@@ -17,6 +17,14 @@ const logout = () => {
   userStore.logoutUser()
   router.push({ name: 'home' })
 }
+
+const searchHandler = async (value: string) => {
+  let query = {}
+  if (value) {
+    query = { field: 'title', value: value }
+  }
+  await router.push({ name: 'search', query })
+}
 </script>
 
 <template>
@@ -37,7 +45,7 @@ const logout = () => {
         <div class="flex">
           <div class="w-full flex flex-row items-center px-4 gap-4 border-b border-b-slate-800">
             <div class="w-full flex items-center justify-center">
-              <SearchInput class="max-w-4xl" />
+              <SearchInput class="max-w-4xl" @change="searchHandler" />
             </div>
             <div class="justify-self-end gap-8 hidden md:flex">
               <BaseButton @click="logout">Logout</BaseButton>

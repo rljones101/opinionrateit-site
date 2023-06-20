@@ -15,6 +15,7 @@ const VideoListView = () => import('@/views/VideoListView.vue')
 const MySavedVideos = () => import('@/views/MySavedReviews.vue')
 const MyStats = () => import('@/views/MyStats.vue')
 const MyVideos = () => import('@/views/MyVideos.vue')
+const SearchView = () => import('@/views/SearchResults.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,6 +47,14 @@ const router = createRouter({
           path: '/videos',
           name: 'videos',
           component: VideoListView,
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          path: '/search',
+          name: 'search',
+          component: SearchView,
           meta: {
             requiresAuth: true
           }

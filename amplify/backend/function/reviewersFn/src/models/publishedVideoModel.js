@@ -35,13 +35,14 @@ const PublishedVideoSchema = new Schema(
   },
   {
     toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    toObject: { virtuals: true },
+    collation: { locale: 'en', strength: 2 }
   }
 )
 
 PublishedVideoSchema.index({ userId: 1 })
 PublishedVideoSchema.index({ videoId: 1 })
-PublishedVideoSchema.index({ title: 1 })
+PublishedVideoSchema.index({ title: 'text' })
 PublishedVideoSchema.index({ channelId: 1 })
 
 // QUERY MIDDLEWARE ===========================================================

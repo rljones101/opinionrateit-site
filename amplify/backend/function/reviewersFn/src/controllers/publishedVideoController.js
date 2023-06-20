@@ -2,6 +2,7 @@ const factory = require('./handlerFactory.js')
 const PublishedVideo = require('../models/publishedVideoModel.js')
 const catchAsync = require('../utils/catchAsync.js')
 
+exports.search = factory.search(PublishedVideo)
 exports.getAll = factory.getAll(PublishedVideo)
 exports.getOne = factory.getOne(PublishedVideo)
 exports.createOne = factory.createOne(PublishedVideo)
