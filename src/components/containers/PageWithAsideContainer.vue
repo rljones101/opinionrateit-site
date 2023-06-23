@@ -55,7 +55,11 @@ watch(searchValue, (value: string) => {
             <div class="w-full flex items-center justify-center">
               <SearchInput v-model="searchValue" class="max-w-4xl" />
             </div>
-            <div class="justify-self-end gap-8 hidden md:flex">
+            <div
+              class="justify-self-end gap-8 hidden md:flex flex-grow items-center"
+              style="line-height: 1rem"
+            >
+              <div class="whitespace-nowrap">{{ userStore.user.name }}</div>
               <BaseButton @click="logout">Logout</BaseButton>
             </div>
           </div>

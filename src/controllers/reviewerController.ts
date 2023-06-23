@@ -1,9 +1,9 @@
 import GoogleAPIService from '@/services/GoogleAPIService'
 import * as reviewerService from '@/services/ReviewerService'
-import { getMultipleVideos } from '@/utils/googleAPI'
 import type { PublishedVideo } from '@/types'
 import type { Reviewer } from '@/types'
 import * as userService from '@/services/UserService'
+import { apiGet } from '@/utils/AppApi'
 
 const googleApiService = new GoogleAPIService()
 
@@ -21,6 +21,10 @@ const getVideos = async (youtubeChannelId: string) => {
   }
 }
 
+const getReviewerDetails = async (channelId: string) => {
+  return apiGet(`/reviewers/${channelId}`)
+}
+
 const getChannelDetails = async (youtubeChannelId: string) => {
   if (!youtubeChannelId) throw new Error('youtubeChannelId was not defined')
 
@@ -34,22 +38,20 @@ const getChannelDetails = async (youtubeChannelId: string) => {
   }
 }
 
-const getVideosByChannelId = (youTubeChannelId: string) => {
-  return googleApiService.getVideosByChannelId(youTubeChannelId)
+const getVideosByChannelId = async (youTubeChannelId: string, search: string = '') => {
+  let path = `/youtube?channelId=${youTubeChannelId}`
+  path = search !== '' ? `${path}&search=${search}` : path
+  const res = await apiGet(path)
+  return res.data.data
 }
 
 const searchVideos = async (youTubeChannelId: string, searchParams: string) => {
-  //const reformattedSearchString = searchParams.split(' ');
-  if (youTubeChannelId) {
-    const query = searchParams.split(' ').join('+')
-    return await googleApiService.getVideosByChannelId(youTubeChannelId, query)
-  }
+  return getVideosByChannelId(youTubeChannelId, searchParams)
 }
 
-const getPublishedVideos = async (id: string, type = 'user') => {
-  const res = await reviewerService.getPublishedVideos(id, type)
-  const publishedVideos = [...res.data.data].map((video) => video.videoId)
-  return await getMultipleVideos(publishedVideos)
+const getPublishedVideos = async (channelId: string) => {
+  const res = await reviewerService.getPublishedVideos(channelId)
+  return res.data.data
 }
 
 const publishVideos = async (videos: PublishedVideo[]) => {
@@ -107,6 +109,7 @@ const convertDataToReviewer = (slideData: any): Reviewer => {
 export default {
   getVideos,
   getChannelDetails,
+  getReviewerDetails,
   getVideosByChannelId,
   getReviewers,
   getPublishedVideos,

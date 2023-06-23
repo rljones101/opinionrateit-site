@@ -20,7 +20,7 @@ defineOptions({
     <input
       :name="id"
       :id="id"
-      class="bg-app-blue border-none text-slate-400 text-sm rounded-full focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
+      class="bg-app-blue border-none text-slate-400 text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 block w-full p-2.5"
       v-bind="$attrs"
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"

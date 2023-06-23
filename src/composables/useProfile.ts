@@ -4,11 +4,14 @@ import type { Ref } from 'vue'
 import * as userService from '@/services/UserService'
 import type { PublishedVideo, VideoChannelDetails } from '@/types'
 import reviewerController from '@/controllers/reviewerController'
+import { debounce } from '@/utils/SearchUtils'
 
 interface Profile {
   id: string
   name: string
   email: string
+  role: string
+  createdAt: string
   youTubeChannelId: string
   isReviewer: boolean
   videos: VideoChannelDetails[]
@@ -36,6 +39,8 @@ const useProfile = () => {
     id: '',
     name: 'Loading',
     email: '',
+    role: '',
+    createdAt: '',
     youTubeChannelId: '',
     isReviewer: false,
     videos: [],
@@ -61,13 +66,15 @@ const useProfile = () => {
       : initialsArr[0].charAt(0)
   })
 
-  const searchVideos = async (searchParams: string) => {
+  const searchCallBack = async (searchParams: string) => {
     if (profile.value.youTubeChannelId) {
       profile.value.videos = [
         ...(await reviewerController.searchVideos(profile.value.youTubeChannelId, searchParams))
       ]
     }
   }
+
+  const searchVideos = debounce(searchCallBack, 500)
 
   const isVideoPublished = (video: VideoChannelDetails) => {
     // NOTE: we need to call the method to get published videos first so that profile.value.publishedVideos has a value
@@ -87,7 +94,9 @@ const useProfile = () => {
 
   const getPublishedVideos = async () => {
     if (profile.value.isReviewer) {
-      const publishedVideos = await reviewerController.getPublishedVideos(profile.value.id)
+      const publishedVideos = await reviewerController.getPublishedVideos(
+        profile.value.youTubeChannelId
+      )
       updatePublishedVideos(publishedVideos)
     }
   }
@@ -99,6 +108,7 @@ const useProfile = () => {
   }
 
   const updateVideos = (googleVideos: VideoChannelDetails[]) => {
+    console.log('googleVideos:', googleVideos)
     if (profile.value.isReviewer && googleVideos) {
       const inPublishedVideos: VideoChannelDetails[] = googleVideos.filter(
         (video: VideoChannelDetails) => !isVideoPublished(video)
@@ -122,7 +132,8 @@ const useProfile = () => {
         user: profile.value.id,
         title: video.title,
         videoId: video.videoId,
-        channelId: profile.value.youTubeChannelId
+        channelId: profile.value.youTubeChannelId,
+        thumbnail: video.thumbnail
       }
       videos.push(publishedVideo)
     })
@@ -167,6 +178,9 @@ const useProfile = () => {
       if (res.status === 'success') {
         if ('data' in res) {
           const profileData = res.data?.data
+          console.log(profileData)
+          profile.value.role = profileData.role
+          profile.value.createdAt = profileData.createdAt
           profile.value.id = profileData._id
           profile.value.isReviewer = isReviewer(profileData.role)
           profile.value.email = profileData.email ?? ''

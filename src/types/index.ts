@@ -63,6 +63,7 @@ export interface PublishedVideo {
   title: string
   videoId: string
   channelId: string
+  thumbnail: string
 }
 
 export interface Reviewer {

@@ -9,12 +9,18 @@ import FormContainer from '@/components/containers/FormContainer.vue'
 import FormInput from '@/components/inputs/FormInput.vue'
 import AppHeader from '@/components/appHeader.vue'
 import AppFooter from '@/components/AppFooter.vue'
+import reviewerController from '@/controllers/reviewerController'
+import UserAvatar from '@/components/UserAvatar.vue'
+import FormTextarea from '@/components/inputs/FormTextarea.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
 
 const defaultForm = {
   youTubeChannelId: '',
+  title: '',
+  description: '',
+  avatar: '',
   firstName: '',
   lastName: '',
   email: '',
@@ -24,10 +30,11 @@ const defaultForm = {
 }
 
 const form = ref(defaultForm)
+const loadedYouTubeData = ref(false)
 
 const register = async () => {
   try {
-    const fullName = form.value.firstName + ' ' + form.value.lastName
+    const fullName = form.value.firstName.trim() + ' ' + form.value.lastName.trim()
 
     const submittedForm = {
       ...form.value,
@@ -38,12 +45,47 @@ const register = async () => {
     // log in user
     await userStore.signupUser(submittedForm)
     // send
-    await router.push({ name: 'reviewers' })
+    await router.push({ name: 'videos' })
     // reset form
     form.value = { ...defaultForm }
   } catch (err) {
     console.error(err)
   }
+}
+
+const getChannelDetails = async () => {
+  try {
+    const channelId = form.value.youTubeChannelId
+    loadedYouTubeData.value = false
+    const res = await reviewerController.getChannelDetails(channelId)
+    loadedYouTubeData.value = true
+    // TODO lookup the channel in the existing reviewer data. Do not allow duplicates
+    const snippet = res.snippet
+    form.value.title = snippet.title
+    form.value.avatar = snippet.thumbnails.default.url
+    form.value.description = snippet.description
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const clearYouTubeData = () => {
+  form.value.youTubeChannelId = ''
+  form.value.title = ''
+  form.value.description = ''
+  form.value.avatar = ''
+}
+
+const isReviewerPlan = (role: string) => {
+  return ['reviewer-basic', 'reviewer-plus'].includes(role)
+}
+
+const selectPlan = (plan: string) => {
+  if (plan === 'user') {
+    loadedYouTubeData.value = false
+    clearYouTubeData()
+  }
+  form.value.role = plan
 }
 </script>
 
@@ -57,7 +99,7 @@ const register = async () => {
         <PricingCard
           :active="form.role === 'user'"
           plan-name="Free Plan"
-          @selected="form.role = 'user'"
+          @selected="selectPlan('user')"
         >
           <template #list>
             <CheckListItem :line-through="false" :is-checked="true"
@@ -81,7 +123,7 @@ const register = async () => {
           plan-name="Basic Plan"
           pricing="4.99"
           annual-discount-price="36"
-          @selected="form.role = 'reviewer-basic'"
+          @selected="selectPlan('reviewer-basic')"
         >
           <template #list>
             <CheckListItem :line-through="false" :is-checked="true"
@@ -106,7 +148,7 @@ const register = async () => {
           plan-name="Premium Plan"
           pricing="19.99"
           annual-discount-price="180"
-          @selected="form.role = 'reviewer-plus'"
+          @selected="selectPlan('reviewer-plus')"
         >
           <template #list>
             <CheckListItem :line-through="false" :is-checked="true"
@@ -126,17 +168,89 @@ const register = async () => {
           </template>
         </PricingCard>
       </div>
-      <FormContainer class="w-full">
-        <div
-          class="mb-6 flex-1"
-          v-if="form.role === 'reviewer-basic' || form.role === 'reviewer-plus'"
-        >
+
+      <div
+        class="flex flex-col items-center rounded-lg bg-app-blue-soft mx-auto max-w-sm p-8 mb-8 space-y-6 text-center"
+        v-if="isReviewerPlan(form.role) && !loadedYouTubeData"
+      >
+        <div class="p-8 flex flex-col border rounded-lg border-slate-500">
+          <font-awesome-icon :icon="['fab', 'youtube']" size="6x" />
+          YouTube Channel ID
+        </div>
+        <p>Please provide your Youtube Channel ID so we can setup your reviewer account</p>
+        <FormInput id="channelId" v-model="form.youTubeChannelId" class="text-center" />
+        <BaseButton @click="getChannelDetails">Get My YouTube Profile</BaseButton>
+      </div>
+
+      <FormContainer class="w-full" v-if="!isReviewerPlan(form.role)">
+        <div class="flex flex-col md:flex-row flex-auto md:gap-6 w-full">
           <FormInput
-            id="channelId"
-            v-model="form.youTubeChannelId"
+            id="firstname"
+            v-model="form.firstName"
             type="text"
-            label="YouTube Channel ID"
+            label="First Name"
+            class="flex-1"
           />
+          <FormInput
+            id="lastname"
+            v-model="form.lastName"
+            type="text"
+            label="Last Name"
+            class="flex-1"
+          />
+        </div>
+        <FormInput id="email" v-model="form.email" type="email" label="Your email" required />
+        <FormInput
+          id="password"
+          v-model="form.password"
+          type="password"
+          label="Your password"
+          required
+        />
+        <FormInput
+          id="password-repeat"
+          v-model="form.passwordConfirm"
+          type="password"
+          label="Repeat password"
+          required
+        />
+        <div class="flex w-full justify-end">
+          <BaseButton class="bg-orange-500" @click="register">Register</BaseButton>
+        </div>
+      </FormContainer>
+
+      <FormContainer class="w-full" v-if="isReviewerPlan(form.role) && loadedYouTubeData">
+        <div
+          v-if="
+            (form.youTubeChannelId && form.role === 'reviewer-basic') ||
+            form.role === 'reviewer-plus'
+          "
+          class="space-y-6"
+        >
+          <div class="flex flex-col items-center text-slate-500">
+            <UserAvatar :src="form.avatar" :alt="form.title" />
+            <p>YouTube Channel ID:</p>
+            <p class="text-white">{{ form.youTubeChannelId }}</p>
+          </div>
+          <FormInput
+            id="title"
+            v-model="form.title"
+            type="text"
+            label="YouTube Title"
+            class="flex-1"
+          />
+
+          <div>
+            <label for="description" class="block mb-2 text-sm font-medium text-slate-300"
+              >YouTube Description</label
+            >
+            <FormTextarea
+              id="description"
+              rows="10"
+              v-model.trim="form.description"
+              placeholder="Write your description here..."
+            />
+          </div>
         </div>
         <div class="flex flex-col md:flex-row flex-auto md:gap-6 w-full">
           <FormInput

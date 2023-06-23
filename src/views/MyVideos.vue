@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 // Import components
 import VideoItem from '@/components/VideoItem.vue'
 import SearchInput from '@/components/inputs/SearchInput.vue'
@@ -19,6 +19,7 @@ const tabs = [{ label: 'My Published Videos' }, { label: 'My Youtube Videos' }]
 
 // Reactive variables
 const selectedTabIndex = ref(0)
+const searchValue = ref('')
 
 // Template refs
 const modal = ref(null)
@@ -35,10 +36,6 @@ const selectedTabHandler = (index: number) => {
   selectedTabIndex.value = index
 }
 
-const searchHandler = (val: string) => {
-  searchVideos(val)
-}
-
 const selectVideoHandler = (video: VideoChannelDetails) => {
   video.selected = !video.selected
 }
@@ -53,6 +50,8 @@ const setSelectedVideosToPublish = async () => {
     console.error(err)
   }
 }
+
+watch(searchValue, (value) => searchVideos(value))
 </script>
 
 <template>
@@ -156,7 +155,7 @@ const setSelectedVideosToPublish = async () => {
             @click="show"
             >Publish Selected ({{ selectedVideos.length }})</BaseButton
           >
-          <SearchInput @change="searchHandler" class="flex-1" />
+          <SearchInput v-model="searchValue" class="flex-1" />
         </div>
         <!--          <p class="mb-4">selected videos: {{ selectedVideos }}</p>-->
         <div class="grid-layout w-full">

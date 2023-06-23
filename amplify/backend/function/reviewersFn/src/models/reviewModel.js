@@ -24,7 +24,6 @@ const reviewSchema = new mongoose.Schema(
     average_review_time: Number,
     product_focus: Number,
     provided_resources: Number,
-    share: Number,
     overall_presentation: Number,
     createdAt: {
       type: Date,
@@ -52,7 +51,6 @@ const reviewSchema = new mongoose.Schema(
               avg_average_review_time: { $avg: '$average_review_time' },
               avg_product_focus: { $avg: '$product_focus' },
               avg_provided_resources: { $avg: '$provided_resources' },
-              avg_share: { $avg: '$share' },
               avg_overall_presentation: { $avg: '$overall_presentation' }
             }
           },
@@ -68,7 +66,6 @@ const reviewSchema = new mongoose.Schema(
                   '$avg_average_review_time',
                   '$avg_product_focus',
                   '$avg_provided_resources',
-                  '$avg_share',
                   '$avg_overall_presentation'
                 ]
               }
@@ -88,7 +85,6 @@ const reviewSchema = new mongoose.Schema(
               avgAverageReviewTime: stats[0].avg_average_review_time,
               avgProductFocus: stats[0].avg_product_focus,
               avgProvidedResources: stats[0].avg_provided_resources,
-              avgShare: stats[0].avg_share,
               avgOverallPresentation: stats[0].avg_overall_presentation,
               metric: stats[0].metric
             }

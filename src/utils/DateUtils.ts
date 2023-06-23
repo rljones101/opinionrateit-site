@@ -3,7 +3,7 @@ import { DateTime } from 'luxon'
 const formatAs = (value: number, timeValue: string) => {
   const roundedValue = Math.round(value)
 
-  return roundedValue > 1 ? `${roundedValue} ${timeValue}s ago` : `${roundedValue} ${timeValue}ago`
+  return roundedValue > 1 ? `${roundedValue} ${timeValue}s ago` : `${roundedValue} ${timeValue} ago`
 }
 
 const getTimeValue = (diff: any, timeValue: string) => {
@@ -24,16 +24,26 @@ const reviewDate = (dateString: string) => {
 
   let dateFormat = ''
   if (years > 0) {
-    dateFormat = formatAs(years, 'year')
-  } else if (months > 0) {
-    dateFormat = formatAs(months, 'month')
-  } else if (days > 0) {
-    dateFormat = formatAs(days, 'day')
-  } else if (hours > 0) {
-    dateFormat = formatAs(hours, 'hour')
+    dateFormat += `${formatAs(years, 'year')}, `
+  }
+  if (months > 0) {
+    dateFormat += `, ${formatAs(months, 'month')}, `
+  }
+  if (days > 0) {
+    dateFormat += `${formatAs(days, 'day')}, `
+  }
+  if (hours > 0) {
+    dateFormat += formatAs(hours, 'hour')
   }
 
   return dateFormat
 }
 
-export { reviewDate }
+const formatDate = (dateStr: string) => {
+  if (dateStr) {
+    return DateTime.fromISO(dateStr).toLocaleString(DateTime.DATETIME_SHORT)
+  }
+  return dateStr
+}
+
+export { reviewDate, formatDate }

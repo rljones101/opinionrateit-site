@@ -5,7 +5,6 @@ import { DateTime } from 'luxon'
 import PieChart from '@/components/charts/PieChart.vue'
 import ButtonReviews from '@/components/buttons/ButtonReviews.vue'
 import * as StringUtils from '../utils/StringUtils'
-import reviewerController from '@/controllers/reviewerController'
 import type { ChartData } from 'chart.js'
 import { useUserStore } from '@/stores/user'
 import type { Reviewer } from '@/types'
@@ -88,10 +87,6 @@ const reviewerImage = computed(() => {
   return channelDetails.value.thumbnails.default.url
 })
 
-// const backgroundImage = computed(() => {
-//   return channelDetails.value.thumbnails.high.url
-// })
-
 const publishDate = computed(() => {
   const now = DateTime.now()
   const previousDate = DateTime.fromISO(channelDetails.value.publishedAt)
@@ -122,48 +117,6 @@ const metricScore = computed(() => {
   return 0
 })
 
-const setChannelDetails = (id: string, snippet: any, stats: any): ChannelDetailsInterface => {
-  return {
-    id,
-    name: props.reviewer.name,
-    title: snippet.title,
-    description: snippet.description,
-    channelThumbnail: '',
-    publishedAt: snippet.publishedAt,
-    thumbnails: {
-      default: {
-        url: snippet.thumbnails.default.url
-      },
-      high: {
-        url: snippet.thumbnails.high.url
-      }
-    },
-    statistics: {
-      commentCount: 0,
-      hiddenSubscriberCount: stats.hiddenSubscriberCount,
-      subscriberCount: stats.subscriberCount,
-      videoCount: stats.videoCount,
-      viewCount: stats.viewCount
-    }
-  }
-}
-const getChannelDetails = async () => {
-  try {
-    if (props.reviewer.channelId !== undefined && props.reviewer.channelId !== '') {
-      const channel = await reviewerController.getChannelDetails(props.reviewer.channelId)
-
-      channelDetails.value = setChannelDetails(
-        channel['id'],
-        channel['snippet'],
-        channel['statistics']
-      )
-      // console.log('channelDetails:', channelDetails.value)
-    }
-  } catch (err) {
-    console.error(err)
-  }
-}
-
 const getMetricScore = () => {
   // const sum = weights.reduce((acc, cur) => acc + cur)
   // const average = Math.floor(sum / weights.length)
@@ -174,7 +127,6 @@ const getMetricScore = () => {
     chartData.value.datasets[0].data.push(Math.floor(100 - props.reviewer.metric))
     chartData.value.datasets[0].backgroundColor = [dataColor, 'rgba(247,114,22,0.2)']
   }
-  // console.log('datasets:', this.chartData.datasets[0].data)
   return Math.floor(props.reviewer.metric) + '%'
 }
 
@@ -184,13 +136,11 @@ const showVideoReviews = () => {
     params: { channelId: props.reviewer.channelId }
   })
 }
-
-getChannelDetails()
 </script>
 
 <template>
   <div
-    class="flex flex-col gap-4 bg-app-blue-soft items-center p-8 transition-all duration-300 group hover:bg-opacity-70 hover:font-bold hover:text-white hover:shadow-lg hover:scale-105 rounded"
+    class="flex flex-col gap-4 bg-app-blue-soft items-center p-8 transition-all duration-300 group hover:bg-opacity-70 hover:font-bold hover:text-white hover:shadow-lg hover:scale-105 rounded-lg"
   >
     <!--    <div class="flex w-full">-->
     <!--      <social-links :social="social" />-->
@@ -202,14 +152,14 @@ getChannelDetails()
     <!--    <a :href="`/reviewers/${channelDetails.name}`" class="font-bold text-orange-500">{{-->
     <!--      channelDetails.title-->
     <!--    }}</a>-->
-    <p class="font-bold text-white">{{ channelDetails.title }}</p>
+    <p class="font-bold text-white">{{ reviewer.name }}</p>
     <div class="flex flex-auto items-center flex-grow gap-4">
-      <div class="chart-container flex-auto w-24" v-show="userStore.isLoggedIn">
-        <div class="flex-auto relative">
+      <div v-show="userStore.isLoggedIn">
+        <div class="relative">
           <div class="absolute w-full h-full flex items-center justify-center">
             {{ metricScore }}
           </div>
-          <PieChart :chart-data="chartData" :options="chartOptions" />
+          <PieChart :chart-data="chartData" :options="chartOptions" class="h-24 w-24" />
         </div>
       </div>
       <div class="details">
@@ -231,14 +181,6 @@ getChannelDetails()
 </template>
 
 <style scoped>
-.chart-container {
-  display: flex;
-}
-
-.chart-container > * {
-  flex-basis: 100%;
-}
-
 .reviewer-image-container {
   border-radius: 50%;
   width: 88px;

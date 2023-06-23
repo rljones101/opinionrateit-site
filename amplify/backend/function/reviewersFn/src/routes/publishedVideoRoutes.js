@@ -1,16 +1,18 @@
 const express = require('express')
 const publishedVideoController = require('../controllers/publishedVideoController.js')
+const authController = require('../controllers/authController')
 
 const router = express.Router()
 
-router
-  .route('/')
-  .get(publishedVideoController.getAll)
-  .get(publishedVideoController.getOne)
-  .post(publishedVideoController.createMultiple)
+router.use(authController.protect)
+
+router.route('/').get(publishedVideoController.getAll).get(publishedVideoController.getOne)
+
 router.route('/search').get(publishedVideoController.search)
-router.route('/user/:userId').get(publishedVideoController.getVideosByUser)
-router.route('/channel/:channelId').get(publishedVideoController.getVideosByChannel)
+
+router.use(authController.restrictTo('reviewer-basic', 'reviewer-plus', 'admin'))
+
+router.route('/').post(publishedVideoController.createMultiple)
 
 router
   .route('/:id')

@@ -37,9 +37,8 @@ const getReviewers = async (query?: URLSearchParams) => {
   }
 }
 
-const getPublishedVideos = async (id: string, type = 'user') => {
-  if (type === 'channel') return await apiGet(`/publishedVideos/channel/${id}`)
-  else return await apiGet(`/publishedVideos/user/${id}`)
+const getPublishedVideos = async (channelId: string) => {
+  return await apiGet(`/reviewers/${channelId}/publishedVideos`)
 }
 
 const publishVideos = async (videos: PublishedVideo[]) => {

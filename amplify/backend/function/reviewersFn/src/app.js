@@ -16,6 +16,7 @@ const userRouter = require('./routes/userRoutes.js')
 const profileRouter = require('./routes/profileRoutes.js')
 const publishedVideoRouter = require('./routes/publishedVideoRoutes.js')
 const reviewsRouter = require('./routes/reviewRoutes.js')
+const youTubeRouter = require('./routes/youTubeRoutes.js')
 
 const connectToDatabase = async () => {
   if (process.env.NODE_ENV === 'development') {
@@ -86,6 +87,7 @@ app.use('/api/v1/users', userRouter)
 app.use('/api/v1/profile', profileRouter)
 app.use('/api/v1/publishedVideos', publishedVideoRouter)
 app.use('/api/v1/reviews', reviewsRouter)
+app.use('/api/v1/youtube', youTubeRouter)
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))

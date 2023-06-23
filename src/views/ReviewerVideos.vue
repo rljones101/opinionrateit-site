@@ -33,21 +33,17 @@ const showReview = (video) => {
 }
 
 if (channelId) {
-  reviewerController.getPublishedVideos(channelId, 'channel').then((res) => {
+  reviewerController.getPublishedVideos(channelId).then((res) => {
     videos.value = res
   })
 }
 
 const getReviewerDetails = async (channelId: string) => {
   try {
-    const channelDetailsResponse = await reviewerController.getChannelDetails(channelId)
-    const snippet = channelDetailsResponse.snippet
-    channelDetails.value.title = snippet.localized.title ? snippet.localized.title : snippet.title
-    channelDetails.value.description = snippet.localized.description
-      ? snippet.localized.description
-      : snippet.description
-
-    metrics.value = await reviewerController.getReviewerMetrics(channelId)
+    const res = await reviewerController.getReviewerDetails(channelId)
+    const reviewerData = res.data
+    console.log(reviewerData)
+    channelDetails.value = { ...reviewerData }
   } catch (err) {
     console.error(err)
   }

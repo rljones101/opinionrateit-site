@@ -6,7 +6,9 @@ export const useUserStore = defineStore('user', () => {
   const jwtToken = ref('')
   const isLoggedIn = ref(false)
   const user = ref({
-    name: ''
+    name: '',
+    email: '',
+    role: ''
   })
 
   const saveUserAndToken = (user: any, token: string) => {
@@ -77,6 +79,11 @@ export const useUserStore = defineStore('user', () => {
     isLoggedIn.value = !!(token && user.name)
   }
 
+  const restrictTo = (...roles: any[]) => {
+    const user = getUser()
+    return roles.includes(user.role)
+  }
+
   checkIfLoggedIn()
 
   return {
@@ -88,6 +95,7 @@ export const useUserStore = defineStore('user', () => {
     signupUser,
     isLoggedIn,
     user,
-    checkIfLoggedIn
+    checkIfLoggedIn,
+    restrictTo
   }
 })

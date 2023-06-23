@@ -23,6 +23,10 @@ const PublishedVideoSchema = new Schema(
       unique: true,
       required: [true, 'A video Id is required']
     },
+    thumbnail: {
+      type: String,
+      required: [true, 'A video requires a thumbnail']
+    },
     active: {
       type: Boolean,
       default: true

@@ -1,5 +1,4 @@
 import { apiGet } from '@/utils/AppApi'
-import { getMultipleVideos } from '@/utils/googleAPI'
 
 const getAllPublishedVideos = async (query = {}) => {
   let url = '/publishedVideos'
@@ -9,9 +8,8 @@ const getAllPublishedVideos = async (query = {}) => {
   const res = await apiGet(url)
   if (res.originalData.results > 0) {
     const channelId = [...res.data.data][0].channelId
-    const publishedVideos = [...res.data.data].map((video) => video.videoId)
-    const youTubeVideos = await getMultipleVideos(publishedVideos)
-    return youTubeVideos.map((video) => ({ ...video, channelId }))
+    const youTubeVideos = res.data.data
+    return youTubeVideos.map((video: any) => ({ ...video, channelId }))
   }
   return []
 }

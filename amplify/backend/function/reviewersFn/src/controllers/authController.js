@@ -4,6 +4,7 @@ const catchAsSync = require('../utils/catchAsync.js')
 const AppError = require('../utils/appError.js')
 const tokenUtils = require('../utils/tokenUtils.js')
 const User = require('../models/userModel.js')
+const Reviewer = require('../models/reviewerModel.js')
 
 const createAndSendToken = (user, statusCode, res) => {
   const token = tokenUtils.signToken(user._id)
@@ -30,6 +31,7 @@ const createAndSendToken = (user, statusCode, res) => {
 }
 
 exports.signup = catchAsSync(async (req, res) => {
+  // save user
   const user = await User.create({
     youTubeChannelId: req.body.youTubeChannelId,
     name: req.body.name,
@@ -38,6 +40,15 @@ exports.signup = catchAsSync(async (req, res) => {
     passwordConfirm: req.body.passwordConfirm,
     passwordChangedAt: req.body.passwordChangedAt,
     role: req.body.role
+  })
+
+  // save reviewer
+  await Reviewer.create({
+    user: user._id,
+    name: req.body.title,
+    channelId: req.body.youTubeChannelId,
+    avatar: req.body.avatar,
+    description: req.body.description
   })
 
   createAndSendToken(user, 201, res)
@@ -61,6 +72,17 @@ exports.login = catchAsSync(async (req, res, next) => {
   // 3) If everything is ok, send token to client
   createAndSendToken(user, 200, res)
 })
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    // roles ['admin', 'lead-guide']. role='user'
+    if (!roles.includes(req.user.role)) {
+      return next(new AppError('You do not have permission to perform this action', 403))
+    }
+
+    next()
+  }
+}
 
 exports.protect = catchAsSync(async (req, res, next) => {
   // 1) Getting token and check of it's there

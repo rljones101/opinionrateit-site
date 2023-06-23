@@ -89,7 +89,7 @@ const goToPath = async (link: userLinkItem) => {
     <nav
       id="reviewerNav"
       class="flex flex-col w-full transition space-y-2 border-t border-app-blue pt-4 mt-4"
-      v-if="user.isLoggedIn"
+      v-if="user.restrictTo('reviewer-basic', 'reviewer-plus', 'admin')"
     >
       <button
         v-for="link in reviewerLinks"

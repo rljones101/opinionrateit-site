@@ -13,6 +13,12 @@ const reviewerSchema = new mongoose.Schema({
     type: String,
     required: [true, 'A Youtube channelId is required for adding a reviewer']
   },
+  avatar: {
+    type: String
+  },
+  description: {
+    type: String
+  },
   social: {
     type: [],
     default: []
