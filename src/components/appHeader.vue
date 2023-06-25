@@ -54,7 +54,12 @@ const showLogin = () => {
               />
             </div>
 
-            <BaseButton @click="showLogin" v-if="!userStore.isLoggedIn">login</BaseButton>
+            <BaseButton
+              class="border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
+              @click="showLogin"
+              v-if="!userStore.isLoggedIn"
+              >login</BaseButton
+            >
           </nav>
         </div>
       </div>
@@ -67,7 +72,7 @@ const showLogin = () => {
           :name="link.name"
           :key="index"
         />
-        <BaseButton @click="showLogin" v-if="!userStore.isLoggedIn">login</BaseButton>
+        <BaseButton class="" @click="showLogin" v-if="!userStore.isLoggedIn">login</BaseButton>
       </nav>
     </div>
   </div>

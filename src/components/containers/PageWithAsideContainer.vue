@@ -9,6 +9,7 @@ import { useUserStore } from '@/stores/user'
 import SiteLogo from '@/components/siteLogo.vue'
 import { ref, watch } from 'vue'
 import pageController from '@/controllers/pageController'
+import UserAvatar from '@/components/UserAvatar.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -38,29 +39,33 @@ watch(searchValue, (value: string) => {
 <template>
   <div class="w-full h-full flex">
     <div id="left" class="column flex-shrink-0 hidden md:flex">
-      <div class="flex-shrink-0 bg-app-blue-soft px-8 pt-4">
-        <SiteLogo class="hidden lg:flex" />
+      <div class="hidden lg:block flex-shrink-0 bg-app-blue-soft px-8 py-4 pb-0">
+        <SiteLogo class="lg:flex" />
+      </div>
+      <div class="bg-app-blue-soft flex flex-col items-center pb-4 pt-4 lg:pt-8">
+        <UserAvatar :name="userStore.user.name" class="w-10 h-10 mb-2" />
+        <p class="whitespace-nowrap hidden lg:block">{{ userStore.user.name }}</p>
       </div>
       <div class="bottom">
         <UserNav class="bg-app-blue-soft h-full" />
       </div>
     </div>
     <div id="right" class="column w-full flex">
-      <div class="flex-shrink-0 bg-app-blue-soft py-4 space-y-4 md:space-y-0">
-        <div class="flex flex-col items-center lg:hidden">
-          <SiteLogo />
-        </div>
+      <div class="flex-shrink-0 bg-app-blue-soft py-4 md:space-y-0">
         <div class="flex">
-          <div class="w-full flex flex-row items-center px-4 gap-4 border-b border-b-slate-800">
+          <div class="w-full flex flex-row items-center px-4">
+            <div class="flex flex-col items-center lg:hidden mr-4">
+              <SiteLogo />
+            </div>
             <div class="w-full flex items-center justify-center">
               <SearchInput v-model="searchValue" class="max-w-4xl" />
             </div>
-            <div
-              class="justify-self-end gap-8 hidden md:flex flex-grow items-center"
-              style="line-height: 1rem"
-            >
-              <div class="whitespace-nowrap">{{ userStore.user.name }}</div>
-              <BaseButton @click="logout">Logout</BaseButton>
+            <div class="justify-self-end hidden md:flex flex-grow items-center ml-4">
+              <BaseButton
+                @click="logout"
+                class="border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
+                >Logout</BaseButton
+              >
             </div>
           </div>
         </div>

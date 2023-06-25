@@ -10,9 +10,7 @@
 .btn {
   @apply py-2
   px-4
-  bg-app-orange
-  rounded-lg
-  text-white;
+  rounded-lg;
   transform: translateY(0);
   transition: transform 0.3s ease-in-out;
   box-shadow: none;

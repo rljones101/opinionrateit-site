@@ -59,7 +59,10 @@ const closeDialog = () => {
   <div class="w-96 relative">
     <FormContainer class="w-full max-w-sm">
       <h5 class="text-xl font-medium">Login</h5>
-      <ButtonClose class="mr-3" @click="closeDialog" />
+      <ButtonClose
+        class="mr-3 !bg-transparent border border-app-orange !text-app-orange hover:!bg-app-orange hover:!text-white"
+        @click="closeDialog"
+      />
       <FormInput
         id="email"
         type="email"
@@ -93,7 +96,11 @@ const closeDialog = () => {
         <a href="#" class="ml-auto text-sm hover:underline">Lost Password?</a>
       </div>
       <div v-if="showError" class="text-red-500">{{ errorMessage }}</div>
-      <BaseButton class="w-full bg-orange-500" @click="login">Login to your account</BaseButton>
+      <BaseButton
+        class="w-full border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
+        @click="login"
+        >Login to your account</BaseButton
+      >
       <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
         Not registered?
         <router-link to="/signup">Create account</router-link>

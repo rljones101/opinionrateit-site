@@ -39,7 +39,7 @@ const emit = defineEmits(['selected'])
     </ul>
     <BaseButton
       :class="{ 'active-button': active }"
-      class="flex w-full justify-center md:max-w-full"
+      class="flex w-full justify-center md:max-w-full border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
       @click="emit('selected')"
       :disabled="active || isDisabled"
       >{{ active ? 'Selected' : isDisabled ? 'Comming Soon' : 'Choose Plan' }}</BaseButton

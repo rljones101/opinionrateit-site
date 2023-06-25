@@ -16,6 +16,9 @@ const reviewerSchema = new mongoose.Schema({
   avatar: {
     type: String
   },
+  thumbnailMedium: {
+    type: String
+  },
   description: {
     type: String
   },
@@ -25,8 +28,11 @@ const reviewerSchema = new mongoose.Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now(),
-    select: false
+    default: Date.now()
+  },
+  numPublishedVideos: {
+    type: Number,
+    default: 0
   },
   avgClarity: {
     type: Number,
@@ -77,6 +83,10 @@ const reviewerSchema = new mongoose.Schema({
     type: Number,
     default: 0,
     set: (val) => Math.round(val)
+  },
+  views: {
+    type: Number,
+    default: 0
   }
 })
 

@@ -38,4 +38,8 @@ const nFormatter = (num: number, digits: number): string => {
   return (num / si[i].value).toFixed(digits).replace(rx, '$1') + si[i].symbol
 }
 
-export { urlify, replaceNewlines, nFormatter }
+const formatPercentageToRating = (percentage: number) => {
+  return ((percentage / 100) * 10).toFixed(1)
+}
+
+export { urlify, replaceNewlines, nFormatter, formatPercentageToRating }

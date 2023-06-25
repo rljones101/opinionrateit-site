@@ -10,6 +10,7 @@ import BaseButton from '@/components/buttons/BaseButton.vue'
 import MetricInput from '@/components/MetricInput.vue'
 import FormContainer from '@/components/containers/FormContainer.vue'
 import { useUserStore } from '@/stores/user'
+import { formatPercentageToRating } from '@/utils/StringUtils'
 
 const route = useRoute()
 const user = useUserStore()
@@ -19,7 +20,6 @@ const youTubeBaseUrl = 'https://www.youtube.com/watch?v='
 const reviews = ref<Review[]>([])
 const showReviewForm = ref(false)
 const reviewQuestions = ref(videoViewController.getReviewQuestions())
-console.log('review questions:', reviewQuestions.value)
 
 const itemDetail = ref({
   title: '',
@@ -201,7 +201,7 @@ getReviews()
                     :style="{
                       color: videoViewController.getColor(videoViewController.reviewMetric(review))
                     }"
-                    >{{ videoViewController.reviewMetric(review) }}%</span
+                    >{{ formatPercentageToRating(videoViewController.reviewMetric(review)) }}</span
                   >
                 </div>
                 <div>

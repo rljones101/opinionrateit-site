@@ -39,11 +39,21 @@ const reviewDate = (dateString: string) => {
   return dateFormat
 }
 
-const formatDate = (dateStr: string) => {
-  if (dateStr) {
+const formatDate = (dateStr: string, format = 'short') => {
+  if (dateStr && format === 'short') {
     return DateTime.fromISO(dateStr).toLocaleString(DateTime.DATETIME_SHORT)
+  } else if (dateStr && format === 'short_no_time') {
+    return DateTime.fromISO(dateStr).toLocaleString(DateTime.DATE_SHORT)
   }
   return dateStr
 }
 
-export { reviewDate, formatDate }
+const pastNumOfDays = (dateStr: string) => {
+  if (dateStr) {
+    const daysObj = { days: 0, ...DateTime.fromISO(dateStr).diffNow('days').toObject() }
+    return Math.round(daysObj.days)
+  }
+  return 0
+}
+
+export { reviewDate, formatDate, pastNumOfDays }

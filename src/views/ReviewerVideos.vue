@@ -8,7 +8,8 @@ import type { VideoChannelDetails } from '@/types'
 import reviewerController from '@/controllers/reviewerController'
 // templates
 import VideoItem from '@/components/VideoItem.vue'
-import videoViewController from '@/controllers/videoViewController'
+import { formatPercentageToRating } from '@/utils/StringUtils'
+import UserAvatar from '@/components/UserAvatar.vue'
 
 // Route instance
 const route = useRoute()
@@ -17,10 +18,12 @@ const router = useRouter()
 // reactive variables
 const videos: Ref<VideoChannelDetails[]> = ref([])
 const channelDetails = ref({
+  avatar: '',
+  name: '',
   title: '',
   description: ''
 })
-const metrics = ref({
+const stats = ref({
   metric: 0
 })
 
@@ -55,25 +58,32 @@ getReviewerDetails(channelId)
 <template>
   <div class="mb-8">
     <router-link to="/reviewers" class="text-orange-500 hover:underline">Reviewers</router-link>
-    / {{ channelDetails.title }}
+    / {{ channelDetails.name }}
   </div>
 
   <div v-if="channelId && videos.length">
     <h2 class="font-bold text-white mb-4">{{ channelDetails.title }}</h2>
-    <div class="flex gap-8">
-      <div class="flex-1 bg-app-blue-soft rounded-lg mb-8 p-8">
-        <div class="rounded-full w-12 h-12 bg-app-blue flex items-center justify-center">
-          <span :style="{ color: videoViewController.getColor(metrics.metric) }"
-            >{{ metrics.metric }}%</span
-          >
+    <div class="flex-1 bg-app-blue-soft p-8 rounded-lg mb-8">
+      <div class="border-b pb-8 mb-8 border-slate-500 flex items-center gap-8">
+        <UserAvatar :name="channelDetails.name" :src="channelDetails.avatar" class="w-16 h-16" />
+        <div class="flex-1">
+          <h2 class="text-lg text-white">{{ channelDetails.name }}</h2>
+          <p>{{ channelDetails.description }}</p>
         </div>
-        Metric score
       </div>
-      <div class="flex-1 bg-app-blue-soft p-8 rounded-lg mb-8">
-        <h2 class="font-bold text-white mb-4">Description</h2>
-        <p class="mb-8">{{ channelDetails.description }}</p>
+
+      <div class="flex items-center gap-2 pb-8">
+        <div
+          class="bg-app-blue w-12 h-12 flex items-center justify-center rounded-lg text-xl text-white"
+        >
+          {{ formatPercentageToRating(stats.metric) }}
+        </div>
+        <p>Rating</p>
+        <span class="rounded-full w-1 h-1 bg-slate-500"></span>
+        <p>376 reviews</p>
       </div>
     </div>
+
     <div class="grid-layout w-full">
       <VideoItem
         v-for="video in videos"

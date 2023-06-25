@@ -1,10 +1,8 @@
-<script setup lang="ts">
-const details = () => {}
-</script>
+<script setup lang="ts"></script>
 
 <template>
-  <button class="btn" @click="details">
-    <span class="font-bold uppercase">View</span>
+  <button class="btn">
+    <span class="font-bold uppercase"><slot /></span>
   </button>
 </template>
 

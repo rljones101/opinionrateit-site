@@ -6,7 +6,7 @@ import AppFooter from '@/components/AppFooter.vue'
 
 <template>
   <div class="flex flex-col items-center justify-center w-full h-screen mx-auto p-8">
-    <SiteLogo />
+    <SiteLogo class="mb-8" />
     <UserLogin />
     <AppFooter />
   </div>

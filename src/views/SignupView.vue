@@ -173,13 +173,29 @@ const selectPlan = (plan: string) => {
         class="flex flex-col items-center rounded-lg bg-app-blue-soft mx-auto max-w-sm p-8 mb-8 space-y-6 text-center"
         v-if="isReviewerPlan(form.role) && !loadedYouTubeData"
       >
-        <div class="p-8 flex flex-col border rounded-lg border-slate-500">
-          <font-awesome-icon :icon="['fab', 'youtube']" size="6x" />
+        <div class="p-8 flex flex-col items-center border rounded-lg border-slate-500">
+          <svg
+            class="w-24 h-24 text-white"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 14"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M19.7 3.037a4.26 4.26 0 0 0-.789-1.964 2.84 2.84 0 0 0-1.984-.84c-2.767-.2-6.926-.2-6.926-.2s-4.157 0-6.928.2a2.836 2.836 0 0 0-1.983.84A4.225 4.225 0 0 0 .3 3.038a30.148 30.148 0 0 0-.2 3.206v1.5c.01 1.071.076 2.142.2 3.206.094.712.363 1.39.784 1.972.604.536 1.38.837 2.187.848 1.583.15 6.731.2 6.731.2s4.161 0 6.928-.2a2.844 2.844 0 0 0 1.985-.84 4.27 4.27 0 0 0 .787-1.965c.124-1.064.19-2.135.2-3.206V6.243a30.672 30.672 0 0 0-.202-3.206ZM8.008 9.59V3.97l5.4 2.819-5.4 2.8Z"
+              clip-rule="evenodd"
+            />
+          </svg>
           YouTube Channel ID
         </div>
         <p>Please provide your Youtube Channel ID so we can setup your reviewer account</p>
         <FormInput id="channelId" v-model="form.youTubeChannelId" class="text-center" />
-        <BaseButton @click="getChannelDetails">Get My YouTube Profile</BaseButton>
+        <BaseButton
+          class="border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
+          @click="getChannelDetails"
+          >Get My YouTube Profile</BaseButton
+        >
       </div>
 
       <FormContainer class="w-full" v-if="!isReviewerPlan(form.role)">
@@ -228,7 +244,7 @@ const selectPlan = (plan: string) => {
           class="space-y-6"
         >
           <div class="flex flex-col items-center text-slate-500">
-            <UserAvatar :src="form.avatar" :alt="form.title" />
+            <UserAvatar :src="form.avatar" :name="form.title" />
             <p>YouTube Channel ID:</p>
             <p class="text-white">{{ form.youTubeChannelId }}</p>
           </div>

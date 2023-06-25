@@ -69,7 +69,11 @@ export interface PublishedVideo {
 export interface Reviewer {
   _id?: string
   name: string
+  createdAt: string
+  avatar: string
+  thumbnailMedium: string
   channelId: string
+  description: string
   avgAverageReviewTime: number
   avgClarity: number
   avgNonBias: number
@@ -80,6 +84,8 @@ export interface Reviewer {
   avgProvidedResources: number
   avgShare: number
   metric: number
+  numPublishedVideos: number
+  views: number
 }
 
 export interface Review {

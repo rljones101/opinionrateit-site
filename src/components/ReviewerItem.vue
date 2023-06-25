@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { reactive, computed, ref } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { DateTime } from 'luxon'
-import PieChart from '@/components/charts/PieChart.vue'
-import ButtonReviews from '@/components/buttons/ButtonReviews.vue'
-import * as StringUtils from '../utils/StringUtils'
-import type { ChartData } from 'chart.js'
 import { useUserStore } from '@/stores/user'
 import type { Reviewer } from '@/types'
+import UserAvatar from '@/components/UserAvatar.vue'
+import BaseButton from '@/components/buttons/BaseButton.vue'
+import { formatDate, pastNumOfDays } from '@/utils/DateUtils'
+import BadgeSmall from '@/components/badges/BadgeSmall.vue'
+import { formatPercentageToRating, nFormatter } from '@/utils/StringUtils'
 
 const userStore = useUserStore()
 const router = useRouter()
@@ -17,118 +17,11 @@ const props = defineProps<{
   reviewer: Reviewer
 }>()
 
-interface ChannelDetailsInterface {
-  id: string
-  name: string
-  title: string
-  description?: string
-  channelThumbnail?: string
-  publishedAt: string
-  thumbnails: {
-    default: {
-      url: string
-    }
-    high?: {
-      url?: string
-    }
-  }
-  statistics: {
-    commentCount: number
-    hiddenSubscriberCount: boolean
-    subscriberCount: number
-    videoCount: number
-    viewCount: number
-  }
-}
+// template refs
 
 // Define data
-let channelDetails = ref<ChannelDetailsInterface>({
-  id: '',
-  name: props.reviewer.name || 'name here..',
-  title: 'Default',
-  publishedAt: '',
-  thumbnails: {
-    default: {
-      url: ''
-    }
-  },
-  statistics: {
-    commentCount: 0,
-    hiddenSubscriberCount: false,
-    subscriberCount: 0,
-    videoCount: 0,
-    viewCount: 0
-  }
-})
-
-const chartData = ref<ChartData<'doughnut'>>({
-  labels: ['score'],
-  datasets: [
-    {
-      label: 'score',
-      data: [],
-      backgroundColor: ['rgb(22,167,46)', 'rgba(247,114,22,0.2)'],
-      borderColor: 'rgba(0,0,0,0)',
-      borderWidth: 1
-    }
-  ]
-})
-const chartOptions = reactive({
-  legend: {
-    display: false
-  },
-  tooltips: {
-    enabled: false
-  }
-})
 
 // Define computed data
-const reviewerImage = computed(() => {
-  return channelDetails.value.thumbnails.default.url
-})
-
-const publishDate = computed(() => {
-  const now = DateTime.now()
-  const previousDate = DateTime.fromISO(channelDetails.value.publishedAt)
-  const dateDiff = now.diff(previousDate, 'years').toObject()
-
-  let years = ''
-  if (dateDiff.years) {
-    years = Math.floor(dateDiff.years) + ' years'
-  }
-  return years
-})
-
-const formattedSubscriberCount = computed(() => {
-  // console.log('channelDetails:', this.channelDetails)
-  const count = channelDetails.value.statistics.subscriberCount
-  return StringUtils.nFormatter(count, 1)
-})
-
-const formattedVideoCount = computed(() => {
-  const count = channelDetails.value.statistics.videoCount
-  return StringUtils.nFormatter(count, 1)
-})
-
-const metricScore = computed(() => {
-  if (props.reviewer.metric) {
-    return getMetricScore()
-  }
-  return 0
-})
-
-const getMetricScore = () => {
-  // const sum = weights.reduce((acc, cur) => acc + cur)
-  // const average = Math.floor(sum / weights.length)
-  if (chartData?.value?.datasets?.[0]?.data) {
-    const dataColor = `hsl(${props.reviewer.metric},100%,50%)`
-
-    chartData.value.datasets[0].data.push(props.reviewer.metric)
-    chartData.value.datasets[0].data.push(Math.floor(100 - props.reviewer.metric))
-    chartData.value.datasets[0].backgroundColor = [dataColor, 'rgba(247,114,22,0.2)']
-  }
-  return Math.floor(props.reviewer.metric) + '%'
-}
 
 const showVideoReviews = () => {
   router.push({
@@ -136,56 +29,153 @@ const showVideoReviews = () => {
     params: { channelId: props.reviewer.channelId }
   })
 }
+
+function testImage(url: string) {
+  return new Promise(function (resolve, reject) {
+    const image = new Image()
+    image.addEventListener('load', resolve)
+    image.addEventListener('error', reject)
+    image.src = url
+  })
+}
+
+const showCardImage = ref(false)
+testImage(props.reviewer.thumbnailMedium)
+  .then(() => {
+    showCardImage.value = true
+  })
+  .catch(() => {
+    showCardImage.value = false
+  })
 </script>
 
 <template>
   <div
-    class="flex flex-col gap-4 bg-app-blue-soft items-center p-8 transition-all duration-300 group hover:bg-opacity-70 hover:font-bold hover:text-white hover:shadow-lg hover:scale-105 rounded-lg"
+    class="relative flex flex-col bg-app-blue-soft transition-all duration-300 group hover:bg-opacity-70 hover:font-bold hover:text-white hover:shadow-lg hover:scale-105 rounded-lg"
   >
-    <!--    <div class="flex w-full">-->
-    <!--      <social-links :social="social" />-->
-    <!--    </div>-->
-    <div v-if="reviewerImage" class="reviewer-image-container">
-      <img :alt="channelDetails.title" :src="reviewerImage" class="reviewer-image" />
+    <BadgeSmall
+      v-if="pastNumOfDays(props.reviewer.createdAt) >= -7"
+      class="absolute -top-2 -left-2 bg-red-500 text-white z-20"
+      >NEW</BadgeSmall
+    >
+    <div class="h-36">
+      <img
+        v-if="showCardImage"
+        :src="reviewer.thumbnailMedium"
+        alt="Card Image"
+        style="object-fit: cover; opacity: 0.2"
+        class="rounded-tl-lg rounded-tr-lg max-h-36 w-full"
+      />
+      <img
+        v-else
+        src="../assets/img/default_card_image.jpg"
+        alt="Card Image"
+        style="object-fit: cover; opacity: 0.2"
+        class="rounded-tl-lg rounded-tr-lg max-h-36 w-full"
+      />
     </div>
-    <!--    <router-link :to="`/reviewers/${channelDetails.name}`" class="font-bold text-orange-500">{{channelDetails.title}}</router-link>-->
-    <!--    <a :href="`/reviewers/${channelDetails.name}`" class="font-bold text-orange-500">{{-->
-    <!--      channelDetails.title-->
-    <!--    }}</a>-->
-    <p class="font-bold text-white">{{ reviewer.name }}</p>
-    <div class="flex flex-auto items-center flex-grow gap-4">
-      <div v-show="userStore.isLoggedIn">
-        <div class="relative">
-          <div class="absolute w-full h-full flex items-center justify-center">
-            {{ metricScore }}
-          </div>
-          <PieChart :chart-data="chartData" :options="chartOptions" class="h-24 w-24" />
+    <p
+      class="absolute top-0 w-full h-36 flex items-center justify-center font-bold text-white text-lg"
+    >
+      {{ reviewer.name }}
+    </p>
+    <div class="relative flex flex-col items-center justify-between">
+      <UserAvatar :name="reviewer.name" :src="reviewer.avatar" class="absolute -top-8 w-16 h-16" />
+      <div class="flex flex-col gap-2 items-center justify-between w-full">
+        <div class="reviewer-details">
+          <p>
+            <span class="reviewer-details__text !text-app-orange"
+              >{{ formatPercentageToRating(reviewer.metric) }} / 10</span
+            >
+            <span class="reviewer-details__label">Rating</span>
+          </p>
+          <p>
+            <span class="reviewer-details__text">{{
+              formatDate(reviewer.createdAt, 'short_no_time')
+            }}</span>
+            <span class="reviewer-details__label">Joined</span>
+          </p>
+          <p>
+            <span class="reviewer-details__text">{{
+              nFormatter(reviewer.numPublishedVideos, 1)
+            }}</span>
+            <span class="reviewer-details__label">videos</span>
+          </p>
+          <p>
+            <span class="reviewer-details__text"> {{ nFormatter(reviewer.views, 1) }}</span>
+            <span class="reviewer-details__label">views</span>
+          </p>
         </div>
       </div>
-      <div class="details">
-        <!--          <div v-if='reviewerImage' class="reviewer-image-container" v-html='channelDetails.channelThumbnail'></div>-->
-        <div class="reviewer-stats">
-          <p class="detail-stat">{{ publishDate }}</p>
-          <p class="detail-stat">Subscribers: {{ formattedSubscriberCount }}</p>
-          <p class="detail-stat">Videos: {{ formattedVideoCount }}</p>
-        </div>
+      <div class="flex justify-between items-end w-full p-4" v-if="userStore.isLoggedIn">
+        <BaseButton class="text-app-orange hover:border hover:border-slate-500">
+          <svg
+            class="w-6 h-6 text-app-orange"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 20"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m13 19-6-5-6 5V2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17Z"
+            />
+          </svg>
+        </BaseButton>
+        <BaseButton
+          class="border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
+          @click="showVideoReviews"
+          >View</BaseButton
+        >
       </div>
     </div>
-    <ButtonReviews
-      v-if="userStore.isLoggedIn"
-      class="mt-8 w-full"
-      :youtube-channel-id="channelDetails.id"
-      @click="showVideoReviews"
-    />
   </div>
 </template>
 
 <style scoped>
-.reviewer-image-container {
-  border-radius: 50%;
-  width: 88px;
-  height: 88px;
-  overflow: hidden;
-  margin-bottom: 20px;
+.reviewer-details {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 1fr 1fr;
+}
+
+.reviewer-details > p {
+  text-align: center;
+  display: block;
+  padding: 1rem;
+}
+
+.reviewer-details > p:nth-child(1) {
+  @apply border-t border-app-blue;
+}
+
+.reviewer-details > p:nth-child(2) {
+  @apply border-t border-l border-app-blue;
+}
+
+.reviewer-details > p:nth-child(3) {
+  @apply border-t border-b border-app-blue;
+}
+
+.reviewer-details > p:nth-child(4) {
+  @apply border-t border-b border-l border-app-blue;
+}
+
+.reviewer-details > p > * {
+  display: block;
+}
+
+.reviewer-details__label {
+  @apply text-slate-500;
+  text-transform: uppercase;
+}
+
+.reviewer-details__text {
+  text-transform: capitalize;
+  font-size: 1rem;
+  color: #ffffff;
 }
 </style>

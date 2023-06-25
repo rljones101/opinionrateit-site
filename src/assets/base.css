@@ -80,13 +80,3 @@ a:hover {
   text-decoration: underline;
 }
 
-button[type="button"] {
-  @apply bg-app-orange;
-  color: #ffffff;
-}
-
-button[type="button"]:hover {
-  @apply bg-app-orange-soft;
-  color: #ffffff;
-}
-

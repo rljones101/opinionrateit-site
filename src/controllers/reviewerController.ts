@@ -92,6 +92,11 @@ const convertDataToReviewer = (slideData: any): Reviewer => {
   return {
     _id: slideData._id,
     name: slideData.name,
+    avatar: slideData.avatar,
+    thumbnailMedium: slideData.thumbnailMedium,
+    numPublishedVideos: slideData.numPublishedVideos,
+    description: slideData.description,
+    createdAt: slideData.createdAt,
     channelId: slideData.channelId,
     avgAverageReviewTime: slideData.avgAverageReviewTime,
     avgClarity: slideData.avgClarity,
@@ -102,8 +107,16 @@ const convertDataToReviewer = (slideData: any): Reviewer => {
     avgProductView: slideData.avgProductView,
     avgProvidedResources: slideData.avgProvidedResources,
     avgShare: slideData.avgShare,
-    metric: slideData.metric
+    metric: slideData.metric,
+    views: slideData.views
   }
+}
+
+const getInitials = (name: string) => {
+  const initialsArr: string[] = name.split(' ')
+  return initialsArr.length > 1
+    ? initialsArr[0].charAt(0) + initialsArr[1].charAt(0)
+    : initialsArr[0].charAt(0)
 }
 
 export default {
@@ -114,6 +127,7 @@ export default {
   getReviewers,
   getPublishedVideos,
   getReviewerMetrics,
+  getInitials,
   publishVideos,
   searchVideos,
   convertDataToReviewer

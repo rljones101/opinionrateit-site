@@ -82,7 +82,9 @@ const goToPath = async (link: userLinkItem) => {
         :class="{ active: route.name === link.name }"
         @click="goToPath(link)"
       >
-        <span v-if="link.icon"><component :is="link.icon" class="w-6 h-6" /></span>
+        <span v-if="link.icon" class="text-white"
+          ><component :is="link.icon" class="w-6 h-6"
+        /></span>
         <span class="hidden lg:flex uppercase font-bold">{{ link.label }}</span>
       </button>
     </nav>
@@ -98,7 +100,9 @@ const goToPath = async (link: userLinkItem) => {
         :class="{ active: route.name === link.name }"
         @click="goToPath(link)"
       >
-        <span v-if="link.icon"><component :is="link.icon" class="w-6 h-6" /></span>
+        <span v-if="link.icon" class="text-white"
+          ><component :is="link.icon" class="w-6 h-6"
+        /></span>
         <span class="hidden lg:flex uppercase font-bold">{{ link.label }}</span>
       </button>
     </nav>
@@ -115,7 +119,7 @@ const goToPath = async (link: userLinkItem) => {
 }
 
 .user-nav-btn.active {
-  @apply bg-white text-white bg-opacity-10 hover:shadow-none;
+  @apply border border-app-orange text-app-orange bg-opacity-10 hover:shadow-none;
 }
 
 .user-nav-btn:hover:not(.active) {

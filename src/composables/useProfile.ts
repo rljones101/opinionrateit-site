@@ -60,10 +60,7 @@ const useProfile = () => {
 
   // Computed
   const profileInitials = computed(() => {
-    const initialsArr: string[] = profile.value.name.split(' ')
-    return initialsArr.length > 1
-      ? initialsArr[0].charAt(0) + initialsArr[1].charAt(0)
-      : initialsArr[0].charAt(0)
+    return reviewerController.getInitials(profile.value.name)
   })
 
   const searchCallBack = async (searchParams: string) => {
