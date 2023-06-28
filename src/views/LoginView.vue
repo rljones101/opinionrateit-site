@@ -5,10 +5,12 @@ import AppFooter from '@/components/AppFooter.vue'
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center w-full h-screen mx-auto p-8">
-    <SiteLogo class="mb-8" />
-    <UserLogin />
-    <AppFooter />
+  <div class="main-content-wrapper">
+    <div class="flex flex-col items-center justify-center w-full h-screen mx-auto p-8">
+      <SiteLogo class="mb-8" />
+      <UserLogin />
+      <AppFooter />
+    </div>
   </div>
 </template>
 

@@ -4,7 +4,11 @@ import { RouterView } from 'vue-router'
 
 <template>
   <div class="flex h-full w-full relative">
-    <div class="flex flex-col h-full w-full relative"><router-view /></div>
+    <router-view v-slot="{ Component }">
+      <Transition name="fade" tag="div" class="flex h-full w-full relative" mode="out-in">
+        <component :is="Component" />
+      </Transition>
+    </router-view>
   </div>
 </template>
 

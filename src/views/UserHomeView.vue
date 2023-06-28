@@ -6,7 +6,16 @@ import PageWithAsideContainer from '@/components/containers/PageWithAsideContain
 <template>
   <PageWithAsideContainer>
     <template #main>
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <transition
+          name="fade"
+          tag="div"
+          class="flex flex-col h-full w-full relative"
+          mode="out-in"
+        >
+          <component :is="Component" />
+        </transition>
+      </router-view>
     </template>
   </PageWithAsideContainer>
 </template>

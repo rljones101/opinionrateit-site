@@ -34,7 +34,7 @@ watch(searchValue, (value: string) => {
 </script>
 
 <template>
-  <div class="w-full h-full flex">
+  <div class="w-full h-full flex background-gradient-color">
     <div id="left" class="column flex-shrink-0 hidden md:flex">
       <div class="flex items-center justify-center flex-shrink-0 bg-app-blue-soft px-4 py-4">
         <div class="hidden lg:block">
@@ -72,9 +72,7 @@ watch(searchValue, (value: string) => {
       </div>
       <div class="bottom">
         <PageContainer class="relative">
-          <transition name="fade">
-            <slot name="main" />
-          </transition>
+          <slot name="main" />
         </PageContainer>
       </div>
     </div>

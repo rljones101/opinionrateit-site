@@ -122,3 +122,33 @@
 .app-card {
     @apply relative bg-app-blue-soft shadow shadow-black rounded-lg;
 }
+
+.main-content-wrapper:before {
+    content: '';
+    display: block;
+    position: fixed;
+    inset: 0;
+    opacity: 0.3;
+    background: linear-gradient(to top, #f77216, #0f172a);
+    background-size: cover;
+    z-index: -1;
+}
+.main-content-wrapper {
+    position: relative;
+    isolation: isolate;
+    @apply scrollbar-thin scrollbar-thumb-orange-500 scrollbar-track-slate-800;
+}
+
+.background-gradient-color {
+    position: relative;
+    isolation: isolate;
+}
+
+.background-gradient-color:before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    opacity: 0.3;
+    background: linear-gradient(to top, #f77216, #0f172a);
+    z-index: -1;
+}

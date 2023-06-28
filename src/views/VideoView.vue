@@ -127,7 +127,7 @@ getReviews()
     </div>
     <div class="max-w-7xl mx-auto">
       <div class="shadow-lg shadow-black">
-        <div key="videoArea" class="relative border border-slate-800 p-8 rounded">
+        <div key="videoArea" class="relative bg-app-blue border border-slate-800 p-8 rounded">
           <div class="w-full flex flex-col gap-8" v-if="itemDetail && itemDetail.youTubeId">
             <!-- video player -->
             <MediaPlayer class="media-player" :video-id="itemDetail.youTubeId"></MediaPlayer>

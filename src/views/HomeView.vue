@@ -9,25 +9,40 @@ import { useRevealObserver } from '@/composables/useRevealObserver'
 import AppHeader from '@/components/appHeader.vue'
 import AppFooter from '@/components/AppFooter.vue'
 import siteLogo from '@/components/siteLogo.vue'
+import { nextTick, onMounted } from 'vue'
 useRevealObserver()
+
+const callback = (entries: any[]) => {
+  entries.forEach((entry) => {
+    entry.target.classList.toggle('is-pinned', entry.intersectionRatio < 1)
+  })
+}
+
+const observer: IntersectionObserver = new IntersectionObserver(callback, { threshold: [1] })
+
+onMounted(async () => {
+  await nextTick()
+  const el = document.querySelector('.app-header') as HTMLElement
+  observer.observe(el)
+})
 </script>
 
 <template>
-  <div class="main-content flex flex-col w-full h-full overflow-y-auto">
+  <div class="main-content-wrapper flex flex-col w-full h-full overflow-y-auto">
     <div class="relative max-w-7xl mx-auto p-8 flex flex-col items-center justify-center pl-4 pr-4">
       <site-logo />
     </div>
     <div
       class="relative flex flex-col max-w-7xl mx-auto rounded-lg shadow-lg shadow-gray-950 bg-app-blue"
     >
-      <AppHeader class="sticky top-0 z-30" />
+      <AppHeader class="app-header sticky -top-1 z-30" />
       <section class="text-white p-8 flex flex-col items-center justify-center">
         <AppHero />
       </section>
       <section>
         <JoinMessage class="max-w-7xl mx-auto" />
       </section>
-      <section class="pt-8 pb-8 hidden md:flex">
+      <section class="pt-8 pb-8 hidden xl:flex">
         <FeaturedReviewers class="reveal fade-right" />
       </section>
       <section>
@@ -72,25 +87,6 @@ useRevealObserver()
 </template>
 
 <style scoped>
-.main-content:before {
-  content: '';
-  display: block;
-  position: fixed;
-  left: 0;
-  top: 0;
-  opacity: 0.3;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(to top, #f77216, #0f172a);
-  background-size: cover;
-}
-
-.main-content {
-  @apply scrollbar-thin scrollbar-thumb-orange-500 scrollbar-track-slate-800;
-  position: relative;
-  z-index: 100;
-}
-
 .icon-wrapper {
   @apply bg-orange-500 rounded-full p-4 text-white;
   width: 50px;

@@ -2,8 +2,8 @@
 
 <template>
   <div class="w-full space-y-8">
-    <div class="lg:flex items-center w-full space-x-4">
-      <div class="max-w-md">
+    <div class="flex flex-col items-center justify-between w-full space-x-4">
+      <div class="hero-text flex-1 mb-4 text-center">
         <h1 class="text-3xl lg:text-5xl shadow mb-4 uppercase">
           Create <br /><span class="font-bold text-orange-500">Product Reviews</span><br />
           With Confidence
@@ -13,7 +13,7 @@
           grow and be a better product reviewer!
         </p>
       </div>
-      <div class="flex">
+      <div class="hero-image">
         <img
           src="../assets/img/desktop-split.png"
           alt="Desktop Image"
@@ -24,4 +24,11 @@
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.hero-text {
+  max-width: 28rem;
+}
+.hero-image {
+  display: flex;
+}
+</style>

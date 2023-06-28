@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import buttonNav from './buttons/buttonNav.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import { useUserStore } from '@/stores/user'
+import SiteLogo from '@/components/siteLogo.vue'
 
 interface linkItem {
   label: string
@@ -53,6 +54,10 @@ const showLogin = () => {
                 :key="index"
               />
             </div>
+            <!-- site logo -->
+            <div class="site-logo hidden mr-24">
+              <SiteLogo />
+            </div>
 
             <BaseButton
               class="border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
@@ -64,7 +69,7 @@ const showLogin = () => {
         </div>
       </div>
     </div>
-    <div class="dropdown-nav-menu" :class="{ show: showMenu }">
+    <div class="dropdown-nav-menu md:hidden block" :class="{ show: showMenu }">
       <nav id="hiddenNav" class="flex flex-col bg-app-blue w-full p-8 space-y-6">
         <button-nav
           v-for="(link, index) in navLinks"
@@ -72,13 +77,22 @@ const showLogin = () => {
           :name="link.name"
           :key="index"
         />
-        <BaseButton class="" @click="showLogin" v-if="!userStore.isLoggedIn">login</BaseButton>
+        <BaseButton
+          class="border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
+          @click="showLogin"
+          v-if="!userStore.isLoggedIn"
+          >login</BaseButton
+        >
       </nav>
     </div>
   </div>
 </template>
 
 <style scoped>
+.app-header.is-pinned .site-logo {
+  display: block;
+  padding-top: 1px;
+}
 .dropdown-nav-menu {
   position: absolute;
   top: 4rem;

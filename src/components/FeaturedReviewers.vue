@@ -8,14 +8,16 @@ import { ref } from 'vue'
 let slides = ref<Slide[]>([])
 
 reviewerController.getReviewers().then((reviewers) => {
-  slides.value = reviewers.map(
-    (item) =>
-      ({
-        id: item._id,
-        data: item,
-        style: { opacity: 1 }
-      } as Slide)
-  )
+  if (reviewers.length) {
+    slides.value = reviewers.map(
+      (item) =>
+        ({
+          id: item._id,
+          data: item,
+          style: { opacity: 1 }
+        } as Slide)
+    )
+  }
 })
 </script>
 
