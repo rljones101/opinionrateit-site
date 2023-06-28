@@ -105,7 +105,6 @@ const useProfile = () => {
   }
 
   const updateVideos = (googleVideos: VideoChannelDetails[]) => {
-    console.log('googleVideos:', googleVideos)
     if (profile.value.isReviewer && googleVideos) {
       const inPublishedVideos: VideoChannelDetails[] = googleVideos.filter(
         (video: VideoChannelDetails) => !isVideoPublished(video)

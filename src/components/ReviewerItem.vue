@@ -68,7 +68,7 @@ testImage(props.reviewer.thumbnailMedium)
       />
       <img
         v-else
-        src="../assets/img/default_card_image.jpg"
+        src="../assets/img/default-card-image-320.png"
         alt="Card Image"
         style="object-fit: cover; opacity: 0.2"
         class="rounded-tl-lg rounded-tr-lg max-h-36 w-full"

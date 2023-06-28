@@ -83,7 +83,7 @@ watch(searchValue, (value) => searchVideos(value))
     </ConfirmModal>
     <!-- tabs --->
     <TabsComponent :tabs="tabs" class="mb-8" @selected-index="selectedTabHandler" />
-    <transition-group name="fade">
+    <transition-group name="fade" tag="div" class="relative">
       <div v-if="selectedTabIndex === 0">
         <div v-if="profile.publishedVideos.length === 0">
           <h3 class="text-2xl font-bold text-white">No published videos found</h3>

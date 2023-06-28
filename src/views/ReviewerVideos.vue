@@ -61,64 +61,66 @@ getReviewerDetails(channelId)
 </script>
 
 <template>
-  <div class="mb-8">
-    <router-link to="/reviewers" class="text-orange-500 hover:underline">Reviewers</router-link>
-    / {{ channelDetails.name }}
-  </div>
+  <div>
+    <div class="mb-8">
+      <router-link to="/reviewers" class="text-orange-500 hover:underline">Reviewers</router-link>
+      / {{ channelDetails.name }}
+    </div>
 
-  <div v-if="channelId">
-    <h2 class="font-bold text-white mb-4">{{ channelDetails.title }}</h2>
-    <div class="flex-1 bg-app-blue-soft p-8 rounded-lg mb-8">
-      <div class="border-b pb-8 mb-8 border-slate-500 flex items-center gap-8">
-        <UserAvatar :name="channelDetails.name" :src="channelDetails.avatar" class="w-16 h-16" />
-        <div class="flex-1">
-          <h2 class="text-lg text-white">{{ channelDetails.name }}</h2>
-          <ContentReadMore>
-            {{ channelDetails.description }}
-          </ContentReadMore>
+    <div v-if="channelId">
+      <h2 class="font-bold text-white mb-4">{{ channelDetails.title }}</h2>
+      <div class="flex-1 bg-app-blue-soft p-8 rounded-lg mb-8">
+        <div class="border-b pb-8 mb-8 border-slate-500 flex items-center gap-8">
+          <UserAvatar :name="channelDetails.name" :src="channelDetails.avatar" class="w-16 h-16" />
+          <div class="flex-1">
+            <h2 class="text-lg text-white">{{ channelDetails.name }}</h2>
+            <ContentReadMore>
+              {{ channelDetails.description }}
+            </ContentReadMore>
+          </div>
+        </div>
+        <div class="reviewer-details grid-layout">
+          <p>
+            <span class="reviewer-details__text !text-app-orange"
+              >{{ formatPercentageToRating(channelDetails.metric) }} / 10</span
+            >
+            <span class="reviewer-details__label">Rating</span>
+          </p>
+          <p>
+            <span class="reviewer-details__text">{{
+              formatDate(channelDetails.createdAt, 'short_no_time')
+            }}</span>
+            <span class="reviewer-details__label">Joined</span>
+          </p>
+          <p>
+            <span class="reviewer-details__text">{{
+              nFormatter(channelDetails.numPublishedVideos, 1)
+            }}</span>
+            <span class="reviewer-details__label">videos</span>
+          </p>
+          <p>
+            <span class="reviewer-details__text"> {{ nFormatter(channelDetails.views, 1) }}</span>
+            <span class="reviewer-details__label">views</span>
+          </p>
         </div>
       </div>
-      <div class="reviewer-details grid-layout">
-        <p>
-          <span class="reviewer-details__text !text-app-orange"
-            >{{ formatPercentageToRating(channelDetails.metric) }} / 10</span
-          >
-          <span class="reviewer-details__label">Rating</span>
-        </p>
-        <p>
-          <span class="reviewer-details__text">{{
-            formatDate(channelDetails.createdAt, 'short_no_time')
-          }}</span>
-          <span class="reviewer-details__label">Joined</span>
-        </p>
-        <p>
-          <span class="reviewer-details__text">{{
-            nFormatter(channelDetails.numPublishedVideos, 1)
-          }}</span>
-          <span class="reviewer-details__label">videos</span>
-        </p>
-        <p>
-          <span class="reviewer-details__text"> {{ nFormatter(channelDetails.views, 1) }}</span>
-          <span class="reviewer-details__label">views</span>
-        </p>
+
+      <div class="grid-layout w-full">
+        <VideoItem
+          v-for="video in videos"
+          :key="video.videoId"
+          :video="video"
+          @click="showReview(video)"
+        />
       </div>
     </div>
-
-    <div class="grid-layout w-full">
-      <VideoItem
-        v-for="video in videos"
-        :key="video.videoId"
-        :video="video"
-        @click="showReview(video)"
-      />
+    <div v-if="channelId && videos.length === 0">
+      <h2 class="font-bold text-white mb-4">No videos found</h2>
+      This user has not submitted any videos for review yet.
     </div>
-  </div>
-  <div v-if="channelId && videos.length === 0">
-    <h2 class="font-bold text-white mb-4">No videos found</h2>
-    This user has not submitted any videos for review yet.
-  </div>
-  <div v-else-if="!channelId">
-    You did not select a user. Please choose a user from the reviewers list.
+    <div v-else-if="!channelId">
+      You did not select a user. Please choose a user from the reviewers list.
+    </div>
   </div>
 </template>
 
