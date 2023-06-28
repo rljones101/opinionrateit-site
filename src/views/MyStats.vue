@@ -10,7 +10,7 @@ const { profile } = useProfile()
 <template>
   <AppTitle class="mb-8">My Stats</AppTitle>
   <div v-if="profile.isReviewer && profile.metric > 0">
-    <div class="flex flex-col gap-8 justify-center bg-app-blue-soft rounded-lg p-8">
+    <div class="app-card flex flex-col gap-8 justify-center p-8">
       <div class="flex items-center gap-2 border-b pb-8 border-slate-500">
         <div
           class="bg-app-blue w-12 h-12 flex items-center justify-center rounded-lg text-xl text-white"

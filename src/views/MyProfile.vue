@@ -35,7 +35,7 @@ const getRole = (role: string) => {
   <div class="w-full h-full relative">
     <!-- content here --->
     <AppTitle>My Profile</AppTitle>
-    <div class="bg-app-blue-soft p-8 rounded-lg max-w-md mx-auto mt-8 space-y-8">
+    <div class="app-card p-8 max-w-md mx-auto mt-8 space-y-8">
       <div class="border-b border-b-app-blue pb-8 flex items-center justify-between">
         <span class="text-3xl">{{ profile.name }}</span>
         <BaseButton

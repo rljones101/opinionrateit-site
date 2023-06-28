@@ -118,3 +118,7 @@
 ::backdrop {
     background-color: rgba(0,0,0, 0.8);
 }
+
+.app-card {
+    @apply relative bg-app-blue-soft shadow shadow-black rounded-lg;
+}

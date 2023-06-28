@@ -1,6 +1,6 @@
 import GoogleAPIService from '@/services/GoogleAPIService'
 import { apiGet, apiPost } from '@/utils/AppApi'
-import type { Review } from '@/types'
+import type { Review, SurveyQuestion } from '@/types'
 
 const fields = [
   'average_review_time',
@@ -41,7 +41,7 @@ const reviewMetric = (review: Review) => {
   return Math.round(average)
 }
 
-const getReviewQuestions = () => {
+const getReviewQuestions = (): SurveyQuestion[] => {
   return [
     {
       id: 1,

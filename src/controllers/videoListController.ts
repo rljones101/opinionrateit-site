@@ -7,9 +7,7 @@ const getAllPublishedVideos = async (query = {}) => {
   }
   const res = await apiGet(url)
   if (res.originalData.results > 0) {
-    const channelId = [...res.data.data][0].channelId
-    const youTubeVideos = res.data.data
-    return youTubeVideos.map((video: any) => ({ ...video, channelId }))
+    return res.data.data
   }
   return []
 }

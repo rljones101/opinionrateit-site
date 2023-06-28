@@ -8,7 +8,6 @@ import VideoItem from '@/components/VideoItem.vue'
 const router = useRouter()
 const videos = ref([])
 getAllPublishedVideos().then((res) => {
-  console.log(res)
   videos.value = res
 })
 
@@ -21,8 +20,8 @@ const showVideo = async (video) => {
 </script>
 
 <template>
-  <AppTitle class="mb-8">Videos</AppTitle>
-  <transition name="fade">
+  <div>
+    <AppTitle class="mb-8">Videos</AppTitle>
     <div class="grid-layout w-full" v-if="videos.length">
       <VideoItem
         v-for="video in videos"
@@ -31,7 +30,7 @@ const showVideo = async (video) => {
         @click="showVideo(video)"
       />
     </div>
-  </transition>
+  </div>
 </template>
 
 <style scoped></style>

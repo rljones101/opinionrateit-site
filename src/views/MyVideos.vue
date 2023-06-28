@@ -13,6 +13,7 @@ import type { VideoChannelDetails } from '@/types'
 import { useProfile } from '@/composables/useProfile'
 import { useModal } from '@/composables/useModal'
 import ComponentSpinner from '@/components/spinners/ComponentSpinner.vue'
+import ConfirmModal from '@/components/modals/ConfirmModal.vue'
 
 // Variables
 const tabs = [{ label: 'My Published Videos' }, { label: 'My Youtube Videos' }]
@@ -22,10 +23,9 @@ const selectedTabIndex = ref(0)
 const searchValue = ref('')
 
 // Template refs
-const modal = ref(null)
 
 // Composables
-const { hide, show } = useModal(modal)
+const { hide, show } = useModal('#modalPublishVideos')
 const { searchVideos, publishVideos, profile, profileLoaded } = useProfile()
 
 // Computed methods
@@ -51,73 +51,36 @@ const setSelectedVideosToPublish = async () => {
   }
 }
 
+const cancelSelection = () => {
+  profile.value.videos.forEach((video) => (video.selected = false))
+  hide()
+}
+
 watch(searchValue, (value) => searchVideos(value))
 </script>
 
 <template>
   <div class="w-full h-full relative">
     <!-- modals --->
-    <div
-      ref="modal"
-      tabindex="-1"
-      aria-hidden="true"
-      class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] max-h-full"
+    <ConfirmModal
+      id="modalPublishVideos"
+      @confirmed="setSelectedVideosToPublish"
+      @cancelled="cancelSelection"
     >
-      <div class="relative w-full max-w-2xl max-h-full">
-        <!-- Modal content -->
-        <div class="relative bg-slate-800 rounded-lg shadow dark:bg-gray-700">
-          <!-- Modal header -->
-          <div class="flex items-start justify-between p-5 border-b rounded-t border-slate-600">
-            <h3 class="text-xl font-semibold text-text-white lg:text-2xl dark:text-white">
-              Publish Videos
-            </h3>
-            <button
-              id="closeButton"
-              type="button"
-              class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-              @click="hide"
+      <template #title> Publish Videos </template>
+      <template #confirmMessage>
+        <p class="text-base leading-relaxed">
+          Are you sure you wish to publish the following videos?
+        </p>
+        <ul class="ml-8 mt-4">
+          <li v-for="video in selectedVideos" :key="video.videoId">
+            <CheckListItem :line-through="false" :is-checked="true" class="flex gap-4 items-center"
+              ><span class="text-white">{{ video.title }}</span></CheckListItem
             >
-              <svg
-                class="w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                ></path>
-              </svg>
-            </button>
-          </div>
-          <!-- Modal body -->
-          <div class="p-6 space-y-6">
-            <p class="text-base leading-relaxed">
-              Are you sure you wish to publish the following videos?
-            </p>
-            <ul class="ml-8 mt-4">
-              <li v-for="video in selectedVideos" :key="video.videoId">
-                <CheckListItem
-                  :line-through="false"
-                  :is-checked="true"
-                  class="flex gap-4 items-center"
-                  ><span class="text-white">{{ video.title }}</span></CheckListItem
-                >
-              </li>
-            </ul>
-          </div>
-          <!-- Modal footer -->
-          <div
-            class="flex items-center justify-end p-6 space-x-2 border-t border-slate-600 rounded-b"
-          >
-            <BaseButton @click="setSelectedVideosToPublish" class="bg-orange-500"> Yes </BaseButton>
-            <BaseButton @click="hide"> No </BaseButton>
-          </div>
-        </div>
-      </div>
-    </div>
-
+          </li>
+        </ul>
+      </template>
+    </ConfirmModal>
     <!-- tabs --->
     <TabsComponent :tabs="tabs" class="mb-8" @selected-index="selectedTabHandler" />
     <transition-group name="fade">
@@ -147,14 +110,20 @@ watch(searchValue, (value) => searchVideos(value))
         <p class="mb-8">
           Here you can search and select what videos you would like to have reviewed.
         </p>
-        <div class="flex w-full gap-8 mb-8">
+        <div class="flex w-full gap-8 mb-8 bg-app-blue-soft p-4 rounded-lg">
           <BaseButton
-            class="flex-2 bg-orange-500"
+            class="relative flex-2 bg-orange-500 text-white"
             v-if="profile.isReviewer"
             :disabled="selectedVideos.length === 0"
             @click="show"
-            >Publish Selected ({{ selectedVideos.length }})</BaseButton
-          >
+            >Publish Selected
+            <span
+              v-if="selectedVideos.length"
+              class="inline-flex items-center justify-center w-4 h-4 ml-2 text-blue-800 bg-blue-200 rounded-full font-bold absolute -top-2 -right-2"
+            >
+              {{ selectedVideos.length }}
+            </span>
+          </BaseButton>
           <SearchInput v-model="searchValue" class="flex-1" />
         </div>
         <!--          <p class="mb-4">selected videos: {{ selectedVideos }}</p>-->
@@ -165,7 +134,7 @@ watch(searchValue, (value) => searchVideos(value))
             v-for="video in profile.videos"
             :key="video.videoId"
           >
-            <VideoItem :video="video" />
+            <VideoItem :video="video" class="h-full" />
             <RadioCheckIcon :is-checked="video.selected" class="absolute top-5 right-5 z-20" />
           </div>
         </div>

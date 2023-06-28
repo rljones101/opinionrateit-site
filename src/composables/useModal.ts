@@ -1,9 +1,9 @@
 import { onMounted, ref } from 'vue'
-import type { Ref } from 'vue'
 import { Modal } from 'flowbite'
+import type { ModalOptions, ModalInterface } from 'flowbite'
 
-const useModal = (modal: Ref) => {
-  const modalInstance = ref()
+const useModal = (modal: string) => {
+  const modalInstance = ref<ModalInterface>()
 
   const show = () => {
     if (modalInstance.value) {
@@ -18,12 +18,19 @@ const useModal = (modal: Ref) => {
   }
 
   onMounted(() => {
-    const modalOptions = {
-      backdropClasses: 'bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40'
-    }
-    // NOTE: Can't find modal references if they are inside a v-if condition
-    if (modal.value) {
-      modalInstance.value = new Modal(modal.value, modalOptions)
+    try {
+      const modalOptions: ModalOptions = {
+        backdropClasses: 'bg-gray-900 bg-opacity-50 dark:bg-opacity-80 fixed inset-0 z-40'
+      }
+      // NOTE: Can't find modal references if they are inside a v-if condition
+      // @ts-ignore
+      const $modalElement: HTMLElement = document.querySelector(modal)
+
+      if ($modalElement) {
+        modalInstance.value = new Modal($modalElement, modalOptions)
+      }
+    } catch (err) {
+      console.error(err)
     }
   })
 

@@ -33,7 +33,7 @@ const login = async () => {
         showError.value = false
         email.value = ''
         password.value = ''
-        await router.push({ name: 'reviewers' })
+        await router.push({ name: 'videos' })
       } else {
         showError.value = true
         if ('message' in res) {

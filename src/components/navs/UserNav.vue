@@ -74,7 +74,7 @@ const goToPath = async (link: userLinkItem) => {
 
 <template>
   <div class="pl-4 pr-4 relative">
-    <nav id="nav" class="relative z-50 flex flex-col w-full transition space-y-2 pt-4">
+    <nav id="nav" class="relative z-50 flex flex-col w-full transition space-y-2">
       <button
         v-for="link in navLinks"
         :key="link.id"
@@ -111,7 +111,7 @@ const goToPath = async (link: userLinkItem) => {
 
 <style scoped>
 .user-nav-btn {
-  @apply hover:bg-app-orange font-bold rounded-lg p-2 pl-4 pr-4 flex items-center gap-4;
+  @apply hover:bg-app-orange border border-transparent font-bold rounded-lg p-2 pl-4 pr-4 flex items-center gap-4;
   min-height: 48px;
   line-height: 1rem;
   transform: translateY(0);

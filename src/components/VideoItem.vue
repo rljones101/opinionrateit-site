@@ -8,18 +8,16 @@ defineProps<{
 
 <template>
   <div
-    class="flex flex-col items-center overflow-hidden transition-all duration-300 ease-in-out hover:scale-105"
+    class="app-card flex flex-col items-center overflow-hidden transition-all duration-300 ease-in-out hover:scale-105 hover:shadow-black hover:shadow-lg"
   >
-    <div class="overflow-hidden relative">
+    <div class="overflow-hidden relative w-full">
       <div
-        class="absolute left-0 right-0 top-0 bottom-0 bg-black bg-opacity-70 rounded border border-orange-500 rounded-lg"
+        class="absolute left-0 right-0 top-0 bottom-0 bg-black bg-opacity-70 border border-orange-500 rounded-lg"
         v-show="video.selected"
       ></div>
-      <img :src="video.thumbnail" :alt="video.title" class="rounded-lg" />
+      <img :src="video.thumbnail" :alt="video.title" class="w-full object-cover" />
     </div>
-    <p class="pt-4 pb-4 font-bold text-sm text-white">{{ video.title }}</p>
-    <!--    <p class="pt-4 pb-4">{{ video.creator }}</p>-->
-    <!--    <p class="pt-4 pb-4">{{ video.reviews }} Reviews</p>-->
+    <p class="p-4 font-bold text-sm">{{ video.title }}</p>
   </div>
 </template>
 

@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="app-title flex flex-col" style="max-width: 200px; min-height: 0; min-width: 0">
+  <div class="site-logo-wrapper">
     <svg
       width="100%"
       height="39"
@@ -37,4 +37,13 @@
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.site-logo-wrapper {
+  max-width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+}
+</style>

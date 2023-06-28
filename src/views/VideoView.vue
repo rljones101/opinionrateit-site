@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import MediaPlayer from '@/components/mediaPlayer.vue'
 import videoViewController from '@/controllers/videoViewController'
 import { useRoute } from 'vue-router'
-import type { Review } from '@/types'
+import type { Review, SurveyQuestion } from '@/types'
 import { reviewDate } from '@/utils/DateUtils'
 import { replaceNewlines, urlify } from '@/utils/StringUtils'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import MetricInput from '@/components/MetricInput.vue'
-import FormContainer from '@/components/containers/FormContainer.vue'
 import { useUserStore } from '@/stores/user'
 import { formatPercentageToRating } from '@/utils/StringUtils'
+import ContentReadMore from '@/components/ContentReadMore.vue'
 
 const route = useRoute()
 const user = useUserStore()
@@ -19,7 +19,8 @@ const channelId = route.params.channelId as string
 const youTubeBaseUrl = 'https://www.youtube.com/watch?v='
 const reviews = ref<Review[]>([])
 const showReviewForm = ref(false)
-const reviewQuestions = ref(videoViewController.getReviewQuestions())
+const reviewQuestions = ref<SurveyQuestion[]>(videoViewController.getReviewQuestions())
+const questionNumber = ref(1)
 
 const itemDetail = ref({
   title: '',
@@ -31,7 +32,7 @@ const itemDetail = ref({
   youtubeURL: `${youTubeBaseUrl}${videoId}`
 })
 
-const reviewForm = ref({
+const defaultFormValues = {
   channelId: route.params.channelId,
   videoId: route.params.videoId,
   overall_presentation: 0,
@@ -43,7 +44,9 @@ const reviewForm = ref({
   product_focus: 0,
   provided_resources: 0,
   comment: ''
-})
+}
+
+const reviewForm = ref({ ...defaultFormValues })
 
 videoViewController.getVideo(videoId).then((res) => {
   if ('items' in res) {
@@ -60,26 +63,46 @@ const getReviews = () => {
   })
 }
 
-const answerQuestion = (question) => {
-  const i = reviewQuestions.value.findIndex((q) => {
-    if (q.id === question.id) {
-      reviewForm.value[question.model.field] = question.model.value
-      return true
-    }
-  })
-  if (i > -1) {
-    reviewQuestions.value.splice(i, 1)
+const showSurvey = () => {
+  showReviewForm.value = !showReviewForm.value
+  if (!showReviewForm.value) {
+    // reset question number
+    questionNumber.value = 1
+    // reset form values
+    reviewForm.value = { ...defaultFormValues }
   }
 }
 
+const hideSurvey = () => {
+  showReviewForm.value = false
+  // reset question number
+  questionNumber.value = 1
+  // reset form values
+  reviewForm.value = { ...defaultFormValues }
+}
+
+const allSurveyQuestionsAnswered = computed(() => {
+  return questionNumber.value > reviewQuestions.value.length
+})
+
+const answerQuestion = (question) => {
+  // set the question value
+  reviewForm.value[question.model.field] = question.model.value
+  // get the next question
+  questionNumber.value++
+}
+
+const currentQuestion = computed(() => {
+  return reviewQuestions.value.find((q) => q.id === questionNumber.value)
+})
+
 const addReview = async () => {
   try {
-    console.log(reviewForm.value)
     await videoViewController.addReview(reviewForm.value)
     // refresh the reviews list
     getReviews()
     // close the form
-    showReviewForm.value = false
+    hideSurvey()
   } catch (err) {
     console.error(err)
   }
@@ -103,163 +126,136 @@ getReviews()
       review
     </div>
     <div class="max-w-7xl mx-auto">
-      <div class="product-buttons">
-        <!--      <div><button class="item-buy-button md-primary md-raised" v-on:click="purchaseProduct" v-if="itemDetail.buyUrl">BUY</button></div>-->
-      </div>
-      <div class="mb-8 flex justify-end gap-4">
-        <BaseButton v-if="user.restrictTo('user')" @click="showReviewForm = !showReviewForm">{{
-          !showReviewForm ? 'Add Review' : 'Cancel'
-        }}</BaseButton>
-        <BaseButton>Bookmark</BaseButton>
-      </div>
-      <div>
-        <Transition name="slide-fade" tag="div" class="absolute">
-          <div
-            key="videoArea"
-            class="relative border border-slate-800 p-8 rounded"
-            v-show="!showReviewForm"
-          >
-            <div class="w-full">
-              <div class="md:flex flex-row gap-4">
-                <!--        <div class="flex-1">-->
-                <!--          <div class="follow-reviewer" v-if="itemDetail.social && itemDetail.social.length">-->
-                <!--            Support Reviewer:-->
-                <!--            <div style="display: flex; flex-direction: row; margin: 20px 0">-->
-                <!--              <div v-for="(socialItem, i) in itemDetail.social" :key="i">-->
-                <!--                <a class="Link SocialLinks-link" :href="socialItem.url" target="_blank">-->
-                <!--                  <span>-->
-                <!--                    <svg-->
-                <!--                      class="Icon-svg"-->
-                <!--                      xmlns="http://www.w3.org/2000/svg"-->
-                <!--                      xmlns:xlink="http://www.w3.org/1999/xlink"-->
-                <!--                      viewBox="0 0 64 64"-->
-                <!--                      focusable="false"-->
-                <!--                    >-->
-                <!--                      <use-->
-                <!--                        xlink:href="../assets/img/icons/social-icons.svg#social-facebook"-->
-                <!--                        v-if="socialItem.type === 'facebook'"-->
-                <!--                      ></use>-->
-                <!--                      <use-->
-                <!--                        xlink:href="../assets/img/icons/social-icons.svg#social-twitter"-->
-                <!--                        v-if="socialItem.type === 'twitter'"-->
-                <!--                      ></use>-->
-                <!--                      <use-->
-                <!--                        xlink:href="../assets/img/icons/social-icons.svg#social-youtube"-->
-                <!--                        v-if="socialItem.type === 'youtube'"-->
-                <!--                      ></use>-->
-                <!--                      <use-->
-                <!--                        xlink:href="../assets/img/icons/social-icons.svg#social-instagram"-->
-                <!--                        v-if="socialItem.type === 'instagram'"-->
-                <!--                      ></use>-->
-                <!--                      <use-->
-                <!--                        xlink:href="../assets/img/icons/social-icons.svg#social-patreon"-->
-                <!--                        v-if="socialItem.type === 'patreon'"-->
-                <!--                      ></use>-->
-                <!--                    </svg>-->
-                <!--                  </span>-->
-                <!--                </a>-->
-                <!--              </div>-->
-                <!--            </div>-->
-                <!--          </div>-->
-                <!--        </div>-->
-                <div class="w-full" v-if="itemDetail && itemDetail.youTubeId">
-                  <div class="mb-8 rounded bg-app-blue-soft p-8 pt-0">
-                    <div class="description">
-                      <h3 class="font-bold text-white pt-4 pb-4">Description</h3>
-                      <div
-                        class="text-sm description-content"
-                        v-html="itemDetail.description"
-                      ></div>
-                    </div>
-                  </div>
-                  <MediaPlayer class="media-player" :video-id="itemDetail.youTubeId"></MediaPlayer>
-                  <div class="flex justify-between items-center mt-8 mb-8">
-                    <div>
-                      <h3 class="font-bold text-white uppercase">{{ itemDetail.title }}</h3>
-                      <p class="text-sm" v-if="itemDetail.creator">
-                        Review by:
-                        <router-link
-                          :to="{ name: 'reviewers-channelId-reviews', params: { channelId } }"
-                          >{{ itemDetail.creator }}</router-link
-                        >
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="w-full">
-              <div
-                v-for="review in reviews"
-                :key="review._id"
-                class="flex mb-8 bg-app-blue-soft rounded p-4 shadow shadow-black"
-              >
-                <div
-                  class="rounded-full w-12 h-12 bg-app-blue flex items-center justify-center mr-4"
-                >
-                  <span
-                    :style="{
-                      color: videoViewController.getColor(videoViewController.reviewMetric(review))
-                    }"
-                    >{{ formatPercentageToRating(videoViewController.reviewMetric(review)) }}</span
+      <div class="shadow-lg shadow-black">
+        <div key="videoArea" class="relative border border-slate-800 p-8 rounded">
+          <div class="w-full flex flex-col gap-8" v-if="itemDetail && itemDetail.youTubeId">
+            <!-- video player -->
+            <MediaPlayer class="media-player" :video-id="itemDetail.youTubeId"></MediaPlayer>
+            <div class="flex justify-between items-center">
+              <div>
+                <h3 class="font-bold text-white uppercase">{{ itemDetail.title }}</h3>
+                <p class="text-sm" v-if="itemDetail.creator">
+                  Review by:
+                  <router-link
+                    :to="{ name: 'reviewers-channelId-reviews', params: { channelId } }"
+                    >{{ itemDetail.creator }}</router-link
                   >
-                </div>
-                <div>
-                  <div class="text-sm">
-                    {{ review.user.name }} - {{ reviewDate(review.createdAt) }}
-                  </div>
-                  <div class="text-white">{{ review.comment }}</div>
-                </div>
+                </p>
               </div>
+              <BaseButton
+                class="border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
+              >
+                Bookmark
+              </BaseButton>
+            </div>
+            <!-- description container -->
+            <div class="rounded bg-app-blue-soft p-4 max-w-full">
+              <div class="flex items-center gap-4 text-white">
+                <span>99K views</span>
+                <span>8 days ago</span>
+              </div>
+              <ContentReadMore>
+                <div class="text-sm description-content" v-html="itemDetail.description"></div>
+              </ContentReadMore>
             </div>
           </div>
-          <!-- comments and form -->
-        </Transition>
-        <transition name="slide-fade" tag="div" class="absolute">
-          <FormContainer class="w-full" key="reviewForm" v-show="showReviewForm">
-            <div class="overflow-hidden relative h-80">
-              <TransitionGroup name="fade">
-                <div v-for="reviewQuestion in reviewQuestions" :key="reviewQuestion.id">
-                  <MetricInput
-                    v-model="reviewQuestion.model.value"
-                    @click:rating="answerQuestion(reviewQuestion)"
-                    >{{ reviewQuestion.question }}</MetricInput
-                  >
-                </div>
-                <div :key="10" class="w-full flex flex-col gap-8 h-80">
-                  <label for="message" class="block mb-2">Your Comment</label>
-                  <textarea
-                    id="message"
-                    rows="10"
-                    v-model="reviewForm.comment"
-                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Write your thoughts here..."
-                  ></textarea>
-                  <div>
-                    <BaseButton @click="addReview">Submit Review</BaseButton>
-                  </div>
-                </div>
-              </TransitionGroup>
+        </div>
+      </div>
+      <div
+        class="bg-app-blue-soft p-4 mt-8 rounded-lg shadow shadow-black"
+        v-if="user.restrictTo('user')"
+      >
+        <!-- review form -->
+        <div class="form-wrapper" :class="[{ open: showReviewForm }]">
+          <!--          <pre key="10">{{ reviewForm }}</pre>-->
+          <div
+            v-if="!allSurveyQuestionsAnswered"
+            key="questions"
+            class="w-full flex items-center justify-center min-h-0"
+          >
+            <TransitionGroup name="slide-fade" class="relative" tag="div">
+              <MetricInput
+                v-if="!allSurveyQuestionsAnswered"
+                :key="questionNumber"
+                v-model="currentQuestion.model.value"
+                class="bg-app-blue-soft w-full"
+                @click:rating="answerQuestion(currentQuestion)"
+                >{{ currentQuestion.question }}</MetricInput
+              >
+            </TransitionGroup>
+          </div>
+          <Transition name="slide-fade">
+            <div key="comment" v-if="allSurveyQuestionsAnswered" class="w-full mb-4">
+              <label for="message" class="block mb-2">Your Comment</label>
+              <textarea
+                id="message"
+                rows="4"
+                v-model="reviewForm.comment"
+                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Write your thoughts here..."
+              ></textarea>
             </div>
-          </FormContainer>
-        </transition>
+          </Transition>
+        </div>
+        <!-- controls -->
+        <div class="button-controls flex gap-4">
+          <BaseButton
+            v-if="!showReviewForm"
+            class="text-app-orange border border-app-orange hover:bg-app-orange hover:text-white"
+            @click="showSurvey"
+            >Add Review</BaseButton
+          >
+          <BaseButton
+            v-if="showReviewForm"
+            class="text-app-orange border border-app-orange hover:bg-app-orange hover:text-white"
+            @click="showSurvey"
+            >Cancel</BaseButton
+          >
+          <BaseButton
+            v-if="allSurveyQuestionsAnswered"
+            class="text-app-orange border border-app-orange hover:bg-app-orange hover:text-white"
+            @click="addReview"
+            >Submit Review</BaseButton
+          >
+        </div>
+      </div>
+
+      <!-- comments and form -->
+      <div class="comments w-full">
+        <div
+          v-for="review in reviews"
+          :key="review._id"
+          class="flex mt-8 bg-app-blue-soft rounded-lg p-4 shadow shadow-black"
+        >
+          <div class="rounded-full w-12 h-12 bg-app-blue flex items-center justify-center mr-4">
+            <span
+              :style="{
+                color: videoViewController.getColor(videoViewController.reviewMetric(review))
+              }"
+              >{{ formatPercentageToRating(videoViewController.reviewMetric(review)) }}</span
+            >
+          </div>
+          <div>
+            <div class="text-sm">{{ review.user.name }} - {{ reviewDate(review.createdAt) }}</div>
+            <div class="text-white">{{ review.comment }}</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.description {
-  display: block;
+.form-wrapper {
+  position: relative;
+  width: 100%;
+  display: grid;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  transition: grid-template-rows 200ms ease-in-out;
 }
 
-.description:hover .description-content {
-  max-height: 300px;
-}
-
-.description-content {
-  max-height: 4rem;
-  transition: max-height 1s;
-  overflow-y: auto;
+.form-wrapper.open {
+  grid-template-rows: 1fr;
 }
 </style>

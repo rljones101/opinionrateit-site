@@ -108,3 +108,12 @@ export interface Review {
   provided_resources: number
   share: number
 }
+
+export interface SurveyQuestion {
+  id: number
+  question: string
+  model: {
+    field: string
+    value: number
+  }
+}

@@ -81,9 +81,7 @@ useRevealObserver()
   opacity: 0.3;
   width: 100%;
   height: 100%;
-  background-image: url('../assets/img/kadyn-pierce--zBngA6zcc8-unsplash.jpg');
-  background-repeat: no-repeat;
-  background-position: center center;
+  background: linear-gradient(to top, #f77216, #0f172a);
   background-size: cover;
 }
 

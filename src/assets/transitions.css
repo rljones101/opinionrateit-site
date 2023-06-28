@@ -1,17 +1,19 @@
 @keyframes slide-in {
   from {
-    transform: translateY(20px);
+    transform: translate(0, -250px);
   }
   to {
-    transform: translateY(0);
+    transform: translate(0, 0);
   }
 }
 @keyframes slide-out {
   from {
-    transform: translateY(0);
+    transform: translate(0, 0);
+    opacity: 1;
   }
   to {
-    transform: translateY(-20px);
+    transform: translate(0, -250px);
+    opacity: 0;
   }
 }
 
@@ -22,7 +24,7 @@
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: all 0.5s cubic-bezier(0.55, 0, 0.1, 1);
+  transition: all 1s cubic-bezier(0.55, 0, 0.1, 1);
 }
 
 .fade-enter-to,
@@ -32,8 +34,7 @@
 
 .fade-leave-active {
   position: absolute;
-  left: 0;
-  right: 0;
+  inset: 0
 }
 
 .slide-enter {
@@ -56,15 +57,22 @@
 .rotate-leave-active { transition: 0.5s; }
 .rotate-leave-to { transform: perspective(500px) rotate3d(0, 1, 0, -90deg); }
 
+.slide-fade-move,
 .slide-fade-enter-active {
-  animation: slide-in 1s ease-out forwards;
+  animation: slide-in .3s ease-in;
   transition: opacity 1s;
 }
 .slide-fade-move,
 .slide-fade-leave-active {
-  animation: slide-out 1s ease-out forwards;
+  animation: slide-out .3s ease-out;
   transition: opacity 1s;
   opacity: 0;
+}
+
+.slide-fade-leave-active {
+  position: absolute;
+  left: 0;
+  right: 0;
 }
 
 .slide-fade-enter-to,

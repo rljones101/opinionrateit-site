@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import PageContainer from '@/components/containers/PageContainer.vue'
 import UserNav from '@/components/navs/UserNav.vue'
-import { useRevealObserver } from '@/composables/useRevealObserver'
 import SearchInput from '@/components/inputs/SearchInput.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import { useRouter, useRoute } from 'vue-router'
@@ -15,8 +14,6 @@ const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
 const searchValue = ref(route.query.value || '')
-
-useRevealObserver()
 
 const logout = () => {
   userStore.logoutUser()
@@ -39,19 +36,22 @@ watch(searchValue, (value: string) => {
 <template>
   <div class="w-full h-full flex">
     <div id="left" class="column flex-shrink-0 hidden md:flex">
-      <div class="hidden lg:block flex-shrink-0 bg-app-blue-soft px-8 py-4 pb-0">
-        <SiteLogo class="lg:flex" />
+      <div class="flex items-center justify-center flex-shrink-0 bg-app-blue-soft px-4 py-4">
+        <div class="hidden lg:block">
+          <SiteLogo />
+        </div>
+        <UserAvatar :name="userStore.user.name" class="block lg:hidden w-10 h-10" />
       </div>
-      <div class="bg-app-blue-soft flex flex-col items-center pb-4 pt-4 lg:pt-8">
-        <UserAvatar :name="userStore.user.name" class="w-10 h-10 mb-2" />
-        <p class="whitespace-nowrap hidden lg:block">{{ userStore.user.name }}</p>
-      </div>
-      <div class="bottom">
-        <UserNav class="bg-app-blue-soft h-full" />
+      <div class="bottom bg-app-blue-soft border-r border-slate-700">
+        <div class="hidden lg:flex flex-col items-center pb-4 pt-4 lg:pt-4">
+          <UserAvatar :name="userStore.user.name" class="w-10 h-10 mb-2" />
+          <p class="whitespace-nowrap hidden lg:block">{{ userStore.user.name }}</p>
+        </div>
+        <UserNav />
       </div>
     </div>
     <div id="right" class="column w-full flex">
-      <div class="flex-shrink-0 bg-app-blue-soft py-4 md:space-y-0">
+      <div class="flex-shrink-0 bg-app-blue-soft py-4 md:space-y-0 border-b border-slate-700">
         <div class="flex">
           <div class="w-full flex flex-row items-center px-4">
             <div class="flex flex-col items-center lg:hidden mr-4">
@@ -71,8 +71,10 @@ watch(searchValue, (value: string) => {
         </div>
       </div>
       <div class="bottom">
-        <PageContainer>
-          <slot name="main" />
+        <PageContainer class="relative">
+          <transition name="fade">
+            <slot name="main" />
+          </transition>
         </PageContainer>
       </div>
     </div>

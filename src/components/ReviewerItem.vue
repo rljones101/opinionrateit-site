@@ -51,7 +51,7 @@ testImage(props.reviewer.thumbnailMedium)
 
 <template>
   <div
-    class="relative flex flex-col bg-app-blue-soft transition-all duration-300 group hover:bg-opacity-70 hover:font-bold hover:text-white hover:shadow-lg hover:scale-105 rounded-lg"
+    class="app-card flex flex-col transition-all duration-300 group hover:font-bold hover:text-white hover:scale-105 hover:shadow-lg hover:shadow-black"
   >
     <BadgeSmall
       v-if="pastNumOfDays(props.reviewer.createdAt) >= -7"
@@ -169,7 +169,6 @@ testImage(props.reviewer.thumbnailMedium)
 }
 
 .reviewer-details__label {
-  @apply text-slate-500;
   text-transform: uppercase;
 }
 

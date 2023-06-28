@@ -3,14 +3,14 @@ import { onMounted } from 'vue'
 export const useYouTube = (iframe: string, videoId: string) => {
   let player: any
 
-  const onPlayerReady = (event: any) => {
+  const onPlayerReady = () => {
     //event.target.playVideo()
     console.log('Player is ready!')
   }
 
-  const stopVideo = () => {
-    player.stopVideo()
-  }
+  // const stopVideo = () => {
+  //   player.stopVideo()
+  // }
 
   const onPlayerStateChange = (event: any) => {
     // if (event.data == window.YT.PlayerState.PLAYING && !done) {
