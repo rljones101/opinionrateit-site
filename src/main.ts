@@ -8,7 +8,7 @@ import awsConfig from './aws-exports.js'
 import App from './App.vue'
 import router from './router'
 
-Amplify.configure(awsConfig)
+if (awsConfig) Amplify.configure(awsConfig)
 
 export const app = createApp(App)
 export const pinia = createPinia()
