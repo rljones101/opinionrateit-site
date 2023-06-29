@@ -70,6 +70,12 @@ PublishedVideoSchema.index({ videoId: 1 })
 PublishedVideoSchema.index({ title: 'text' })
 PublishedVideoSchema.index({ channelId: 1 })
 
+PublishedVideoSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'videoId',
+  localField: '_id'
+})
+
 // POST MIDDLEWARE ===========================================================
 PublishedVideoSchema.post('save', function () {
   this.constructor.setVideoCount(this.channelId)

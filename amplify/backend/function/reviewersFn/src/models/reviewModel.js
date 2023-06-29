@@ -98,6 +98,10 @@ const reviewSchema = new mongoose.Schema(
 reviewSchema.index({ channelId: 1 })
 reviewSchema.index({ user: 1 })
 reviewSchema.index({ videoId: 1 })
+reviewSchema.pre(/^find/, function (next) {
+  this.populate('user')
+  next()
+})
 
 reviewSchema.post('save', function () {
   // calculate averages

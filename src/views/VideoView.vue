@@ -221,11 +221,11 @@ getReviews()
       </div>
 
       <!-- comments and form -->
-      <div class="comments w-full">
+      <div class="comments w-full mt-8">
         <div
           v-for="review in reviews"
           :key="review._id"
-          class="flex mt-8 bg-app-blue-soft rounded-lg p-4 shadow shadow-black"
+          class="flex mb-4 bg-app-blue-soft rounded-lg p-4 shadow shadow-black"
         >
           <div class="rounded-full w-12 h-12 bg-app-blue flex items-center justify-center mr-4">
             <span

@@ -9,7 +9,7 @@ exports.updateOne = factory.updateOne(Review)
 exports.deleteOne = factory.deleteOne(Review)
 
 exports.getReviewsByVideo = catchAsync(async (req, res) => {
-  const reviews = await Review.find({ videoId: req.params.videoId }).populate('user')
+  const reviews = await Review.find({ videoId: req.params.videoId })
 
   res.status(200).json({
     status: 'success',
