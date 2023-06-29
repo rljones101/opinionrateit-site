@@ -15,7 +15,7 @@
       "function": {
         "reviewersFn": {
           "deploymentBucketName": "amplify-opinionrateitsite-devbackend-84458-deployment",
-          "s3Key": "amplify-builds/reviewersFn-4859764f527479336c56-build.zip"
+          "s3Key": "amplify-builds/reviewersFn-39572b42484777487430-build.zip"
         }
       },
       "api": {

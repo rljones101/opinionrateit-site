@@ -23,8 +23,10 @@ if (props.src) {
   testImage(props.src)
     .then(() => {
       showImage.value = true
+      console.log('show the avatar image!!!')
     })
     .catch(() => {
+      console.log('Could not load avatar image!')
       showImage.value = false
     })
 }
@@ -44,5 +46,4 @@ const initials = computed(() => reviewerController.getInitials(props.name))
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

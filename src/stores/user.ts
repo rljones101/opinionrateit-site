@@ -8,7 +8,9 @@ export const useUserStore = defineStore('user', () => {
   const user = ref({
     name: '',
     email: '',
-    role: ''
+    role: '',
+    avatar: '',
+    youTubeChannelId: ''
   })
 
   const saveUserAndToken = (user: any, token: string) => {
@@ -18,8 +20,12 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const saveUser = (userDetails: any) => {
-    const { name, email, role } = userDetails
-    localStorage.setItem('orateit-user', JSON.stringify({ name, email, role }))
+    console.log({ userDetails })
+    const { name, email, role, avatar, youTubeChannelId } = userDetails
+    localStorage.setItem(
+      'orateit-user',
+      JSON.stringify({ name, email, role, avatar, youTubeChannelId })
+    )
     user.value = userDetails
   }
 
@@ -48,6 +54,7 @@ export const useUserStore = defineStore('user', () => {
 
   const loginUser = async (email: string, password: string) => {
     const res = await usersLogin(email, password)
+    console.log('login result:', res)
     if (res.status === 'success') {
       if ('data' in res) {
         saveUserAndToken(res.data.user, res.originalData.token)

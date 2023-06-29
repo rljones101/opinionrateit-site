@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useProfile } from '@/composables/useProfile'
 import { formatDate } from '@/utils/DateUtils'
+import { useUserStore } from '@/stores/user'
 
 // Import components
 import AppTitle from '@/components/AppTitle.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
+import UserAvatar from '@/components/UserAvatar.vue'
 // Import types
 
 // Import controllers or other utils
@@ -12,6 +14,7 @@ import BaseButton from '@/components/buttons/BaseButton.vue'
 // Variables
 
 // Reactive variables
+const userStore = useUserStore()
 
 // Template refs
 
@@ -37,7 +40,14 @@ const getRole = (role: string) => {
     <AppTitle>My Profile</AppTitle>
     <div class="app-card p-8 mt-8 space-y-8">
       <div class="border-b border-b-app-blue pb-8 flex items-center justify-between">
-        <span class="text-3xl">{{ profile.name }}</span>
+        <div class="flex items-center gap-2">
+          <UserAvatar
+            :name="userStore.user.name"
+            :src="userStore.user.avatar"
+            class="block w-10 h-10"
+          />
+          <p class="text-3xl">{{ profile.name }}</p>
+        </div>
         <BaseButton
           class="border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
           >Edit</BaseButton

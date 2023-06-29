@@ -32,7 +32,7 @@ const createAndSendToken = (user, statusCode, res) => {
 
 exports.signup = catchAsSync(async (req, res) => {
   // save user
-  const user = await User.create({
+  let user = await User.create({
     youTubeChannelId: req.body.youTubeChannelId,
     name: req.body.name,
     email: req.body.email,
@@ -42,14 +42,18 @@ exports.signup = catchAsSync(async (req, res) => {
     role: req.body.role
   })
 
-  // save reviewer
-  await Reviewer.create({
-    user: user._id,
-    name: req.body.title,
-    channelId: req.body.youTubeChannelId,
-    avatar: req.body.avatar,
-    description: req.body.description
-  })
+  if (['reviewer-basic', 'reviewer-plus'].includes(req.body.role)) {
+    // save reviewer
+    const reviewer = await Reviewer.create({
+      user: user._id,
+      name: req.body.title,
+      channelId: req.body.youTubeChannelId,
+      avatar: req.body.avatar,
+      description: req.body.description
+    })
+
+    user = { ...user.toObject(), avatar: reviewer.avatar }
+  }
 
   createAndSendToken(user, 201, res)
 })
@@ -63,10 +67,17 @@ exports.login = catchAsSync(async (req, res, next) => {
   }
 
   // 2) Check if the user exists and password is correct
-  const user = await User.findOne({ email }).select('+password')
+  let user = await User.findOne({ email }).select('+password -__v')
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError('Incorrect email or password', 401))
+  }
+
+  if (['reviewer-basic', 'reviewer-plus'].includes(user.role)) {
+    const reviewer = await Reviewer.findOne({ channelId: user.youTubeChannelId })
+    if (reviewer) {
+      user = { ...user.toObject(), avatar: reviewer.avatar }
+    }
   }
 
   // 3) If everything is ok, send token to client

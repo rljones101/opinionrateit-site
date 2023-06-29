@@ -44,7 +44,11 @@ watch(searchValue, (value: string) => {
       </div>
       <div class="bottom bg-app-blue-soft border-r border-slate-700">
         <div class="hidden lg:flex flex-col items-center pb-4 pt-4 lg:pt-4">
-          <UserAvatar :name="userStore.user.name" class="w-10 h-10 mb-2" />
+          <UserAvatar
+            :name="userStore.user.name"
+            :src="userStore.user.avatar"
+            class="w-10 h-10 mb-2"
+          />
           <p class="whitespace-nowrap hidden lg:block">{{ userStore.user.name }}</p>
         </div>
         <UserNav />
