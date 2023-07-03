@@ -117,3 +117,31 @@ export interface SurveyQuestion {
     value: number
   }
 }
+
+export interface SignupPlan {
+  name: string
+  role: string
+  priceKey: string
+  cost: number
+  yearlyDiscount: number
+  allowedReviewerAccess: boolean
+  giveReviewerFeedback: boolean
+  bookmarkReviewer: boolean
+  addYourReviews: boolean
+  metricAnalysis: boolean
+  patreonSupport: boolean
+  vinmeo: boolean
+  twitter: boolean
+  steps: string[]
+}
+
+export interface BillingDetails {
+  name: string
+  email: string
+  address: {
+    city: string
+    line1: string
+    state: string
+    postal_code: string
+  }
+}

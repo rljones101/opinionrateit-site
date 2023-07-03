@@ -173,12 +173,12 @@ getReviews()
             key="questions"
             class="w-full flex items-center justify-center min-h-0"
           >
-            <TransitionGroup name="slide-fade" class="relative" tag="div">
+            <TransitionGroup name="slide-fade" tag="div" class="survey-wrapper">
               <MetricInput
                 v-if="!allSurveyQuestionsAnswered"
                 :key="questionNumber"
                 v-model="currentQuestion.model.value"
-                class="bg-app-blue-soft w-full"
+                class="survey-question"
                 @click:rating="answerQuestion(currentQuestion)"
                 >{{ currentQuestion.question }}</MetricInput
               >
@@ -257,5 +257,20 @@ getReviews()
 
 .form-wrapper.open {
   grid-template-rows: 1fr;
+}
+
+.survey-wrapper {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 200px;
+  width: 100%;
+}
+
+.survey-question {
+  position: absolute;
+  inset: 0;
+  flex: 1;
 }
 </style>

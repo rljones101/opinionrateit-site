@@ -9,24 +9,9 @@ defineProps<{
   <li class="flex space-x-3">
     <!-- Icon -->
     <svg
-      v-if="isChecked"
       aria-hidden="true"
-      class="flex-shrink-0 w-5 h-5 text-orange-600 dark:text-orange-500"
-      fill="currentColor"
-      viewBox="0 0 20 20"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <title>Check icon</title>
-      <path
-        fill-rule="evenodd"
-        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-        clip-rule="evenodd"
-      ></path>
-    </svg>
-    <svg
-      v-if="!isChecked"
-      aria-hidden="true"
-      class="flex-shrink-0 w-5 h-5 text-gray-400 dark:text-gray-500"
+      class="flex-shrink-0 w-5 h-5"
+      :class="[{ 'text-app-orange': isChecked }, { 'text-gray-500': !isChecked }]"
       fill="currentColor"
       viewBox="0 0 20 20"
       xmlns="http://www.w3.org/2000/svg"
@@ -39,13 +24,11 @@ defineProps<{
       ></path>
     </svg>
     <span
-      v-if="!lineThrough"
-      class="text-base font-normal leading-tight text-slate-300 dark:text-slate-300"
-      ><slot
-    /></span>
-    <span
-      v-if="lineThrough"
-      class="text-base font-normal leading-tight text-gray-500 dark:text-gray-600 line-through decoration-gray-500"
+      class="text-base font-normal leading-tight"
+      :class="[
+        { 'line-through text-gray-500 decoration-gray-500': !isChecked },
+        { 'text-slate-300': isChecked }
+      ]"
       ><slot
     /></span>
   </li>

@@ -135,13 +135,11 @@
 }
 .main-content-wrapper {
     position: relative;
-    isolation: isolate;
     @apply scrollbar-thin scrollbar-thumb-orange-500 scrollbar-track-slate-800;
 }
 
 .background-gradient-color {
     position: relative;
-    isolation: isolate;
 }
 
 .background-gradient-color:before {
@@ -151,4 +149,10 @@
     opacity: 0.3;
     background: linear-gradient(to top, #f77216, #0f172a);
     z-index: -1;
+}
+
+.form-controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
 }

@@ -33,7 +33,9 @@ const showLogin = () => {
 </script>
 
 <template>
-  <div class="w-full flex flex-col relative bg-app-blue-soft">
+  <div
+    class="w-full flex flex-col relative bg-app-blue-soft border-b border-gray-700 shadow-lg shadow-black"
+  >
     <div class="w-full p-4">
       <div class="flex justify-between items-center w-full">
         <div class="pl-4 w-full">
@@ -59,10 +61,7 @@ const showLogin = () => {
               <SiteLogo />
             </div>
 
-            <BaseButton
-              class="border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
-              @click="showLogin"
-              v-if="!userStore.isLoggedIn"
+            <BaseButton :is-primary="true" @click="showLogin" v-if="!userStore.isLoggedIn"
               >login</BaseButton
             >
           </nav>

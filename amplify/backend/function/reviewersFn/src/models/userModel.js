@@ -56,8 +56,7 @@ const userSchema = new mongoose.Schema({
   // We only inactivate users and don't remove them
   active: {
     type: Boolean,
-    default: true,
-
+    default: false,
     select: false
   },
   slug: {

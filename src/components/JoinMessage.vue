@@ -63,11 +63,7 @@ const { goToSignup } = useNavRoutes()
         others one of your favorites!
       </p>
       <div class="flex gap-4">
-        <BaseButton
-          class="mt-4 w-40 border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
-          @click="goToSignup"
-          >Sign Up</BaseButton
-        >
+        <BaseButton :is-primary="true" @click="goToSignup">Sign Up</BaseButton>
       </div>
     </div>
   </div>

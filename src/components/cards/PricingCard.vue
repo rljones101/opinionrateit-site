@@ -2,7 +2,7 @@
 import BaseButton from '@/components/buttons/BaseButton.vue'
 
 defineProps<{
-  active: boolean
+  active?: boolean
   planName: string
   pricing?: string
   annualDiscountPrice?: string
@@ -15,7 +15,7 @@ const emit = defineEmits(['selected'])
 <template>
   <div
     :class="{ 'active-plan': active }"
-    class="w-full flex flex-col max-w-full p-4 bg-app-blue-soft text-white rounded-lg shadow sm:p-8 dark:bg-gray-800 dark:border-gray-700"
+    class="w-full flex flex-col max-w-sm p-4 bg-app-blue-soft text-white rounded-lg shadow-lg shadow-black sm:p-8"
   >
     <h5 class="mb-4 text-xl font-medium dark:text-gray-400">{{ planName }}</h5>
     <div class="flex items-baseline dark:text-white" v-if="!isDisabled">
@@ -39,7 +39,7 @@ const emit = defineEmits(['selected'])
     </ul>
     <BaseButton
       :class="{ 'active-button': active }"
-      class="flex w-full justify-center md:max-w-full border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
+      :is-primary="true"
       @click="emit('selected')"
       :disabled="active || isDisabled"
       >{{ active ? 'Selected' : isDisabled ? 'Comming Soon' : 'Choose Plan' }}</BaseButton

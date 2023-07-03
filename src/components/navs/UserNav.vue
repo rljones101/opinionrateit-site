@@ -34,19 +34,22 @@ const navLinks: userLinkItem[] = [
     label: 'Reviewers',
     name: 'reviewers',
     icon: UserGroupIcon
-  },
+  }
+]
+
+const userLinks = [
   {
-    id: 2,
-    label: 'My Saved Reviews',
-    name: 'my-saved-reviews',
-    icon: BookmarkIcon
-  },
-  {
-    id: 3,
+    id: 0,
     label: 'My Profile',
     name: 'my-profile',
     icon: UserCircleIcon,
     params: { name: user.user.name }
+  },
+  {
+    id: 1,
+    label: 'My Saved Reviews',
+    name: 'my-saved-reviews',
+    icon: BookmarkIcon
   }
 ]
 
@@ -74,7 +77,7 @@ const goToPath = async (link: userLinkItem) => {
 
 <template>
   <div class="pl-4 pr-4 relative">
-    <nav id="nav" class="relative z-50 flex flex-col w-full transition space-y-2">
+    <nav id="nav" class="flex flex-col w-full transition space-y-2">
       <button
         v-for="link in navLinks"
         :key="link.id"
@@ -88,38 +91,58 @@ const goToPath = async (link: userLinkItem) => {
         <span class="hidden lg:flex uppercase font-bold">{{ link.label }}</span>
       </button>
     </nav>
-    <nav
-      id="reviewerNav"
-      class="flex flex-col w-full transition space-y-2 border-t border-app-blue pt-4 mt-4"
-      v-if="user.restrictTo('reviewer-basic', 'reviewer-plus', 'admin')"
-    >
-      <button
-        v-for="link in reviewerLinks"
-        :key="link.id"
-        class="user-nav-btn whitespace-nowrap"
-        :class="{ active: route.name === link.name }"
-        @click="goToPath(link)"
+    <div class="border-t border-app-blue pt-4 mt-8">
+      <nav id="userNav" class="flex flex-col w-full transition space-y-2">
+        <button
+          v-for="link in userLinks"
+          :key="link.id"
+          class="user-nav-btn whitespace-nowrap"
+          :class="{ active: route.name === link.name }"
+          @click="goToPath(link)"
+        >
+          <span v-if="link.icon" class="text-white"
+            ><component :is="link.icon" class="w-6 h-6"
+          /></span>
+          <span class="hidden lg:flex uppercase font-bold">{{ link.label }}</span>
+        </button>
+      </nav>
+      <nav
+        id="reviewerNav"
+        class="flex flex-col w-full transition space-y-2"
+        v-if="user.restrictTo('reviewer-basic', 'reviewer-plus', 'admin')"
       >
-        <span v-if="link.icon" class="text-white"
-          ><component :is="link.icon" class="w-6 h-6"
-        /></span>
-        <span class="hidden lg:flex uppercase font-bold">{{ link.label }}</span>
-      </button>
-    </nav>
+        <button
+          v-for="link in reviewerLinks"
+          :key="link.id"
+          class="user-nav-btn whitespace-nowrap"
+          :class="{ active: route.name === link.name }"
+          @click="goToPath(link)"
+        >
+          <span v-if="link.icon" class="text-white"
+            ><component :is="link.icon" class="w-6 h-6"
+          /></span>
+          <span class="hidden lg:flex uppercase font-bold">{{ link.label }}</span>
+        </button>
+      </nav>
+    </div>
   </div>
 </template>
 
 <style scoped>
 .user-nav-btn {
-  @apply hover:bg-app-orange border border-transparent font-bold rounded-lg p-2 pl-4 pr-4 flex items-center gap-4;
+  @apply border border-transparent font-bold rounded-lg p-2 pl-4 pr-4 flex items-center gap-4;
   min-height: 48px;
   line-height: 1rem;
   transform: translateY(0);
   transition: all 0.3s ease-in-out;
 }
 
+.user-nav-btn:hover {
+  @apply bg-app-orange-muted transition ease-in-out delay-150 -translate-y-1 scale-105 border border-app-orange;
+}
+
 .user-nav-btn.active {
-  @apply border border-app-orange text-app-orange bg-opacity-10 hover:shadow-none;
+  @apply pointer-events-none bg-white bg-opacity-30 text-app-orange bg-opacity-10 hover:shadow-none;
 }
 
 .user-nav-btn:hover:not(.active) {

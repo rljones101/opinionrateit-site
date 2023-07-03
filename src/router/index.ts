@@ -16,6 +16,8 @@ const MySavedVideos = () => import('@/views/MySavedReviews.vue')
 const MyStats = () => import('@/views/MyStats.vue')
 const MyVideos = () => import('@/views/MyVideos.vue')
 const SearchView = () => import('@/views/SearchResults.vue')
+const SuccessView = () => import('@/views/stripe/SuccessView.vue')
+const CancelView = () => import('@/views/stripe/CancelView.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,6 +36,16 @@ const router = createRouter({
       path: '/signup',
       name: 'signup',
       component: SignupView
+    },
+    {
+      path: '/success',
+      name: 'signup-success',
+      component: SuccessView
+    },
+    {
+      path: '/cancel',
+      name: 'signup-cancelled',
+      component: CancelView
     },
     {
       path: '/access',

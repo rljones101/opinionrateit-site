@@ -174,7 +174,6 @@ const useProfile = () => {
       if (res.status === 'success') {
         if ('data' in res) {
           const profileData = res.data?.data
-          console.log(profileData)
           profile.value.role = profileData.role
           profile.value.createdAt = profileData.createdAt
           profile.value.id = profileData._id

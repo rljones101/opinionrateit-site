@@ -1,7 +1,19 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { computed } from 'vue'
+
+const props = defineProps<{
+  isPrimary?: boolean
+}>()
+
+const getClasses = computed(() => {
+  return props.isPrimary
+    ? 'border border-transparent bg-app-orange text-white hover:bg-app-orange-muted'
+    : 'border border-app-orange text-app-orange hover:bg-app-orange-muted hover:text-white'
+})
+</script>
 
 <template>
-  <button type="button" class="btn font-bold uppercase"><slot /></button>
+  <button type="button" class="btn font-bold uppercase" :class="getClasses"><slot /></button>
 </template>
 
 <style scoped>
@@ -10,12 +22,12 @@
   px-4
   rounded-lg;
   transform: translateY(0);
-  transition: transform 0.3s ease-in-out;
+  transition: all 150ms ease-in-out;
   box-shadow: none;
 }
 
 .btn:hover {
-  transform: translate(0, -0.5em);
+  @apply transition ease-in-out delay-150 -translate-y-1 scale-105 border border-app-orange;
   box-shadow: rgba(0, 0, 0, 0.2) 0 10px 10px;
 }
 .btn:disabled {

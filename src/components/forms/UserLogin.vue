@@ -96,9 +96,7 @@ const closeDialog = () => {
         <a href="#" class="ml-auto text-sm hover:underline">Lost Password?</a>
       </div>
       <div v-if="showError" class="text-red-500">{{ errorMessage }}</div>
-      <BaseButton
-        class="w-full border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
-        @click="login"
+      <BaseButton :is-primary="true" class="w-full" @click="login"
         >Login to your account</BaseButton
       >
       <div class="text-sm font-medium text-gray-500 dark:text-gray-300">

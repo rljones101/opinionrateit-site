@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import JoinMessage from '@/components/JoinMessage.vue'
-import FeaturedReviewers from '@/components/FeaturedReviewers.vue'
 import IconCommunity from '@/components/icons/IconCommunity.vue'
 import IconDocumentation from '@/components/icons/IconDocumentation.vue'
 import IconEcosystem from '@/components/icons/IconEcosystem.vue'
@@ -42,9 +41,9 @@ onMounted(async () => {
       <section>
         <JoinMessage class="max-w-7xl mx-auto" />
       </section>
-      <section class="pt-8 pb-8 hidden xl:flex">
-        <FeaturedReviewers class="reveal fade-right" />
-      </section>
+      <!--      <section class="pt-8 pb-8 hidden xl:flex">-->
+      <!--        <FeaturedReviewers class="reveal fade-right" />-->
+      <!--      </section>-->
       <section>
         <div class="max-w-7xl mx-auto">
           <h1 class="pt-16 flex justify-center text-4xl text-white text-center uppercase">
