@@ -35,7 +35,7 @@ const getRole = (role: string) => {
 </script>
 
 <template>
-  <div class="w-full h-full relative">
+  <div class="w-full h-full relative text-orange-100">
     <!-- content here --->
     <AppTitle>My Profile</AppTitle>
     <div class="app-card p-8 mt-8 space-y-8">
@@ -78,6 +78,5 @@ const getRole = (role: string) => {
 }
 .profile-user-value {
   font-weight: bold;
-  color: #ffffff;
 }
 </style>

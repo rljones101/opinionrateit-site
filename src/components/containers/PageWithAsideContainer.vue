@@ -9,6 +9,7 @@ import SiteLogo from '@/components/siteLogo.vue'
 import { ref, watch } from 'vue'
 import pageController from '@/controllers/pageController'
 import UserAvatar from '@/components/UserAvatar.vue'
+import AppFooter from '@/components/AppFooter.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -28,7 +29,7 @@ const searchHandler = async (value: string) => {
   await router.push({ name: 'search', query })
 }
 
-watch(searchValue, (value: string) => {
+watch(searchValue, (value: any) => {
   pageController.find(value, searchHandler)
 })
 </script>
@@ -70,10 +71,11 @@ watch(searchValue, (value: string) => {
           </div>
         </div>
       </div>
-      <div class="bottom">
+      <div class="bottom grid grid-rows-[1fr_auto]">
         <PageContainer class="relative">
           <slot name="main" />
         </PageContainer>
+        <AppFooter />
       </div>
     </div>
   </div>

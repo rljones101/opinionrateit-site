@@ -9,6 +9,7 @@ const xss = require('xss-clean')
 const cors = require('cors')
 const AppError = require('./utils/appError.js')
 const globalErrorHandler = require('./controllers/errorController.js')
+const stripeController = require('./controllers/stripeController.js')
 
 // Routers
 const reviewerRouter = require('./routes/reviewerRoutes.js')
@@ -46,6 +47,13 @@ if (process.env.NODE_ENV !== 'development') {
 
 // Set security HTTP Headers
 app.use(helmet())
+
+// Stripe Webhook - This MUST be created before the Body parser middleware!
+app.post(
+  '/api/v1/stripe/webhook',
+  express.raw({ type: 'application/json' }),
+  stripeController.stripeWebHook
+)
 
 // Body parser, reading data from the body into req.body
 app.use(bodyParser.json())

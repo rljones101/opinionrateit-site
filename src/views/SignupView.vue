@@ -1,35 +1,39 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 // Components
 import CheckListItem from '@/components/CheckListItem.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import PricingCard from '@/components/cards/PricingCard.vue'
 import FormInput from '@/components/inputs/FormInput.vue'
-import UserAvatar from '@/components/UserAvatar.vue'
-import FormTextarea from '@/components/inputs/FormTextarea.vue'
 import NoAuthLayout from '@/components/layouts/NoAuthLayout.vue'
 // Controllers
 import reviewerController from '@/controllers/reviewerController'
 import signupViewController from '@/controllers/signupViewController'
-import {
-  createCardElement,
-  getCardElement,
-  createPaymentMethod,
-  confirmCardPayment
-} from '@/controllers/stripeController'
-// Services
-import { createPaymentIntent } from '@/services/stripeService'
 // Types
-import type { BillingDetails } from '@/types'
+import type { SignupPlan } from '@/types'
 // Stores
 import { useUserStore } from '@/stores/user'
+import AccountForm from '@/components/forms/AccountForm.vue'
+import BillingForm from '@/components/forms/BillingForm.vue'
+
+import { createCustomer } from '@/services/stripeService'
 
 const router = useRouter()
 const userStore = useUserStore()
-const signupPlans = signupViewController.getSignupPlans()
+const signupPlans: SignupPlan[] = signupViewController.getSignupPlans()
 
-const defaultForm = {
+const billingFormData = ref({
+  id: '',
+  name: '',
+  email: '',
+  address: '',
+  city: '',
+  state: '',
+  zip: ''
+})
+
+const accountFormData = ref({
   youTubeChannelId: '',
   title: '',
   description: '',
@@ -40,34 +44,49 @@ const defaultForm = {
   password: '',
   passwordConfirm: '',
   role: ''
-}
-
-const checkoutForm = {
-  name: '',
-  email: '',
-  address: '',
-  city: '',
-  state: '',
-  zip: ''
-}
-
-const form = ref(defaultForm)
+})
 const loadedYouTubeData = ref(false)
-const loading = ref(true)
+// const loading = ref(true)
 const currentStep = ref('Choose Plan')
 
 // computed methods
 const selectedPlan = computed(() => {
-  if (form.value.role) {
-    return signupPlans.find((plan) => plan.role === form.value.role)
+  let plan = signupViewController.defaultPlan
+  if (accountFormData.value.role) {
+    plan = signupPlans.find((plan) => plan.role === accountFormData.value.role) as SignupPlan
   }
-  return signupViewController.defaultPlan
+  return plan
 })
 
 // methods
-async function handleSubmitAccount() {
-  checkoutForm.name = form.value.firstName.trim() + ' ' + form.value.lastName.trim()
-  goToNextStep()
+const handleSubmitAccount = async (formData: any) => {
+  try {
+    accountFormData.value = { ...formData }
+    const fullName =
+      accountFormData.value.firstName.trim() + ' ' + accountFormData.value.lastName.trim()
+    const res = await createCustomer({ email: formData.email, name: fullName })
+    console.log(res)
+    billingFormData.value.id = res.data.data.id
+    billingFormData.value.name = fullName
+    goToNextStep()
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+const paymentComplete = async (formData: any) => {
+  // Setting this value serves no purpose
+  billingFormData.value = { ...formData }
+  console.log('billingFormData:', billingFormData.value)
+  console.log('formData:', formData)
+  // Signup the user
+  await userStore.signupUser({
+    ...accountFormData.value,
+    name: billingFormData.value.name,
+    active: true
+  })
+  // User should now be signed up
+  await complete()
 }
 
 async function complete() {
@@ -77,15 +96,15 @@ async function complete() {
 
 async function getChannelDetails() {
   try {
-    const channelId = form.value.youTubeChannelId
+    const channelId = accountFormData.value.youTubeChannelId
     loadedYouTubeData.value = false
     const res = await reviewerController.getChannelDetails(channelId)
     loadedYouTubeData.value = true
     // TODO lookup the channel in the existing reviewer data. Do not allow duplicates
     const snippet = res.snippet
-    form.value.title = snippet.title
-    form.value.avatar = snippet.thumbnails.default.url
-    form.value.description = snippet.description
+    accountFormData.value.title = snippet.title
+    accountFormData.value.avatar = snippet.thumbnails.default.url
+    accountFormData.value.description = snippet.description
     goToNextStep()
   } catch (err) {
     console.error(err)
@@ -93,10 +112,10 @@ async function getChannelDetails() {
 }
 
 function clearYouTubeData() {
-  form.value.youTubeChannelId = ''
-  form.value.title = ''
-  form.value.description = ''
-  form.value.avatar = ''
+  accountFormData.value.youTubeChannelId = ''
+  accountFormData.value.title = ''
+  accountFormData.value.description = ''
+  accountFormData.value.avatar = ''
 }
 
 function selectPlan(plan: string) {
@@ -104,58 +123,12 @@ function selectPlan(plan: string) {
     loadedYouTubeData.value = false
     clearYouTubeData()
   }
-  form.value.role = plan
+
+  // Update 'form' role value
+  accountFormData.value.role = plan
+
   // Get the next step
   currentStep.value = selectedPlan.value.steps[1]
-}
-
-async function handleSubmit() {
-  if (loading.value) return
-  loading.value = true
-  try {
-    // Used to pass to the payment intent and lookup price
-    const priceKey = selectedPlan.value.priceKey
-    // Get the billing details
-    const billingDetails: BillingDetails = {
-      name: checkoutForm.name,
-      email: form.value.email,
-      address: {
-        city: checkoutForm.city,
-        line1: checkoutForm.address,
-        state: checkoutForm.state,
-        postal_code: checkoutForm.zip
-      }
-    }
-    // Get the card element that contains the card data
-    const cardElement = getCardElement()
-    // create a payment intent
-    const res = await createPaymentIntent({ priceKey })
-    // get the secret
-    const secret = res.data.data.secret
-    // create the payment method
-    const paymentMethodReq = await createPaymentMethod(cardElement, billingDetails)
-    // confirm the payment with the secret from the intent
-    const { error } = confirmCardPayment(secret, paymentMethodReq.paymentMethod.id)
-    // an error occurred while creating a payment
-    if (error) {
-      console.error(`Failed to make a payment: ${error}`)
-      return
-    } else {
-      // Signup user
-      const submittedForm = {
-        ...form.value,
-        name: checkoutForm.name,
-        active: true
-      }
-      await userStore.signupUser(submittedForm)
-    }
-
-    loading.value = false
-    // done... go to 'complete' step
-    await complete()
-  } catch (err) {
-    console.error(err)
-  }
 }
 
 function isCurrentStepDone(step: string) {
@@ -173,7 +146,6 @@ function getNextStep(step: string) {
 
 function goToPreviousStep() {
   const stepIndex = selectedPlan.value.steps.indexOf(currentStep.value)
-  console.log('step index:', stepIndex)
   if (stepIndex > 0) {
     currentStep.value = selectedPlan.value.steps[stepIndex - 1]
   }
@@ -185,22 +157,12 @@ function goToNextStep() {
     currentStep.value = next
   }
 }
-
-let element = null
-// lifecycle hooks
-onMounted(() => {
-  if (!element) {
-    const element = createCardElement()
-    element.mount('#stripe-element-mount-point')
-  }
-  loading.value = false
-})
 </script>
 
 <template>
   <NoAuthLayout>
-    <!-- Step 1: Pricing Cards -->
     <div class="relative flex-1 flex flex-col items-stretch h-full w-full">
+      <!-- Step 1: Pricing Cards -->
       <Transition name="fade">
         <div
           key="PricingCards"
@@ -246,7 +208,10 @@ onMounted(() => {
         class="flex w-full bg-app-blue-soft p-8 rounded-lg shadow-lg shadow-black"
       >
         <div class="min-w-max w-[254px] step-wrapper pr-8 border-r border-slate-700">
-          <BaseButton @click="goToPreviousStep">Go Back</BaseButton>
+          <div class="flex justify-center">
+            <BaseButton @click="goToPreviousStep">Go Back</BaseButton>
+          </div>
+
           <ol class="mt-8 flex flex-col w-full">
             <li
               class="relative flex w-full"
@@ -307,6 +272,7 @@ onMounted(() => {
         </div>
         <TransitionGroup
           class="form-wrapper flex-1 w-full relative flex flex-col items-center"
+          name="fade"
           tag="div"
         >
           <div
@@ -338,9 +304,9 @@ onMounted(() => {
               </div>
               <FormInput
                 label="YouTube Channel ID"
-                id="channelId"
-                v-model="form.youTubeChannelId"
+                name="youTubeChannelId"
                 class="text-center"
+                v-model="accountFormData.youTubeChannelId"
               />
               <div class="flex gap-4">
                 <!--                <BaseButton @click="cancel">Cancel</BaseButton>-->
@@ -353,81 +319,7 @@ onMounted(() => {
 
           <!-- user register form -->
           <div key="register" v-if="currentStep === 'Account'" class="w-full px-8">
-            <form @submit.prevent="handleSubmitAccount" class="flex-1 flex flex-col">
-              <div id="Account" class="mb-8 space-y-2">
-                <h2 class="font-bold text-xl">Account</h2>
-                <!-- YouTube Details -->
-                <div v-if="form.youTubeChannelId" class="space-y-2">
-                  <div class="flex flex-col items-center text-slate-500">
-                    <UserAvatar :src="form.avatar" :name="form.title" />
-                    <p>YouTube Channel ID:</p>
-                    <p class="text-white">{{ form.youTubeChannelId }}</p>
-                  </div>
-                  <FormInput
-                    id="title"
-                    v-model="form.title"
-                    type="text"
-                    label="YouTube Title"
-                    class="flex-1"
-                  />
-
-                  <div>
-                    <label for="description" class="block mb-2 text-sm font-medium text-slate-300"
-                      >YouTube Description</label
-                    >
-                    <FormTextarea
-                      id="description"
-                      rows="5"
-                      v-model.trim="form.description"
-                      placeholder="Write your description here..."
-                    />
-                  </div>
-                </div>
-                <!-- user name, email and password -->
-                <div class="flex flex-col md:flex-row flex-auto md:gap-6 w-full">
-                  <input type="hidden" v-model="form.role" />
-                  <FormInput
-                    id="firstname"
-                    v-model="form.firstName"
-                    type="text"
-                    label="First Name"
-                    class="flex-1"
-                  />
-                  <FormInput
-                    id="lastname"
-                    v-model="form.lastName"
-                    type="text"
-                    label="Last Name"
-                    class="flex-1"
-                  />
-                </div>
-                <FormInput
-                  id="email"
-                  label="Email"
-                  v-model="form.email"
-                  placeholder="johndoe@example.com"
-                />
-                <FormInput
-                  id="password"
-                  v-model="form.password"
-                  type="password"
-                  label="Your password"
-                  required
-                />
-                <FormInput
-                  id="password-repeat"
-                  v-model="form.passwordConfirm"
-                  type="password"
-                  label="Repeat password"
-                  required
-                />
-              </div>
-              <div class="form-controls">
-                <BaseButton class="max-w-fit" type="submit" :is-primary="true">
-                  {{ loading ? 'loading...' : 'Continue' }}
-                </BaseButton>
-              </div>
-            </form>
+            <AccountForm :form-data="accountFormData" @submit="handleSubmitAccount" />
           </div>
 
           <div
@@ -437,62 +329,11 @@ onMounted(() => {
           >
             <!-- billing -->
             <div class="flex pl-8 gap-8">
-              <form @submit.prevent="handleSubmit" class="flex-1 flex flex-col">
-                <div id="Billing" class="space-y-2">
-                  <h2 class="font-bold text-xl">Billing</h2>
-                  <!-- Add a hidden field with the lookup_key of your Price -->
-                  <input type="hidden" name="priceKey" v-model="selectedPlan.priceKey" />
-                  <input type="hidden" name="email" v-model="form.email" />
-                  <FormInput
-                    id="name"
-                    label="Name"
-                    v-model="checkoutForm.name"
-                    placeholder="Your Name"
-                  />
-                  <FormInput
-                    id="address"
-                    label="Address"
-                    v-model="checkoutForm.address"
-                    placeholder="Your street address"
-                    ><template #errorMessage> Address is incomplete. </template></FormInput
-                  >
-                  <FormInput
-                    id="city"
-                    label="City"
-                    v-model="checkoutForm.city"
-                    placeholder="Your City"
-                  />
-                  <div class="flex gap-4">
-                    <FormInput
-                      id="state"
-                      label="State"
-                      v-model="checkoutForm.state"
-                      placeholder="Your State"
-                    />
-                    <FormInput
-                      id="zip"
-                      label="Zip"
-                      v-model="checkoutForm.zip"
-                      placeholder="Your Zip"
-                    />
-                  </div>
-                  <label>Credit Card Information</label>
-                  <div
-                    id="stripe-element-mount-point"
-                    class="bg-app-blue rounded-lg text-white p-2.5"
-                  ></div>
-                </div>
-                <div class="form-controls mt-6">
-                  <BaseButton
-                    id="checkout-and-portal-button"
-                    class="max-w-fit"
-                    type="submit"
-                    :is-primary="true"
-                  >
-                    {{ loading ? 'loading...' : `Subscribe ${selectedPlan.cost} / monthly` }}
-                  </BaseButton>
-                </div>
-              </form>
+              <BillingForm
+                :form-data="billingFormData"
+                :selected-plan="selectedPlan"
+                @payment-complete="paymentComplete"
+              />
               <div class="flex flex-col justify-between p-8 bg-app-blue rounded-lg">
                 <div>
                   <h2 class="text-xl mb-8">Order Summary</h2>

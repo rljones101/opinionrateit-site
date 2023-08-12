@@ -7,8 +7,8 @@ const props = defineProps<{
 
 const getClasses = computed(() => {
   return props.isPrimary
-    ? 'border border-transparent bg-app-orange text-white hover:bg-app-orange-muted'
-    : 'border border-app-orange text-app-orange hover:bg-app-orange-muted hover:text-white'
+    ? 'border border-transparent bg-app-orange text-orange-100 hover:bg-app-orange-muted'
+    : 'border border-app-orange text-app-orange hover:bg-app-orange-muted'
 })
 </script>
 
@@ -31,6 +31,6 @@ const getClasses = computed(() => {
   box-shadow: rgba(0, 0, 0, 0.2) 0 10px 10px;
 }
 .btn:disabled {
-  @apply bg-slate-300 text-slate-500 border-none transition-none transform-none;
+  @apply pointer-events-none bg-gray-700 text-slate-500 border-none transition-none transform-none;
 }
 </style>

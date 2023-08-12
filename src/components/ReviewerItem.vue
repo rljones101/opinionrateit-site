@@ -51,7 +51,7 @@ testImage(props.reviewer.thumbnailMedium)
 
 <template>
   <div
-    class="app-card flex flex-col transition-all duration-300 group hover:font-bold hover:text-white hover:scale-105 hover:shadow-lg hover:shadow-black"
+    class="text-orange-100 text-sm app-card flex flex-col transition-all duration-300 group hover:font-bold hover:scale-105 hover:shadow-lg hover:shadow-black"
   >
     <BadgeSmall
       v-if="pastNumOfDays(props.reviewer.createdAt) >= -7"
@@ -108,7 +108,7 @@ testImage(props.reviewer.thumbnailMedium)
         </div>
       </div>
       <div class="flex justify-between items-end w-full p-4" v-if="userStore.isLoggedIn">
-        <BaseButton class="text-app-orange hover:border hover:border-slate-500">
+        <BaseButton>
           <svg
             class="w-6 h-6 text-app-orange"
             aria-hidden="true"
@@ -125,11 +125,7 @@ testImage(props.reviewer.thumbnailMedium)
             />
           </svg>
         </BaseButton>
-        <BaseButton
-          class="border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
-          @click="showVideoReviews"
-          >View</BaseButton
-        >
+        <BaseButton :is-primary="true" @click="showVideoReviews">View</BaseButton>
       </div>
     </div>
   </div>

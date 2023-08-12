@@ -6,10 +6,9 @@ const { goToSignup } = useNavRoutes()
 </script>
 
 <template>
-  <div class="md:flex items-center p-8 gap-4 overflow-hidden">
+  <div class="md:flex items-center p-8 gap-4 overflow-hidden justify-between bg-app-blue-soft">
     <div class="mb-8 md:mb-0">
       <AppTitle>What analytics are measured?</AppTitle>
-      <p class="p-4">Below you will find the metrics that we help collect:</p>
       <ul style="margin: 10px">
         <li>
           <span class="definition-word">Clarity</span>
@@ -55,8 +54,10 @@ const { goToSignup } = useNavRoutes()
         </li>
       </ul>
     </div>
-    <div class="flex flex-col items-center gap-4 flex-1 bg-app-blue-soft p-8 rounded shadow-lg">
-      <h1 class="p-4 font-bold text-white text-2xl">Become a reviewer!</h1>
+    <div
+      class="flex border border-app-blue-soft max-w-md flex-col items-center gap-4 flex-1 bg-app-blue p-8 rounded shadow-lg shadow-black"
+    >
+      <h1 class="p-4 font-bold text-white text-2xl uppercase">Become a reviewer!</h1>
       <p>
         Join our online community and help us expand our existing reviewer base! New Tech is being
         produced at a rapid pace and so are Tech reviewers. By becoming a member you can share with
@@ -71,6 +72,9 @@ const { goToSignup } = useNavRoutes()
 
 <style scoped>
 .definition-word {
-  @apply text-white font-bold;
+  @apply text-white;
+}
+.metric-definition {
+  display: inline-block;
 }
 </style>

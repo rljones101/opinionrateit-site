@@ -8,4 +8,8 @@ const createPaymentIntent = async (formData: any) => {
   return await apiPost('/stripe/create-intent', formData)
 }
 
-export { createCheckoutSession, createPaymentIntent }
+const createCustomer = async (formData: any) => {
+  return await apiPost('/stripe/create-customer', formData)
+}
+
+export { createCheckoutSession, createPaymentIntent, createCustomer }

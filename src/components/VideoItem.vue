@@ -17,7 +17,7 @@ defineProps<{
       ></div>
       <img :src="video.thumbnail" :alt="video.title" class="w-full object-cover" />
     </div>
-    <p class="p-4 font-bold text-sm">{{ video.title }}</p>
+    <p class="p-4 font-semibold text-sm text-orange-100">{{ video.title }}</p>
   </div>
 </template>
 

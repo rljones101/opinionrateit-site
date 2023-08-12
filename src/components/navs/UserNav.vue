@@ -81,11 +81,11 @@ const goToPath = async (link: userLinkItem) => {
       <button
         v-for="link in navLinks"
         :key="link.id"
-        class="user-nav-btn whitespace-nowrap"
+        class="user-nav-btn text-orange-100 whitespace-nowrap"
         :class="{ active: route.name === link.name }"
         @click="goToPath(link)"
       >
-        <span v-if="link.icon" class="text-white"
+        <span v-if="link.icon" class="text-orange-100"
           ><component :is="link.icon" class="w-6 h-6"
         /></span>
         <span class="hidden lg:flex uppercase font-bold">{{ link.label }}</span>
@@ -96,11 +96,11 @@ const goToPath = async (link: userLinkItem) => {
         <button
           v-for="link in userLinks"
           :key="link.id"
-          class="user-nav-btn whitespace-nowrap"
+          class="user-nav-btn text-orange-100 whitespace-nowrap"
           :class="{ active: route.name === link.name }"
           @click="goToPath(link)"
         >
-          <span v-if="link.icon" class="text-white"
+          <span v-if="link.icon" class="text-orange-100"
             ><component :is="link.icon" class="w-6 h-6"
           /></span>
           <span class="hidden lg:flex uppercase font-bold">{{ link.label }}</span>
@@ -114,11 +114,11 @@ const goToPath = async (link: userLinkItem) => {
         <button
           v-for="link in reviewerLinks"
           :key="link.id"
-          class="user-nav-btn whitespace-nowrap"
+          class="user-nav-btn text-orange-100 whitespace-nowrap"
           :class="{ active: route.name === link.name }"
           @click="goToPath(link)"
         >
-          <span v-if="link.icon" class="text-white"
+          <span v-if="link.icon" class="text-orange-100"
             ><component :is="link.icon" class="w-6 h-6"
           /></span>
           <span class="hidden lg:flex uppercase font-bold">{{ link.label }}</span>

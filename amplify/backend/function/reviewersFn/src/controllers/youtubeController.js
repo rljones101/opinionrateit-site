@@ -20,7 +20,7 @@ exports.getVideosByChannel = catchAsync(async (req, res) => {
   const query = req.query.search
   const channelId = req.query.channelId
 
-  const key = `getVideosByChannel_${channelId}`
+  const key = `getVideosByChannel_${channelId}_${req.query.search}`
 
   const videos = await cache.get(key, async () => {
     const params = {

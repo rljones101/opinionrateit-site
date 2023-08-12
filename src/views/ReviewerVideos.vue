@@ -72,7 +72,7 @@ getReviewerDetails(channelId)
       <div class="flex-1 bg-app-blue-soft p-8 rounded-lg mb-8">
         <div class="border-b pb-8 mb-8 border-slate-500 flex items-center gap-8">
           <UserAvatar :name="channelDetails.name" :src="channelDetails.avatar" class="w-16 h-16" />
-          <div class="flex-1">
+          <div class="flex-1 text-orange-100">
             <h2 class="text-lg text-white">{{ channelDetails.name }}</h2>
             <ContentReadMore>
               {{ channelDetails.description }}
@@ -80,28 +80,51 @@ getReviewerDetails(channelId)
           </div>
         </div>
         <div class="reviewer-details grid-layout">
-          <p>
-            <span class="reviewer-details__text !text-app-orange"
-              >{{ formatPercentageToRating(channelDetails.metric) }} / 10</span
-            >
-            <span class="reviewer-details__label">Rating</span>
-          </p>
-          <p>
-            <span class="reviewer-details__text">{{
-              formatDate(channelDetails.createdAt, 'short_no_time')
-            }}</span>
-            <span class="reviewer-details__label">Joined</span>
-          </p>
-          <p>
-            <span class="reviewer-details__text">{{
-              nFormatter(channelDetails.numPublishedVideos, 1)
-            }}</span>
-            <span class="reviewer-details__label">videos</span>
-          </p>
-          <p>
-            <span class="reviewer-details__text"> {{ nFormatter(channelDetails.views, 1) }}</span>
-            <span class="reviewer-details__label">views</span>
-          </p>
+          <div
+            class="flex flex-col justify-center items-center bg-app-blue rounded-xl text-orange-100 p-4"
+          >
+            <p class="text-sm">Rating</p>
+            <p class="text-lg">
+              <span class="font-semibold text-app-orange">
+                {{ formatPercentageToRating(channelDetails.metric) }}
+              </span>
+
+              / 10
+            </p>
+          </div>
+
+          <div
+            class="flex flex-col justify-center items-center bg-app-blue rounded-xl text-orange-100 p-4"
+          >
+            <p class="text-sm">Joined</p>
+            <p class="text-lg">
+              <span class="font-semibold text-app-orange">
+                {{ formatDate(channelDetails.createdAt, 'short_no_time') }}
+              </span>
+            </p>
+          </div>
+
+          <div
+            class="flex flex-col justify-center items-center bg-app-blue rounded-xl text-orange-100 p-4"
+          >
+            <p class="text-sm">Videos</p>
+            <p class="text-lg">
+              <span class="font-semibold text-app-orange">
+                {{ nFormatter(channelDetails.numPublishedVideos, 1) }}
+              </span>
+            </p>
+          </div>
+
+          <div
+            class="flex flex-col justify-center items-center bg-app-blue rounded-xl text-orange-100 p-4"
+          >
+            <p class="text-sm">Views</p>
+            <p class="text-lg">
+              <span class="font-semibold text-app-orange">
+                {{ nFormatter(channelDetails.views, 1) }}
+              </span>
+            </p>
+          </div>
         </div>
       </div>
 
@@ -132,11 +155,12 @@ getReviewerDetails(channelId)
   text-align: center;
   @apply bg-app-blue;
 }
-
+/*
 .reviewer-details__text {
   font-size: 1.25rem;
   color: white;
 }
+ */
 
 .reviewer-details > p > * {
   display: flex;

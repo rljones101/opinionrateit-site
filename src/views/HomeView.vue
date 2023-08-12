@@ -49,8 +49,15 @@ onMounted(async () => {
           <h1 class="pt-16 flex justify-center text-4xl text-white text-center uppercase">
             Activate more effective reviews
           </h1>
-          <div class="p-24 grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="flex flex-col items-center gap-4">
+          <div class="w-full flex flex-col items-center mt-8 mb-8">
+            <img src="../assets/img/desktop-split.png" alt="Desktop Image" class="object-contain" />
+          </div>
+          <div
+            class="px-24 pb-24 flex flex-col md:flex-row w-full gap-4 items-stretch justify-center"
+          >
+            <div
+              class="flex-1 flex flex-col items-center text-center gap-4 bg-app-blue-soft p-4 rounded"
+            >
               <div class="icon-wrapper"><IconCommunity /></div>
               <h3 class="font-bold text-2xl text-white uppercase">Community</h3>
               <p>
@@ -59,7 +66,9 @@ onMounted(async () => {
               </p>
               <!--            <ReadMoreLink />-->
             </div>
-            <div class="flex flex-col items-center gap-4">
+            <div
+              class="flex-1 flex flex-col items-center text-center gap-4 bg-app-blue-soft p-4 rounded"
+            >
               <div class="icon-wrapper"><IconDocumentation /></div>
               <h3 class="font-bold text-2xl text-white uppercase">Tech Knowledge</h3>
               <p>
@@ -68,7 +77,9 @@ onMounted(async () => {
               </p>
               <!--            <ReadMoreLink />-->
             </div>
-            <div class="flex flex-col items-center gap-4">
+            <div
+              class="flex-1 flex flex-col items-center text-center gap-4 bg-app-blue-soft p-4 rounded"
+            >
               <div class="icon-wrapper"><IconEcosystem /></div>
               <h3 class="font-bold text-2xl text-white uppercase">Engagement Tracking</h3>
               <p>
@@ -91,4 +102,12 @@ onMounted(async () => {
   width: 50px;
   height: 50px;
 }
+/*
+.background-desktop-split-image {
+  background-image: url('../assets/img/desktop-split.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+*/
 </style>

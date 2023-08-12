@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppTitle from '@/components/AppTitle.vue'
 import BaseBarMetric from '@/components/BaseBarMetric.vue'
+import MetricPieChart from '@/components/charts/MetricPieChart.vue'
 import { useProfile } from '@/composables/useProfile'
 import { ChatBubbleBottomCenterTextIcon } from '@heroicons/vue/20/solid'
 import { formatPercentageToRating } from '@/utils/StringUtils'
@@ -10,16 +11,20 @@ const { profile } = useProfile()
 <template>
   <div>
     <AppTitle class="mb-8">My Stats</AppTitle>
-    <div v-if="profile.isReviewer && profile.metric > 0">
-      <div class="app-card flex flex-col gap-8 justify-center p-8">
-        <div class="flex items-center gap-2 border-b pb-8 border-slate-500">
+    <div v-if="profile.isReviewer && profile.metric > 0" class="flex flex-col lg:flex-row gap-4">
+      <div class="app-card flex-1 hidden lg:flex max-w-md">
+        <MetricPieChart :metric="profile.metric" class="max-w-md" />
+      </div>
+
+      <div class="app-card flex flex-col gap-8 justify-center p-8 grow">
+        <div class="flex items-center gap-2 border-b pb-8 border-orange-200 text-orange-200">
           <div
-            class="bg-app-blue w-12 h-12 flex items-center justify-center rounded-lg text-xl text-white"
+            class="bg-app-blue lg:hidden w-12 h-12 flex items-center justify-center rounded-lg text-xl"
           >
             {{ formatPercentageToRating(profile.metric) }}
           </div>
-          <p>Rating</p>
-          <span class="rounded-full w-1 h-1 bg-slate-500"></span>
+          <p class="lg:hidden block">Rating</p>
+          <span class="lg:hidden block rounded-full w-1 h-1 bg-orange-200"></span>
           <p>376 reviews</p>
         </div>
         <BaseBarMetric label="Presentation" :percentage="profile.avgOverallPresentation" />

@@ -4,8 +4,8 @@ import { computed } from 'vue'
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])
 
-const emitSearchChange = (value: string) => {
-  emit('update:modelValue', value)
+const emitSearchChange = () => {
+  emit('update:modelValue', search?.value)
 }
 
 const search = computed({
@@ -13,12 +13,12 @@ const search = computed({
     return props.modelValue
   },
   set(value: string) {
-    emitSearchChange(value)
+    emit('update:modelValue', value)
   }
 })
 
 const clearSearch = () => {
-  emitSearchChange('')
+  emit('update:modelValue', '')
 }
 </script>
 
@@ -43,7 +43,7 @@ const clearSearch = () => {
       </div>
       <input
         v-model="search"
-        @keydown.enter="emitSearchChange($event.target.value)"
+        @keydown.enter="emitSearchChange()"
         id="simple-search"
         class="bg-app-blue text-slate-300 text-sm rounded-full focus:ring-orange-500 focus:border-orange-500 w-full pl-10 p-2.5"
         placeholder="Search"
@@ -73,7 +73,7 @@ const clearSearch = () => {
       </button>
     </div>
     <button
-      @click="emitSearchChange($event.target.value)"
+      @click="emitSearchChange()"
       type="submit"
       class="p-2.5 ml-2 text-sm font-medium text-white bg-app-orange rounded-lg hover:bg-app-orange-muted focus:ring-1 focus:outline-none focus:ring-slate-700"
     >

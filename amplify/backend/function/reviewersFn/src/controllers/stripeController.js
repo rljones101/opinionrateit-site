@@ -1,27 +1,60 @@
+const loadEnvConfig = require('../utils/loadEnvConfig.js')
+loadEnvConfig()
 const stripe = require('stripe')(process.env.STRIPE_API_KEY)
 const catchAsync = require('../utils/catchAsync')
 
+exports.createCustomer = catchAsync(async (req, res) => {
+  const { email, name } = req.body
+  const customer = await stripe.customers.create({
+    email,
+    name
+  })
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data: customer
+    }
+  })
+})
+
 exports.createIntent = catchAsync(async (req, res) => {
-  const { priceKey } = req.body
+  const { priceKey, customer } = req.body
   const price = await stripe.prices.retrieve(priceKey)
 
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: price.unit_amount,
-    currency: price.currency,
-    automatic_payment_methods: { enabled: true }
+  // const paymentIntent = await stripe.paymentIntents.create({
+  //   amount: price.unit_amount,
+  //   currency: price.currency,
+  //   automatic_payment_methods: { enabled: true }
+  // })
+  // const secret = paymentIntent.client_secret
+
+  // Create the subscription. Note we're expanding the Subscription's
+  // latest invoice and that invoice's payment_intent
+  // so we can pass it to the front end to confirm the payment
+  const subscription = await stripe.subscriptions.create({
+    customer,
+    items: [
+      {
+        price: price.id
+      }
+    ],
+    payment_behavior: 'default_incomplete',
+    payment_settings: { save_default_payment_method: 'on_subscription' },
+    expand: ['latest_invoice.payment_intent']
   })
+  const secret = subscription.latest_invoice.payment_intent.client_secret
 
   res.status(200).json({
     status: 'success',
     data: {
       data: {
-        secret: paymentIntent.client_secret
+        secret
       }
     }
   })
 })
 
-exports.stripeWebHook = catchAsync((req, res) => {
+exports.stripeWebHook = (req, res) => {
   let event = req.body
   // Replace this endpoint secret with your endpoint's unique secret
   // If you are testing with the CLI, find the secret by running 'stripe listen'
@@ -83,5 +116,5 @@ exports.stripeWebHook = catchAsync((req, res) => {
       console.log(`Unhandled event type ${event.type}.`)
   }
   // Return a 200 response to acknowledge receipt of the event
-  res.stats(200).json({ received: true })
-})
+  res.status(200).json({ received: true })
+}

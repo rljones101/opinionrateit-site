@@ -33,6 +33,7 @@ const useProfile = () => {
   const route = useRoute()
 
   const profileLoaded = ref(false)
+  const status = ref('loading')
 
   // Reactive variables
   const profile: Ref<Profile> = ref({
@@ -63,16 +64,6 @@ const useProfile = () => {
     return reviewerController.getInitials(profile.value.name)
   })
 
-  const searchCallBack = async (searchParams: string) => {
-    if (profile.value.youTubeChannelId) {
-      profile.value.videos = [
-        ...(await reviewerController.searchVideos(profile.value.youTubeChannelId, searchParams))
-      ]
-    }
-  }
-
-  const searchVideos = debounce(searchCallBack, 500)
-
   const isVideoPublished = (video: VideoChannelDetails) => {
     // NOTE: we need to call the method to get published videos first so that profile.value.publishedVideos has a value
     return profile.value.publishedVideos.find((publishVideo) => {
@@ -80,21 +71,37 @@ const useProfile = () => {
     })
   }
 
+  const searchCallBack = async (searchParams: string) => {
+    if (profile.value.youTubeChannelId) {
+      status.value = 'searching'
+      profile.value.videos = [
+        ...(await reviewerController.searchVideos(profile.value.youTubeChannelId, searchParams))
+      ].filter((ytVid: any) => !isVideoPublished(ytVid))
+      status.value = 'idle'
+    }
+  }
+
+  const searchVideos = debounce(searchCallBack, 500)
+
   const getVideos = async () => {
     if (profile.value.isReviewer) {
+      status.value = 'loading'
       const googleVideos: VideoChannelDetails[] = await reviewerController.getVideosByChannelId(
         profile.value.youTubeChannelId
       )
       updateVideos(googleVideos)
+      status.value = 'idle'
     }
   }
 
   const getPublishedVideos = async () => {
     if (profile.value.isReviewer) {
+      status.value = 'loading'
       const publishedVideos = await reviewerController.getPublishedVideos(
         profile.value.youTubeChannelId
       )
       updatePublishedVideos(publishedVideos)
+      status.value = 'idle'
     }
   }
 
@@ -203,7 +210,8 @@ const useProfile = () => {
     profileLoaded,
     searchVideos,
     getVideos,
-    publishVideos
+    publishVideos,
+    status
   }
 }
 

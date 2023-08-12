@@ -1,11 +1,12 @@
 import { signupPlans } from '@/models/signupPlans'
+import colors from 'tailwindcss/colors'
 
 const style = {
   style: {
     base: {
       iconColor: '#000',
-      color: '#fff',
-      fontWeight: '800',
+      color: colors.slate['400'],
+      fontWeight: 'normal',
       fontFamily: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu",
       fontSize: '14px',
       fontSmoothing: 'antialiased',
@@ -13,7 +14,7 @@ const style = {
         color: '#f77216'
       },
       '::placeholder': {
-        color: '#ccc'
+        color: colors.slate['400']
       }
     },
     invalid: {

@@ -145,3 +145,26 @@ export interface BillingDetails {
     postal_code: string
   }
 }
+
+export interface Profile {
+  id: string
+  name: string
+  email: string
+  role: string
+  createdAt: string
+  youTubeChannelId: string
+  isReviewer: boolean
+  videos: VideoChannelDetails[]
+  publishedVideos: VideoChannelDetails[]
+  numberOfPublishedVideos?: number
+  avgAverageReviewTime: number
+  avgClarity: number
+  avgNonBias: number
+  avgOverallPresentation: number
+  avgProductDetailExplanation: number
+  avgProductFocus: number
+  avgProductView: number
+  avgProvidedResources: number
+  avgShare: number
+  metric: number
+}

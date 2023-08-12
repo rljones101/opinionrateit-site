@@ -1,10 +1,15 @@
 <script setup lang="ts"></script>
 
 <template>
-  <div class="w-full space-y-8">
-    <div class="flex flex-col items-center justify-between w-full space-x-4">
-      <div class="hero-text flex-1 mb-4 text-center">
-        <h1 class="text-3xl lg:text-5xl shadow mb-4 uppercase">
+  <div class="w-full flex flex-col items-center">
+    <div class="flex items-center w-full">
+      <div class="hidden md:flex">
+        <div class="hero-image">
+          <img src="../assets/img/site-screens.png" alt="Desktop Image" class="object-contain" />
+        </div>
+      </div>
+      <div class="flex md:ml-4 flex-col text-left hero-text">
+        <h1 class="text-3xl lg:text-5xl mb-4 uppercase">
           Create <br /><span class="font-bold text-orange-500">Product Reviews</span><br />
           With Confidence
         </h1>
@@ -12,13 +17,6 @@
           Need to know what content is right for you? Get on demand information that will help you
           grow and be a better product reviewer!
         </p>
-      </div>
-      <div class="hero-image">
-        <img
-          src="../assets/img/desktop-split.png"
-          alt="Desktop Image"
-          style="object-fit: contain"
-        />
       </div>
     </div>
   </div>
