@@ -2,7 +2,6 @@
 import { onMounted, ref, watch } from 'vue'
 import { useForm } from 'vee-validate'
 import FormInput from '@/components/inputs/FormInput.vue'
-import BaseButton from '@/components/buttons/BaseButton.vue'
 import * as yup from 'yup'
 import { BillingDetails, SignupPlan } from '@/types'
 import {
@@ -12,6 +11,7 @@ import {
   getCardElement
 } from '@/controllers/stripeController'
 import { createPaymentIntent } from '@/services/stripeService'
+import SubmitButton from '@/components/buttons/SubmitButton.vue'
 
 const props = defineProps<{
   formData: {
@@ -25,7 +25,7 @@ const props = defineProps<{
   }
   selectedPlan: SignupPlan
 }>()
-
+console.log(props.formData)
 const emit = defineEmits(['paymentComplete'])
 const priceKey = ref('')
 const fullName = ref('')
@@ -131,6 +131,11 @@ onMounted(() => {
 <template>
   <form @submit="handleBillingSubmit" class="flex-1 flex flex-col">
     <pre>{{ billingFormData }}</pre>
+    <p>Name: {{ billingFormData.name }}</p>
+    <p>Email: {{ billingFormData.email || email }}</p>
+    <p>
+      Address: {{ billingFormData.address }} {{ billingFormData.city }} {{ billingFormData.zip }}
+    </p>
     <div id="Billing" class="space-y-2">
       <h2 class="font-bold text-xl">Billing</h2>
       <!-- Add a hidden field with the lookup_key of your Price -->
@@ -160,15 +165,13 @@ onMounted(() => {
       </div>
     </div>
     <div class="form-controls mt-6">
-      <BaseButton
+      <SubmitButton
         :disabled="!billingForm.meta.value.valid"
         id="checkout-and-portal-button"
         class="max-w-fit"
-        type="submit"
-        :is-primary="true"
       >
         {{ loading ? 'loading...' : `Subscribe ${selectedPlan.cost} / monthly` }}
-      </BaseButton>
+      </SubmitButton>
     </div>
   </form>
 </template>

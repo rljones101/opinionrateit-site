@@ -209,7 +209,7 @@ function goToNextStep() {
       >
         <div class="min-w-max w-[254px] step-wrapper pr-8 border-r border-slate-700">
           <div class="flex justify-center">
-            <BaseButton @click="goToPreviousStep">Go Back</BaseButton>
+            <BaseButton @click="goToPreviousStep" type="primary">Go Back</BaseButton>
           </div>
 
           <ol class="mt-8 flex flex-col w-full">
@@ -310,7 +310,7 @@ function goToNextStep() {
               />
               <div class="flex gap-4">
                 <!--                <BaseButton @click="cancel">Cancel</BaseButton>-->
-                <BaseButton class="w-full" :is-primary="true" @click="getChannelDetails"
+                <BaseButton class="w-full" type="primary" @click="getChannelDetails"
                   >Get My YouTube Profile</BaseButton
                 >
               </div>

@@ -3,9 +3,9 @@ import { ref } from 'vue'
 import { useForm } from 'vee-validate'
 import UserAvatar from '@/components/UserAvatar.vue'
 import FormInput from '@/components/inputs/FormInput.vue'
-import BaseButton from '@/components/buttons/BaseButton.vue'
 import FormTextarea from '@/components/inputs/FormTextarea.vue'
 import * as yup from 'yup'
+import SubmitButton from '@/components/buttons/SubmitButton.vue'
 
 const props = defineProps<{
   formData: {
@@ -140,14 +140,9 @@ const handleSubmitAccount = registerForm.handleSubmit((values) => {
       />
     </div>
     <div class="form-controls">
-      <BaseButton
-        :disabled="!registerForm.meta.value.valid"
-        class="max-w-fit"
-        type="submit"
-        :is-primary="true"
-      >
+      <SubmitButton :disabled="!registerForm.meta.value.valid" class="max-w-fit">
         {{ loading ? 'loading...' : 'Continue' }}
-      </BaseButton>
+      </SubmitButton>
     </div>
   </form>
 </template>

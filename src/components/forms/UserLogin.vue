@@ -66,6 +66,7 @@ const closeDialog = () => {
       <FormInput
         id="email"
         type="email"
+        name="email"
         placeholder="name@company.com"
         autocomplete="username"
         v-model="email"
@@ -75,6 +76,7 @@ const closeDialog = () => {
       <FormInput
         id="password"
         type="password"
+        name="password"
         placeholer="••••••••"
         autocomplete="password"
         v-model="password"
@@ -96,9 +98,7 @@ const closeDialog = () => {
         <a href="#" class="ml-auto text-sm hover:underline">Lost Password?</a>
       </div>
       <div v-if="showError" class="text-red-500">{{ errorMessage }}</div>
-      <BaseButton :is-primary="true" class="w-full" @click="login"
-        >Login to your account</BaseButton
-      >
+      <BaseButton type="primary" class="w-full" @click="login">Login to your account</BaseButton>
       <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
         Not registered?
         <router-link to="/signup">Create account</router-link>

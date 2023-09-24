@@ -17,6 +17,8 @@ reviewRoutes
 
 reviewRoutes.route('/:videoId/byVideo').get(reviewController.getReviewsByVideo)
 
+reviewRoutes.route('/:channelId/numReviews').get(reviewController.getNumReviews)
+
 reviewRoutes
   .route('/:id')
   .get(reviewController.getOne)

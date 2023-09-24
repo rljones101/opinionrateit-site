@@ -7,6 +7,7 @@ import { useUserStore } from '@/stores/user'
 import AppTitle from '@/components/AppTitle.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
+
 // Import types
 
 // Import controllers or other utils
@@ -23,11 +24,11 @@ const { profile } = useProfile()
 
 const getRole = (role: string) => {
   if (role === 'user') {
-    return 'User'
+    return '👤User'
   } else if (role === 'reviewer-basic') {
-    return 'Reviewer'
+    return '⭐Reviewer'
   } else if (role === 'reviewer-plus') {
-    return 'Reviewer Plus'
+    return '✨Reviewer Plus'
   }
 }
 
@@ -48,10 +49,7 @@ const getRole = (role: string) => {
           />
           <p class="text-3xl">{{ profile.name }}</p>
         </div>
-        <BaseButton
-          class="border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
-          >Edit</BaseButton
-        >
+        <BaseButton type="secondary">Edit</BaseButton>
       </div>
       <p class="flex flex-col">
         <span class="profile-label flex-1">Created On:</span
@@ -65,18 +63,14 @@ const getRole = (role: string) => {
         <span class="profile-label flex-1">Email:</span
         ><span class="profile-user-value flex-1">{{ profile.email }}</span>
       </p>
-      <p class="flex flex-col">
-        <span class="profile-label flex-1">Account type:</span
-        ><span class="profile-user-value flex-1">{{ getRole(profile.role) }}</span>
-      </p>
+      <div class="flex flex-col">
+        <p class="profile-label flex-1">
+          Account type: <BaseButton type="small" class="ml-4">Change</BaseButton>
+        </p>
+        <p class="font-semibold flex-1 text-app-orange">{{ getRole(profile.role) }}</p>
+      </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-.profile-label {
-}
-.profile-user-value {
-  font-weight: bold;
-}
-</style>
+<style scoped></style>

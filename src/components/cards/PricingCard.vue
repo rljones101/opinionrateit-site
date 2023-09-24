@@ -39,7 +39,7 @@ const emit = defineEmits(['selected'])
     </ul>
     <BaseButton
       :class="{ 'active-button': active }"
-      :is-primary="true"
+      type="primary"
       @click="emit('selected')"
       :disabled="active || isDisabled"
       >{{ active ? 'Selected' : isDisabled ? 'Comming Soon' : 'Choose Plan' }}</BaseButton

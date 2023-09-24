@@ -66,7 +66,7 @@ watch(searchValue, (value: any) => {
               <SearchInput v-model="searchValue" class="max-w-4xl" />
             </div>
             <div class="justify-self-end hidden md:flex flex-grow items-center ml-4">
-              <BaseButton @click="logout" :is-primary="true">Logout</BaseButton>
+              <BaseButton type="primary" @click="logout">Logout</BaseButton>
             </div>
           </div>
         </div>

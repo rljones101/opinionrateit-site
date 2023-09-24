@@ -61,7 +61,7 @@ const showLogin = () => {
               <SiteLogo />
             </div>
 
-            <BaseButton :is-primary="true" @click="showLogin" v-if="!userStore.isLoggedIn"
+            <BaseButton type="primary" @click="showLogin" v-if="!userStore.isLoggedIn"
               >login</BaseButton
             >
           </nav>
@@ -80,6 +80,7 @@ const showLogin = () => {
           class="border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
           @click="showLogin"
           v-if="!userStore.isLoggedIn"
+          type="secondary"
           >login</BaseButton
         >
       </nav>

@@ -5,7 +5,17 @@ import MetricPieChart from '@/components/charts/MetricPieChart.vue'
 import { useProfile } from '@/composables/useProfile'
 import { ChatBubbleBottomCenterTextIcon } from '@heroicons/vue/20/solid'
 import { formatPercentageToRating } from '@/utils/StringUtils'
+import { getNumReviews } from '@/services/ReviewService'
+import { useUserStore } from '@/stores/user'
 const { profile } = useProfile()
+
+const userStore = useUserStore()
+
+let numReviews = 0
+
+getNumReviews(userStore.user.youTubeChannelId)
+  .then((res) => (numReviews = res.data.numReviews))
+  .catch((err) => console.error(err))
 </script>
 
 <template>
@@ -25,7 +35,7 @@ const { profile } = useProfile()
           </div>
           <p class="lg:hidden block">Rating</p>
           <span class="lg:hidden block rounded-full w-1 h-1 bg-orange-200"></span>
-          <p>376 reviews</p>
+          <p>{{ numReviews }} review{{ numReviews > 1 ? `s` : '' }}</p>
         </div>
         <BaseBarMetric label="Presentation" :percentage="profile.avgOverallPresentation" />
         <BaseBarMetric label="Clarity" :percentage="profile.avgClarity" />

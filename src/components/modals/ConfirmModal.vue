@@ -59,16 +59,10 @@ const confirm = () => {
         <div
           class="flex items-center justify-end p-6 space-x-2 border-t border-slate-600 rounded-b"
         >
-          <BaseButton
-            class="border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
-            @click="confirm"
-          >
+          <BaseButton type="primary" @click="confirm">
             {{ yesLabel ? yesLabel : 'Yes' }}
           </BaseButton>
-          <BaseButton
-            class="text-white border border-transparent hover:border-white"
-            @click="close"
-          >
+          <BaseButton type="secondary" @click="close">
             {{ noLabel ? noLabel : 'No' }}
           </BaseButton>
         </div>

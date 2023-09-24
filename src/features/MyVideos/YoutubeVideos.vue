@@ -3,7 +3,7 @@
     <p class="mb-8">Here you can search and select what videos you would like to have reviewed.</p>
     <div class="flex w-full gap-8 mb-8 bg-app-blue-soft p-4 rounded-lg">
       <BaseButton
-        class="relative flex-2 bg-orange-500 text-white"
+        type="primary"
         v-if="profile.isReviewer"
         :disabled="selectedVideos.length === 0"
         @click="handlePublishSelected"

@@ -20,6 +20,17 @@ exports.getReviewsByVideo = catchAsync(async (req, res) => {
   })
 })
 
+exports.getNumReviews = catchAsync(async (req, res) => {
+  const numReviews = await Review.countDocuments({ channelId: req.params.channelId })
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      numReviews
+    }
+  })
+})
+
 exports.setReviewUserId = (req, res, next) => {
   if (!req.body.user) req.body.user = req.user.id
   next()

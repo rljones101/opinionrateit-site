@@ -64,7 +64,7 @@ const { goToSignup } = useNavRoutes()
         others one of your favorites!
       </p>
       <div class="flex gap-4">
-        <BaseButton :is-primary="true" @click="goToSignup">Sign Up</BaseButton>
+        <BaseButton type="primary" @click="goToSignup">Sign Up</BaseButton>
       </div>
     </div>
   </div>

@@ -142,11 +142,7 @@ getReviews()
                   >
                 </p>
               </div>
-              <BaseButton
-                class="border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
-              >
-                Bookmark
-              </BaseButton>
+              <BaseButton type="primary"> Bookmark </BaseButton>
             </div>
             <!-- description container -->
             <div class="rounded bg-app-blue-soft p-4 max-w-full">
@@ -199,22 +195,11 @@ getReviews()
         </div>
         <!-- controls -->
         <div class="button-controls flex gap-4">
-          <BaseButton
-            v-if="!showReviewForm"
-            class="text-app-orange border border-app-orange hover:bg-app-orange hover:text-white"
-            @click="showSurvey"
+          <BaseButton v-if="!showReviewForm" type="primary" @click="showSurvey"
             >Add Review</BaseButton
           >
-          <BaseButton
-            v-if="showReviewForm"
-            class="text-app-orange border border-app-orange hover:bg-app-orange hover:text-white"
-            @click="showSurvey"
-            >Cancel</BaseButton
-          >
-          <BaseButton
-            v-if="allSurveyQuestionsAnswered"
-            class="text-app-orange border border-app-orange hover:bg-app-orange hover:text-white"
-            @click="addReview"
+          <BaseButton v-if="showReviewForm" type="primary" @click="showSurvey">Cancel</BaseButton>
+          <BaseButton v-if="allSurveyQuestionsAnswered" type="primary" @click="addReview"
             >Submit Review</BaseButton
           >
         </div>

@@ -108,7 +108,7 @@ testImage(props.reviewer.thumbnailMedium)
         </div>
       </div>
       <div class="flex justify-between items-end w-full p-4" v-if="userStore.isLoggedIn">
-        <BaseButton>
+        <BaseButton type="secondary">
           <svg
             class="w-6 h-6 text-app-orange"
             aria-hidden="true"
@@ -125,7 +125,7 @@ testImage(props.reviewer.thumbnailMedium)
             />
           </svg>
         </BaseButton>
-        <BaseButton :is-primary="true" @click="showVideoReviews">View</BaseButton>
+        <BaseButton type="primary" @click="showVideoReviews">View</BaseButton>
       </div>
     </div>
   </div>
