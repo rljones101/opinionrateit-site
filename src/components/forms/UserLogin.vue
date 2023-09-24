@@ -84,17 +84,17 @@ const closeDialog = () => {
         label="Your password"
       />
       <div class="flex items-start">
-        <div class="flex items-start">
-          <div class="flex items-center h-5">
-            <input
-              id="remember"
-              type="checkbox"
-              value=""
-              class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-orange-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-orange-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
-            />
-          </div>
-          <label for="remember" class="ml-2 text-sm font-medium">Remember me</label>
-        </div>
+        <!--        <div class="flex items-start">-->
+        <!--          <div class="flex items-center h-5">-->
+        <!--            <input-->
+        <!--              id="remember"-->
+        <!--              type="checkbox"-->
+        <!--              value=""-->
+        <!--              class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-orange-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-orange-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"-->
+        <!--            />-->
+        <!--          </div>-->
+        <!--          <label for="remember" class="ml-2 text-sm font-medium">Remember me</label>-->
+        <!--        </div>-->
         <a href="#" class="ml-auto text-sm hover:underline">Lost Password?</a>
       </div>
       <div v-if="showError" class="text-red-500">{{ errorMessage }}</div>
