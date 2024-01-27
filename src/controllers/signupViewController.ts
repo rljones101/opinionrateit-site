@@ -1,4 +1,5 @@
 import { signupPlans } from '@/models/signupPlans'
+import type { SignupPlan } from '@/types'
 import colors from 'tailwindcss/colors'
 
 const style = {
@@ -24,11 +25,11 @@ const style = {
   }
 }
 
-function isReviewerPlan(role: string) {
+function isReviewerPlan(role: string): boolean {
   return ['reviewer-basic', 'reviewer-plus'].includes(role)
 }
 
-function getSignupPlans() {
+function getSignupPlans() : SignupPlan[] {
   return signupPlans
 }
 

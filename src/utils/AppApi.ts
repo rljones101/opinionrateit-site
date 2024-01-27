@@ -34,7 +34,7 @@ const apiErrorResponse = (
   return { status: 'error', statusCode, message, originalData: data }
 }
 
-const handleError = (error: AxiosError) => {
+const handleError = (error: AxiosError): AppApiErrorResponse => {
   if (error.response) {
     const response: AxiosResponse = error.response
     // The request was made and the server responded with a status code
@@ -57,7 +57,7 @@ const handleError = (error: AxiosError) => {
   //console.log(error.config)
 }
 
-const apiGet = async (url: string, config = {}) => {
+const apiGet = async (url: string, config = {}): Promise<AppApiResponse | AppApiErrorResponse> => {
   try {
     const res = await appApi.get(url, config)
     return apiSuccessResponse(res.status, res.data)
@@ -67,7 +67,7 @@ const apiGet = async (url: string, config = {}) => {
   }
 }
 
-const apiPost = async (url: string, data: any, config = {}) => {
+const apiPost = async (url: string, data: any, config = {}): Promise<AppApiResponse | AppApiErrorResponse> => {
   try {
     const res = await appApi.post(url, data, config)
     return apiSuccessResponse(res.status, res.data)
@@ -77,7 +77,7 @@ const apiPost = async (url: string, data: any, config = {}) => {
   }
 }
 
-const apiDelete = async (url: string, config = {}) => {
+const apiDelete = async (url: string, config = {}): Promise<AppApiResponse | AppApiErrorResponse> => {
   try {
     const res = await appApi.delete(url, config)
     return apiSuccessResponse(res.status, res.data)
@@ -87,7 +87,7 @@ const apiDelete = async (url: string, config = {}) => {
   }
 }
 
-const apiPatch = async (url: string, data: any, config = {}) => {
+const apiPatch = async (url: string, data: any, config = {}): Promise<AppApiResponse | AppApiErrorResponse> => {
   try {
     const res = await appApi.patch(url, data, config)
     return apiSuccessResponse(res.status, res.data)

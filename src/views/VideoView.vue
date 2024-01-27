@@ -32,7 +32,21 @@ const itemDetail = ref({
   youtubeURL: `${youTubeBaseUrl}${videoId}`
 })
 
-const defaultFormValues = {
+interface ReviewFormValues {
+  channelId: string,
+  videoId: string,
+  overall_presentation: number,
+  clarity: number,
+  product_view: number,
+  product_detail_explanation: number,
+  non_bias: number,
+  average_review_time: number,
+  product_focus: number,
+  provided_resources: number,
+  comment: string
+}
+
+const defaultFormValues: ReviewFormValues = {
   channelId: route.params.channelId,
   videoId: route.params.videoId,
   overall_presentation: 0,
@@ -46,9 +60,9 @@ const defaultFormValues = {
   comment: ''
 }
 
-const reviewForm = ref({ ...defaultFormValues })
+const reviewForm = ref<ReviewFormValues>({ ...defaultFormValues })
 
-videoViewController.getVideo(videoId).then((res) => {
+videoViewController.getVideo(videoId).then((res: any) => {
   if ('items' in res) {
     const snippet = res.items[0].snippet
     itemDetail.value.title = snippet.localized.title
@@ -85,7 +99,15 @@ const allSurveyQuestionsAnswered = computed(() => {
   return questionNumber.value > reviewQuestions.value.length
 })
 
-const answerQuestion = (question) => {
+
+interface Question {
+  model: {
+    field: string,
+    value: string
+  }
+}
+
+const answerQuestion = (question: Question) => {
   // set the question value
   reviewForm.value[question.model.field] = question.model.value
   // get the next question

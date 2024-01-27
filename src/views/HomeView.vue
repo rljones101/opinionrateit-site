@@ -4,26 +4,61 @@ import IconCommunity from '@/components/icons/IconCommunity.vue'
 import IconDocumentation from '@/components/icons/IconDocumentation.vue'
 import IconEcosystem from '@/components/icons/IconEcosystem.vue'
 import AppHero from '@/components/AppHero.vue'
-import { useRevealObserver } from '@/composables/useRevealObserver'
 import AppHeader from '@/components/appHeader.vue'
 import AppFooter from '@/components/AppFooter.vue'
 import siteLogo from '@/components/siteLogo.vue'
-import { nextTick, onMounted } from 'vue'
-useRevealObserver()
+import { nextTick, onMounted, onBeforeUnmount } from 'vue'
 
-const callback = (entries: any[]) => {
-  entries.forEach((entry) => {
-    entry.target.classList.toggle('is-pinned', entry.intersectionRatio < 1)
+useSetActiveElement('.reveal')
+useSetIsPinnedElement('.app-header')
+
+
+function useSetActiveElement(className: string): void {
+    const callback = (entries: any[]) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('active')
+            } else {
+                entry.target.classList.remove('active')
+            }
+        })
+    }
+
+    const observer: IntersectionObserver = new IntersectionObserver(callback)
+
+    onMounted(async () => {
+        await nextTick()
+        document.querySelectorAll(className).forEach(el => {
+            observer.observe(el)
+        })
+    })
+
+    onBeforeUnmount(() => {
+        observer.disconnect()
+    })
+}
+
+function useSetIsPinnedElement(className: string) :void {
+
+  const callback = (entries: any[]) => {
+    entries.forEach((entry) => {
+      entry.target.classList.toggle('is-pinned', entry.intersectionRatio < 1)
+    })
+  }
+
+  const observer: IntersectionObserver = new IntersectionObserver(callback, { threshold: [1] })
+
+  onMounted(async () => {
+    await nextTick()
+    const el = document.querySelector(className) as HTMLElement
+    observer.observe(el)
+  })
+
+  onBeforeUnmount(() => {
+    observer.disconnect()
   })
 }
 
-const observer: IntersectionObserver = new IntersectionObserver(callback, { threshold: [1] })
-
-onMounted(async () => {
-  await nextTick()
-  const el = document.querySelector('.app-header') as HTMLElement
-  observer.observe(el)
-})
 </script>
 
 <template>

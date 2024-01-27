@@ -85,6 +85,29 @@ exports.login = catchAsSync(async (req, res, next) => {
   createAndSendToken(user, 200, res)
 })
 
+exports.forgotPassword = catchAsSync(async (req, res, next) => {
+  // 1) Get user based on posted email
+  const user = await User.findOne({ email: req.body.email })
+  if (!user) {
+    return next(new AppError('There is no user with email address.', 404))
+  }
+
+  // 2) Generate the random reset token
+  const resetToken = user.createPasswordResetToken()
+  await user.save({ validateBeforeSave: false })
+
+  // 3) Send it to user's email
+  try {
+    const resetURL = `${req.protocol}://${req.get('host')}/api/v1/users/resetPassword${resetToken}`
+    await new Email(user, resetURL).sendPasswordReset()
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Token sent to email!'
+    })
+  } catch (err) {}
+})
+
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     // roles ['admin', 'lead-guide']. role='user'

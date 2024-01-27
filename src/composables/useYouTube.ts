@@ -25,19 +25,23 @@ export const useYouTube = (iframe: string, videoId: string) => {
     return new window.YT.Player(iframe, options)
   }
 
+  const videoPlayerOptions = {
+    height: '100%',
+    width: '100%',
+    videoId: videoId,
+    playerVars: {
+      playsinline: 1, // fullscreen on IOS = 0, inline = 1
+      modestbranding: 1, // hide youtube logo = 1, show youtube logo = 0
+      controls: 1 // show = 1, hide = 0
+    },
+    events: {
+      onReady: onPlayerReady,
+      onStateChange: onPlayerStateChange
+    }
+  }
+
   const onYouTubeIframeAPIReady = () => {
-    player = createPlayer(iframe, {
-      height: '270',
-      width: '480',
-      videoId: videoId,
-      playerVars: {
-        playsinline: 1
-      },
-      events: {
-        onReady: onPlayerReady,
-        onStateChange: onPlayerStateChange
-      }
-    })
+    player = createPlayer('player', videoPlayerOptions)
   }
 
   // globals
@@ -50,20 +54,7 @@ export const useYouTube = (iframe: string, videoId: string) => {
 
   onMounted(() => {
     if (!player) {
-      player = createPlayer('player', {
-        height: '100%',
-        width: '100%',
-        videoId: videoId,
-        playerVars: {
-          playsinline: 1, // fullscreen on IOS = 0, inline = 1
-          modestbranding: 1, // hide youtube logo = 1, show youtube logo = 0
-          controls: 1 // show = 1, hide = 0
-        },
-        events: {
-          onReady: onPlayerReady,
-          onStateChange: onPlayerStateChange
-        }
-      })
+      player = createPlayer('player', videoPlayerOptions)
     }
   })
 }
