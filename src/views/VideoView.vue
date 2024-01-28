@@ -12,27 +12,17 @@ import { useUserStore } from '@/stores/user'
 import { formatPercentageToRating } from '@/utils/StringUtils'
 import ContentReadMore from '@/components/ContentReadMore.vue'
 
-const route = useRoute()
-const user = useUserStore()
-const videoId = route.params.videoId as string
-const channelId = route.params.channelId as string
-const youTubeBaseUrl = 'https://www.youtube.com/watch?v='
-const reviews = ref<Review[]>([])
-const showReviewForm = ref(false)
-const reviewQuestions = ref<SurveyQuestion[]>(videoViewController.getReviewQuestions())
-const questionNumber = ref(1)
 
-const itemDetail = ref({
-  title: '',
-  creator: '',
-  description: '',
-  price: '',
-  social: [],
-  youTubeId: videoId,
-  youtubeURL: `${youTubeBaseUrl}${videoId}`
-})
+interface Question {
+    id: number,
+    question: string,
+    model: {
+      field: string,
+      value: number
+    }
+}
 
-interface ReviewFormValues {
+interface ReviewFormValues extends Record<string, unknown> {
   channelId: string,
   videoId: string,
   overall_presentation: number,
@@ -46,21 +36,33 @@ interface ReviewFormValues {
   comment: string
 }
 
-const defaultFormValues: ReviewFormValues = {
-  channelId: route.params.channelId,
-  videoId: route.params.videoId,
-  overall_presentation: 0,
-  clarity: 0,
-  product_view: 0,
-  product_detail_explanation: 0,
-  non_bias: 0,
-  average_review_time: 0,
-  product_focus: 0,
-  provided_resources: 0,
-  comment: ''
-}
 
-const reviewForm = ref<ReviewFormValues>({ ...defaultFormValues })
+const route = useRoute()
+const user = useUserStore()
+const videoId = route.params.videoId as string
+const channelId = route.params.channelId as string
+const youTubeBaseUrl = 'https://www.youtube.com/watch?v='
+const { 
+  reviewForm, 
+  showReviewForm, 
+  allSurveyQuestionsAnswered, 
+  questionNumber, 
+  currentQuestion,
+  answerQuestion,
+  showSurvey,
+  addReview
+} = useSurvey()
+const { reviews, getReviews } = useReviews()
+
+const itemDetail = ref({
+  title: '',
+  creator: '',
+  description: '',
+  price: '',
+  social: [],
+  youTubeId: videoId,
+  youtubeURL: `${youTubeBaseUrl}${videoId}`
+})
 
 videoViewController.getVideo(videoId).then((res: any) => {
   if ('items' in res) {
@@ -71,62 +73,95 @@ videoViewController.getVideo(videoId).then((res: any) => {
   }
 })
 
-const getReviews = () => {
-  videoViewController.getReviewsByVideo(videoId).then((res) => {
-    reviews.value = res.data.data
-  })
+
+function useReviews() {
+  const reviews = ref<Review[]>([])
+  const getReviews = () => {
+    videoViewController.getReviewsByVideo(videoId).then((res) => {
+      reviews.value = res.data.data
+    })
+  }
+  return {
+    reviews,
+    getReviews
+  }
 }
 
-const showSurvey = () => {
-  showReviewForm.value = !showReviewForm.value
-  if (!showReviewForm.value) {
+function useSurvey() {
+  
+  const defaultFormValues: ReviewFormValues = {
+      channelId: route.params.channelId as string,
+      videoId: route.params.videoId as string,
+      overall_presentation: 0,
+      clarity: 0,
+      product_view: 0,
+      product_detail_explanation: 0,
+      non_bias: 0,
+      average_review_time: 0,
+      product_focus: 0,
+      provided_resources: 0,
+      comment: ''
+    }
+
+  const reviewForm = ref<ReviewFormValues>({ ...defaultFormValues })
+
+  const questionNumber = ref(1)
+  const showReviewForm = ref(false)
+
+  const showSurvey = () => {
+    showReviewForm.value = !showReviewForm.value
+    if (!showReviewForm.value) {
+      // reset question number
+      questionNumber.value = 1
+      // reset form values
+      reviewForm.value = { ...defaultFormValues }
+    }
+  }
+  const hideSurvey = () => {
+    showReviewForm.value = false
     // reset question number
     questionNumber.value = 1
     // reset form values
     reviewForm.value = { ...defaultFormValues }
   }
-}
 
-const hideSurvey = () => {
-  showReviewForm.value = false
-  // reset question number
-  questionNumber.value = 1
-  // reset form values
-  reviewForm.value = { ...defaultFormValues }
-}
+  const reviewQuestions = ref<SurveyQuestion[]>(videoViewController.getReviewQuestions())
+  const allSurveyQuestionsAnswered = computed(() => {
+    return questionNumber.value > reviewQuestions.value.length
+  })
+  const currentQuestion = computed(() => {
+    return reviewQuestions.value.find((q) => q.id === questionNumber.value)
+  })
 
-const allSurveyQuestionsAnswered = computed(() => {
-  return questionNumber.value > reviewQuestions.value.length
-})
-
-
-interface Question {
-  model: {
-    field: string,
-    value: string
+  const answerQuestion = (question: Question) => {
+    // set the question value
+    reviewForm.value[question.model.field] = question?.model?.value
+    // get the next question
+    questionNumber.value++
   }
-}
 
-const answerQuestion = (question: Question) => {
-  // set the question value
-  reviewForm.value[question.model.field] = question.model.value
-  // get the next question
-  questionNumber.value++
-}
+  const addReview = async () => {
+    try {
+      await videoViewController.addReview(reviewForm.value)
+      // refresh the reviews list
+      getReviews()
+      // close the form
+      hideSurvey()
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
-const currentQuestion = computed(() => {
-  return reviewQuestions.value.find((q) => q.id === questionNumber.value)
-})
-
-const addReview = async () => {
-  try {
-    await videoViewController.addReview(reviewForm.value)
-    // refresh the reviews list
-    getReviews()
-    // close the form
-    hideSurvey()
-  } catch (err) {
-    console.error(err)
+  return {
+    allSurveyQuestionsAnswered,
+    currentQuestion,
+    questionNumber,
+    showSurvey,
+    hideSurvey,
+    answerQuestion,
+    addReview,
+    reviewForm,
+    showReviewForm
   }
 }
 
@@ -193,7 +228,7 @@ getReviews()
           >
             <TransitionGroup name="slide-fade" tag="div" class="survey-wrapper">
               <MetricInput
-                v-if="!allSurveyQuestionsAnswered"
+                v-if="!allSurveyQuestionsAnswered && currentQuestion"
                 :key="questionNumber"
                 v-model="currentQuestion.model.value"
                 class="survey-question"
