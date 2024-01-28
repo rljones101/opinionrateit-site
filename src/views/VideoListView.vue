@@ -9,7 +9,7 @@ import type { VideoChannelDetails } from '@/types'
 const router = useRouter()
 const videos = ref<VideoChannelDetails[]>([])
 getAllPublishedVideos().then((res) => {
-  videos.value = res
+  videos.value = res as VideoChannelDetails[]
 })
 
 const showVideo = async (video: VideoChannelDetails) => {
