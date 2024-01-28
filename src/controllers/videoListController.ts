@@ -1,3 +1,4 @@
+import type { VideoChannelDetails } from '@/types'
 import { apiGet } from '@/utils/AppApi'
 
 const getAllPublishedVideos = async (query = {}) => {
@@ -7,7 +8,7 @@ const getAllPublishedVideos = async (query = {}) => {
   }
   const res = await apiGet(url)
   if (res.originalData.results > 0) {
-    return res.data.data
+    return res.data.data as VideoChannelDetails[]
   }
   return []
 }

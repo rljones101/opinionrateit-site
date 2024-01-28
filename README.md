@@ -31,12 +31,12 @@ There is a `docker-compose.yml` file created within the project. This is where y
 
 Once that is installed then run the following command to start the local MongoDB:
 ```
-docker-compose up -d
+npm run mongo:start
 ```
 
 Run the following command to view the containers that are running:
 ```
-docker-compose ps
+npm run mongo:log
 ```
 
 Start the local backend Express app:

@@ -49,6 +49,7 @@ export interface ChannelDetailsInterface {
 
 export interface VideoChannelDetails {
   videoId: string
+  channelId: string
   title: string
   description?: string
   creator?: string

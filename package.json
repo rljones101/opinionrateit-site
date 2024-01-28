@@ -10,6 +10,8 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "mongo:start": "docker-compose up -d",
+    "mongo:log": "docker-compose ps",
     "backend:dev": "cd ./amplify/backend/function/reviewersFn/src/ && SET NODE_ENV=development&&nodemon app.js",
     "backend:install": "npm install --prefix ./amplify/backend/function/reviewersFn/src",
     "format": "prettier --write src/"

@@ -4,14 +4,15 @@ import { getAllPublishedVideos } from '@/controllers/videoListController'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import VideoItem from '@/components/VideoItem.vue'
+import type { VideoChannelDetails } from '@/types'
 
 const router = useRouter()
-const videos = ref([])
+const videos = ref<VideoChannelDetails[]>([])
 getAllPublishedVideos().then((res) => {
   videos.value = res
 })
 
-const showVideo = async (video) => {
+const showVideo = async (video: VideoChannelDetails) => {
   await router.push({
     name: 'reviewers-channelId-reviews-videoId',
     params: { channelId: video.channelId, videoId: video.videoId }
