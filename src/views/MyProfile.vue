@@ -8,21 +8,10 @@ import AppTitle from '@/components/AppTitle.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 
-// Import types
-
-// Import controllers or other utils
-
-// Variables
-
-// Reactive variables
 const userStore = useUserStore()
-
-// Template refs
-
-// Composables
 const { profile } = useProfile()
 
-const getRole = (role: string) => {
+const getRole = (role: string): string => {
   if (role === 'user') {
     return '👤User'
   } else if (role === 'reviewer-basic') {
@@ -30,9 +19,9 @@ const getRole = (role: string) => {
   } else if (role === 'reviewer-plus') {
     return '✨Reviewer Plus'
   }
+  return ''
 }
 
-// Static methods
 </script>
 
 <template>

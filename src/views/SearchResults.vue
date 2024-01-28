@@ -5,10 +5,11 @@ import { useRouter, useRoute } from 'vue-router'
 import { ref, watch } from 'vue'
 import { getAllPublishedVideos } from '@/controllers/videoListController'
 import PageLoadContainer from '@/components/containers/PageLoadContainer.vue'
+import type { VideoChannelDetails } from '@/types'
 
 const router = useRouter()
 const route = useRoute()
-const videos = ref([])
+const videos = ref<VideoChannelDetails[]>([])
 const isLoading = ref(false)
 
 watch(
@@ -16,7 +17,7 @@ watch(
   (query) => {
     isLoading.value = true
     getAllPublishedVideos(query).then((res) => {
-      videos.value = res
+      videos.value = res as VideoChannelDetails[]
       isLoading.value = false
     })
   },
@@ -25,7 +26,7 @@ watch(
   }
 )
 
-const showVideo = async (video) => {
+const showVideo = async (video: VideoChannelDetails) => {
   await router.push({
     name: 'reviewers-channelId-reviews-videoId',
     params: { channelId: video.channelId, videoId: video.videoId }
