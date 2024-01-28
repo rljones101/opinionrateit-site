@@ -34,7 +34,7 @@ const channelDetails = ref({
 const channelId = route.params.channelId as string
 
 // methods
-const showReview = (video) => {
+const showReview = (video: VideoChannelDetails) => {
   router.push({
     name: 'reviewers-channelId-reviews-videoId',
     params: { channelId, videoId: video.videoId }
