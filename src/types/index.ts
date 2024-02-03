@@ -1,3 +1,9 @@
+export interface User {
+  _id: string,
+  name: string,
+  email: string
+}
+
 export interface Slide {
   id: number
   data: any
@@ -47,24 +53,26 @@ export interface ChannelDetailsInterface {
   }
 }
 
-export interface VideoChannelDetails {
-  videoId: string
-  channelId: string
-  title: string
-  description?: string
-  creator?: string
-  thumbnail: string
-  reviews?: any[]
+export interface Video {
+  _id: string,
+  videoId: string,
+  channelId: string,
+  title: string,
+  thumbnail: string,
   selected: boolean
-  isPublished?: boolean
 }
 
-export interface PublishedVideo {
-  user: string
-  title: string
-  videoId: string
-  channelId: string
-  thumbnail: string
+export interface PublishedVideo extends Video {
+  user: User
+  active: boolean
+  id: string
+}
+
+export interface VideoChannelDetails extends Video {
+  description?: string
+  creator?: string
+  reviews?: any[]
+  isPublished?: boolean
 }
 
 export interface Reviewer {

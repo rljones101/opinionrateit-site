@@ -1,17 +1,14 @@
 <script setup lang="ts">
 import AppTitle from '@/components/AppTitle.vue'
-import reviewerController from '@/controllers/reviewerController'
 import ReviewerItem from '@/components/ReviewerItem.vue'
+import { useReviewersStore } from '@/stores/reviewers';
 
-import { ref } from 'vue'
-import type { Reviewer } from '@/types'
+const reviewersState = useReviewersStore()
+reviewersState.getReviewers()
 
-let list = ref<Reviewer[]>([])
 // let search = ref('')
 
-reviewerController.getReviewers().then((reviewers: Reviewer[]) => {
-  list.value = reviewers
-})
+
 
 // const searchReviewers = async () => {
 //   const params = search.value ? { name: search.value } : ''
@@ -28,8 +25,8 @@ reviewerController.getReviewers().then((reviewers: Reviewer[]) => {
 <template>
   <div class="w-full">
     <AppTitle class="mb-8">Reviewers</AppTitle>
-    <div class="grid-layout" v-show="list.length">
-      <ReviewerItem v-for="reviewer in list" :key="reviewer._id" :reviewer="reviewer" />
+    <div class="grid-layout" v-show="reviewersState.reviewers.length">
+      <ReviewerItem v-for="reviewer in reviewersState.reviewers" :key="reviewer._id" :reviewer="reviewer" />
     </div>
   </div>
 </template>

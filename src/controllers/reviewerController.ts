@@ -49,9 +49,9 @@ const searchVideos = async (youTubeChannelId: string, searchParams: string) => {
   return getVideosByChannelId(youTubeChannelId, searchParams)
 }
 
-const getPublishedVideos = async (channelId: string) => {
+const getPublishedVideos = async (channelId: string): Promise<PublishedVideo[]> => {
   const res = await reviewerService.getPublishedVideos(channelId)
-  return res.data.data
+  return res.data.data as PublishedVideo[]
 }
 
 const publishVideos = async (videos: PublishedVideo[]) => {

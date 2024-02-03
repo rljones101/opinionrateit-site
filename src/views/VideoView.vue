@@ -12,17 +12,7 @@ import { useUserStore } from '@/stores/user'
 import { formatPercentageToRating } from '@/utils/StringUtils'
 import ContentReadMore from '@/components/ContentReadMore.vue'
 
-
-interface Question {
-    id: number,
-    question: string,
-    model: {
-      field: string,
-      value: number
-    }
-}
-
-interface ReviewFormValues extends Record<string, unknown> {
+interface ReviewFormValues {
   channelId: string,
   videoId: string,
   overall_presentation: number,
@@ -35,6 +25,18 @@ interface ReviewFormValues extends Record<string, unknown> {
   provided_resources: number,
   comment: string
 }
+
+type ReviewFormValuesKey = keyof ReviewFormValues
+
+interface Question {
+    id: number,
+    question: string,
+    model: {
+      field: ReviewFormValuesKey,
+      value: number
+    }
+}
+
 
 
 const route = useRoute()
@@ -133,9 +135,14 @@ function useSurvey() {
     return reviewQuestions.value.find((q) => q.id === questionNumber.value)
   })
 
+  const setFormValue = <K extends keyof ReviewFormValues>(key: K, value: ReviewFormValues[K]) => {
+    return reviewForm.value[key] = value
+  }
+
   const answerQuestion = (question: Question) => {
     // set the question value
-    reviewForm.value[question.model.field] = question?.model?.value
+    const key: ReviewFormValuesKey = question.model.field
+    setFormValue(key, question?.model?.value)
     // get the next question
     questionNumber.value++
   }

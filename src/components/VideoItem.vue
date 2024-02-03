@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { VideoChannelDetails } from '@/types'
+import type { Video } from '@/types'
 
 defineProps<{
-  video: VideoChannelDetails
+  video: Video
 }>()
 </script>
 
