@@ -177,3 +177,11 @@ export interface Profile {
   avgShare: number
   metric: number
 }
+
+export interface NavLink {
+  id: number
+  label: string
+  name: string
+  icon: any
+  params?: any
+}

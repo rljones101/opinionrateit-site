@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  body {
+    @apply bg-app-blue text-app-text-color;
+  }
+}
+
 /* color palette from <https://github.com/vuejs/theme> */
 :root {
   --vt-c-white: #ffffff;
@@ -69,7 +75,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /*background: linear-gradient(to top, #00f260, #0575e6);*/
-  @apply bg-app-blue text-app-text-color;
 }
 
 a,

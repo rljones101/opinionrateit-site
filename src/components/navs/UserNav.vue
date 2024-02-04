@@ -7,22 +7,15 @@ import {
   VideoCameraIcon,
   UserCircleIcon
 } from '@heroicons/vue/20/solid'
-import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
+import { type NavLink } from '@/types';
+import NavButton from '../buttons/NavButton.vue';
 
-const router = useRouter()
-const route = useRoute()
+
 const user = useUserStore()
 
-interface userLinkItem {
-  id: number
-  label: string
-  name: string
-  icon: any
-  params?: any
-}
 
-const navLinks: userLinkItem[] = [
+const navLinks: NavLink[] = [
   {
     id: 0,
     label: 'Home',
@@ -70,84 +63,27 @@ const reviewerLinks = [
   }
 ]
 
-const goToPath = async (link: userLinkItem) => {
-  await router.push({ name: link.name, params: link.params })
-}
 </script>
 
 <template>
   <div class="pl-4 pr-4 relative">
     <nav id="nav" class="flex flex-col w-full transition space-y-2">
-      <button
-        v-for="link in navLinks"
-        :key="link.id"
-        class="user-nav-btn text-orange-100 whitespace-nowrap"
-        :class="{ active: route.name === link.name }"
-        @click="goToPath(link)"
-      >
-        <span v-if="link.icon" class="text-orange-100"
-          ><component :is="link.icon" class="w-6 h-6"
-        /></span>
-        <span class="hidden lg:flex uppercase font-bold">{{ link.label }}</span>
-      </button>
+      <NavButton v-for="link in navLinks" :link="link" :key="link.id" />
     </nav>
     <div class="border-t border-app-blue pt-4 mt-8">
       <nav id="userNav" class="flex flex-col w-full transition space-y-2">
-        <button
-          v-for="link in userLinks"
-          :key="link.id"
-          class="user-nav-btn text-orange-100 whitespace-nowrap"
-          :class="{ active: route.name === link.name }"
-          @click="goToPath(link)"
-        >
-          <span v-if="link.icon" class="text-orange-100"
-            ><component :is="link.icon" class="w-6 h-6"
-          /></span>
-          <span class="hidden lg:flex uppercase font-bold">{{ link.label }}</span>
-        </button>
+        <NavButton v-for="link in userLinks" :link="link" :key="link.id" />
       </nav>
       <nav
         id="reviewerNav"
         class="flex flex-col w-full transition space-y-2"
         v-if="user.restrictTo('reviewer-basic', 'reviewer-plus', 'admin')"
       >
-        <button
-          v-for="link in reviewerLinks"
-          :key="link.id"
-          class="user-nav-btn text-orange-100 whitespace-nowrap"
-          :class="{ active: route.name === link.name }"
-          @click="goToPath(link)"
-        >
-          <span v-if="link.icon" class="text-orange-100"
-            ><component :is="link.icon" class="w-6 h-6"
-          /></span>
-          <span class="hidden lg:flex uppercase font-bold">{{ link.label }}</span>
-        </button>
+        <NavButton v-for="link in reviewerLinks" :link="link" :key="link.id" />
       </nav>
     </div>
   </div>
 </template>
 
 <style scoped>
-.user-nav-btn {
-  @apply border border-transparent font-bold rounded-lg p-2 pl-4 pr-4 flex items-center gap-4;
-  min-height: 48px;
-  line-height: 1rem;
-  transform: translateY(0);
-  transition: all 0.3s ease-in-out;
-}
-
-.user-nav-btn:hover {
-  @apply bg-app-orange-muted transition ease-in-out delay-150 -translate-y-1 scale-105 border border-app-orange;
-}
-
-.user-nav-btn.active {
-  @apply pointer-events-none bg-white bg-opacity-30 text-app-orange bg-opacity-10 hover:shadow-none;
-}
-
-.user-nav-btn:hover:not(.active) {
-  @apply text-white;
-  transform: translate(0, -0.5em);
-  box-shadow: rgba(0, 0, 0, 0.5) 0 10px 10px;
-}
 </style>
