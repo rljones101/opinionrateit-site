@@ -2,13 +2,12 @@
 
 <template>
   <button class="btn">
-    <span class="font-bold uppercase"><slot /></span>
+    <span class="font-bold uppercase bg-app-blue hover:bg-app-orange hover:text-white hover:font-bold border-gray-700 rounded-lg p-2 flex justify-center"><slot /></span>
   </button>
 </template>
 
 <style scoped>
 .btn {
-  @apply bg-app-blue hover:bg-app-orange hover:text-white hover:font-bold border-gray-700 rounded-lg p-2 flex justify-center;
   transform: translateY(0);
   transition: all 0.3s ease-in-out;
 }

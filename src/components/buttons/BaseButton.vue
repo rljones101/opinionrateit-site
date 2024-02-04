@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
+type ButtonType = 'primary' | 'secondary' | 'small'
+
 const props = defineProps<{
-  type: string
+  type: ButtonType
   btnType?: 'button' | 'submit' | 'reset' | undefined
 }>()
 
@@ -16,15 +18,12 @@ const getClasses = computed(() => {
     small:
       'font-semibold uppercase rounded-full px-2 py-0.5 text-xs border border-transparent bg-app-orange text-orange-100 hover:bg-app-orange-muted'
   }
-
-  const cls = Object.keys(classes).find((key) => key === props.type)
-  console.log(cls)
   return classes[props.type]
 })
 </script>
 
 <template>
-  <button :type="btnType" class="btn" :class="getClasses"><slot /></button>
+  <button :type="btnType" class="btn transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 border hover:border-app-orange disabled:pointer-events-none disabled:bg-gray-700 disabled:text-slate-500 disabled:border-none hover:transform-none" :class="getClasses"><slot /></button>
 </template>
 
 <style scoped>
@@ -35,10 +34,6 @@ const getClasses = computed(() => {
 }
 
 .btn:hover {
-  @apply transition ease-in-out delay-150 -translate-y-1 scale-105 border border-app-orange;
   box-shadow: rgba(0, 0, 0, 0.2) 0 10px 10px;
-}
-.btn:disabled {
-  @apply pointer-events-none bg-gray-700 text-slate-500 border-none transition-none transform-none;
 }
 </style>
