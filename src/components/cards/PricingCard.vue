@@ -14,7 +14,7 @@ const emit = defineEmits(['selected'])
 
 <template>
   <div
-    :class="{ 'active-plan': active }"
+    :class="{ 'border border-orange-500': active }"
     class="w-full flex flex-col max-w-sm p-4 bg-app-blue-soft text-white rounded-lg shadow-lg shadow-black sm:p-8"
   >
     <h5 class="mb-4 text-xl font-medium dark:text-gray-400">{{ planName }}</h5>
@@ -38,7 +38,7 @@ const emit = defineEmits(['selected'])
       <slot name="list"></slot>
     </ul>
     <BaseButton
-      :class="{ 'active-button': active }"
+      :class="{ 'bg-orange-500 shadow-none border-none disabled:bg-app-blue hover:transition-none hover:translate-y-0 text-orange-500': active }"
       type="primary"
       @click="emit('selected')"
       :disabled="active || isDisabled"
@@ -49,16 +49,5 @@ const emit = defineEmits(['selected'])
 </template>
 
 <style scoped>
-.active-plan {
-  @apply border border-orange-500;
-}
-.active-button {
-  @apply bg-orange-500
-  shadow-none
-  border-none
-  disabled:bg-app-blue
-  hover:transition-none
-  hover:translate-y-0
-  text-orange-500;
-}
+
 </style>
