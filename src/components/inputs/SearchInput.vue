@@ -1,21 +1,19 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref } from 'vue'
+import { debounce } from '@/utils/SearchUtils'
 
 const props = defineProps(['modelValue'])
 const emit = defineEmits(['update:modelValue'])
+const search = ref(props.modelValue)
+
+const doSearch = debounce(() => {
+  console.log('called emitSearchChange:', search.value)
+  emit('update:modelValue', search.value)
+}, 1000)
 
 const emitSearchChange = () => {
-  emit('update:modelValue', search?.value)
+  doSearch()
 }
-
-const search = computed({
-  get() {
-    return props.modelValue
-  },
-  set(value: string) {
-    emit('update:modelValue', value)
-  }
-})
 
 const clearSearch = () => {
   emit('update:modelValue', '')
@@ -43,7 +41,7 @@ const clearSearch = () => {
       </div>
       <input
         v-model="search"
-        @keydown.enter="emitSearchChange()"
+        @keydown="emitSearchChange"
         id="simple-search"
         class="bg-app-blue text-slate-300 text-sm rounded-full focus:ring-orange-500 focus:border-orange-500 w-full pl-10 p-2.5"
         placeholder="Search"
@@ -73,7 +71,7 @@ const clearSearch = () => {
       </button>
     </div>
     <button
-      @click="emitSearchChange()"
+      @click="emitSearchChange"
       type="submit"
       class="p-2.5 ml-2 text-sm font-medium text-white bg-app-orange rounded-lg hover:bg-app-orange-muted focus:ring-1 focus:outline-none focus:ring-slate-700"
     >

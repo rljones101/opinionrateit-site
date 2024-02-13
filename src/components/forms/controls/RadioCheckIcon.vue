@@ -8,7 +8,7 @@ defineProps<{
   <svg
     aria-hidden="true"
     class="flex-shrink-0 w-5 h-5 text-gray-400 dark:text-gray-500"
-    :class="{ 'is-checked': isChecked }"
+    :class="{ 'text-orange-600 dark:text-orange-500': isChecked }"
     fill="currentColor"
     viewBox="0 0 20 20"
     xmlns="http://www.w3.org/2000/svg"
@@ -23,7 +23,5 @@ defineProps<{
 </template>
 
 <style scoped>
-.is-checked {
-  @apply text-orange-600 dark:text-orange-500;
-}
+
 </style>

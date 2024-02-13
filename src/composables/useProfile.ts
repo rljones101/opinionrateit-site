@@ -81,7 +81,8 @@ const useProfile = () => {
     }
   }
 
-  const searchVideos = debounce(searchCallBack, 500)
+  // const searchVideos = debounce(searchCallBack, 500)
+  const searchVideos = searchCallBack
 
   const getVideos = async () => {
     if (profile.value.isReviewer) {
@@ -131,13 +132,20 @@ const useProfile = () => {
   const publishVideos = async (channelId: string, selectedVideos: VideoChannelDetails[]) => {
     const videos: PublishedVideo[] = []
     selectedVideos.forEach((video: VideoChannelDetails) => {
+
       const publishedVideo: PublishedVideo = {
-        user: profile.value.id,
-        title: video.title,
         videoId: video.videoId,
+        user: {
+          _id: profile.value.id,
+          name: profile.value.name,
+          email: profile.value.email  
+        },
+        title: video.title,
+        active: true,
         channelId: profile.value.youTubeChannelId,
         thumbnail: video.thumbnail
       }
+
       videos.push(publishedVideo)
     })
 

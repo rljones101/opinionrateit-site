@@ -26,7 +26,8 @@ const emit = defineEmits(['submit'])
 
 const loading = ref(false)
 
-let form = {
+
+let defaultValues = {
   youTubeChannelId: '',
   title: '',
   description: '',
@@ -37,6 +38,10 @@ let form = {
   password: '',
   passwordConfirm: '',
   role: '',
+}
+
+let form = {
+  ...defaultValues,
   ...props.formData
 }
 

@@ -6,8 +6,7 @@ import BaseButton from '@/components/buttons/BaseButton.vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/user'
 import SiteLogo from '@/components/siteLogo.vue'
-import { ref, watch } from 'vue'
-import pageController from '@/controllers/pageController'
+import { ref } from 'vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import AppFooter from '@/components/AppFooter.vue'
 
@@ -28,10 +27,6 @@ const searchHandler = async (value: string) => {
   }
   await router.push({ name: 'search', query })
 }
-
-watch(searchValue, (value: any) => {
-  pageController.find(value, searchHandler)
-})
 </script>
 
 <template>
@@ -63,7 +58,7 @@ watch(searchValue, (value: any) => {
               <SiteLogo />
             </div>
             <div class="w-full flex items-center justify-center">
-              <SearchInput v-model="searchValue" class="max-w-4xl" />
+              <SearchInput :model-value="searchValue" @update:modelValue="searchHandler" class="max-w-4xl" />
             </div>
             <div class="justify-self-end hidden md:flex flex-grow items-center ml-4">
               <BaseButton type="primary" @click="logout">Logout</BaseButton>

@@ -3,7 +3,7 @@ import { onMounted, ref, watch } from 'vue'
 import { useForm } from 'vee-validate'
 import FormInput from '@/components/inputs/FormInput.vue'
 import * as yup from 'yup'
-import { BillingDetails, SignupPlan } from '@/types'
+import { type BillingDetails, type SignupPlan } from '@/types'
 import {
   confirmCardPayment,
   createCardElement,
@@ -52,7 +52,7 @@ watch(
 
 const loading = ref(false)
 
-const billingFormData = {
+const defaultValues = {
   id: '',
   name: '',
   email: '',
@@ -60,6 +60,10 @@ const billingFormData = {
   city: '',
   state: '',
   zip: '',
+}
+
+const billingFormData = {
+  ...defaultValues,
   ...props.formData
 }
 
@@ -102,7 +106,7 @@ const handleBillingSubmit = billingForm.handleSubmit(async (values: any) => {
     // create the payment method
     const paymentMethodReq = await createPaymentMethod(cardElement, billingDetails)
     // confirm the payment with the secret from the intent
-    const { error } = confirmCardPayment(secret, paymentMethodReq.paymentMethod.id)
+    const { error } = await confirmCardPayment(secret, paymentMethodReq.paymentMethod.id)
     // an error occurred while creating a payment
     if (error) {
       console.error(`Payment Failed: ${error}`)
@@ -117,7 +121,7 @@ const handleBillingSubmit = billingForm.handleSubmit(async (values: any) => {
   }
 })
 
-let element = null
+let element: any = null
 // lifecycle hooks
 onMounted(() => {
   if (!element) {
