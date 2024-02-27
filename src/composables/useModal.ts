@@ -28,6 +28,8 @@ const useModal = (modal: string) => {
 
       if ($modalElement) {
         modalInstance.value = new Modal($modalElement, modalOptions)
+      } else {
+        throw Error(`Could not find modal element with the id of '${modal}'`)
       }
     } catch (err) {
       console.error(err)
