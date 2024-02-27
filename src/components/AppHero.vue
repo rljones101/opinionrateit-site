@@ -4,7 +4,7 @@
   <div class="w-full flex flex-col items-center">
     <div class="flex items-center w-full">
       <div class="hidden md:flex">
-        <div class="hero-image">
+        <div class="flex">
           <img src="../assets/img/site-screens.png" alt="Desktop Image" class="object-contain" />
         </div>
       </div>
@@ -25,8 +25,5 @@
 <style scoped>
 .hero-text {
   max-width: 28rem;
-}
-.hero-image {
-  display: flex;
 }
 </style>

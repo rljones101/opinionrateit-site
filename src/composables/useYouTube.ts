@@ -47,7 +47,6 @@ export const useYouTube = (iframe: string, videoId: string) => {
   // globals
   // @ts-ignore
   if (!window.onYouTubeIframeAPIReady) {
-    console.log('...add listener')
     // @ts-ignore
     window.onYouTubeIframeAPIReady = () => onYouTubeIframeAPIReady
   }

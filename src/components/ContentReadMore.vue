@@ -2,12 +2,12 @@
 import { onMounted, ref } from 'vue'
 
 const showReadMore = ref(true)
-const ContentRef = ref('')
+const ContentRef = ref<HTMLElement | null>(null)
 
 async function showHideReadMore() {
   try {
     setTimeout(() => {
-      const el: HTMLElement = ContentRef.value as HTMLElement
+      const el = ContentRef.value
       if (el) {
         showReadMore.value = el.offsetHeight < el.scrollHeight || el.offsetWidth < el.scrollHeight
       }
@@ -26,7 +26,7 @@ onMounted(async () => {
   <div class="w-full">
     <div
       ref="ContentRef"
-      class="w-full h-full content-container"
+      class="w-full h-full content-container scrollbar-thin scrollbar-thumb-orange-500 scrollbar-track-slate-800"
       :class="{ 'line-clamp-4': showReadMore }"
     >
       <slot />
@@ -42,7 +42,6 @@ onMounted(async () => {
 
 <style scoped>
 .content-container {
-  @apply scrollbar-thin scrollbar-thumb-orange-500 scrollbar-track-slate-800;
   max-height: 24rem;
   overflow-y: auto;
 }

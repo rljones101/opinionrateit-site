@@ -7,7 +7,6 @@ const emit = defineEmits(['update:modelValue'])
 const search = ref(props.modelValue)
 
 const doSearch = debounce(() => {
-  console.log('called emitSearchChange:', search.value)
   emit('update:modelValue', search.value)
 }, 1000)
 
@@ -16,14 +15,15 @@ const emitSearchChange = () => {
 }
 
 const clearSearch = () => {
-  emit('update:modelValue', '')
+  search.value = ''
+  doSearch()
 }
 </script>
 
 <template>
   <div class="flex w-full">
     <label for="simple-search" class="sr-only">Search</label>
-    <div class="relative w-full">
+    <div class="relative group w-6/12 transition-all hover:w-full focus-within:w-full">
       <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
         <svg
           aria-hidden="true"
@@ -43,7 +43,7 @@ const clearSearch = () => {
         v-model="search"
         @keydown="emitSearchChange"
         id="simple-search"
-        class="bg-app-blue text-slate-300 text-sm rounded-full focus:ring-orange-500 focus:border-orange-500 w-full pl-10 p-2.5"
+        class="bg-app-blue text-slate-300 text-sm rounded-full focus:ring-orange-500 focus:border-orange-500 w-full transition-all pl-10 p-2.5"
         placeholder="Search"
         required
       />
@@ -70,7 +70,7 @@ const clearSearch = () => {
         </svg>
       </button>
     </div>
-    <button
+    <!-- <button
       @click="emitSearchChange"
       type="submit"
       class="p-2.5 ml-2 text-sm font-medium text-white bg-app-orange rounded-lg hover:bg-app-orange-muted focus:ring-1 focus:outline-none focus:ring-slate-700"
@@ -90,7 +90,7 @@ const clearSearch = () => {
         ></path>
       </svg>
       <span class="sr-only">Search</span>
-    </button>
+    </button> -->
   </div>
 </template>
 
