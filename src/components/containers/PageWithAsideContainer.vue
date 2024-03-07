@@ -53,14 +53,14 @@ const searchHandler = async (value: string) => {
     <div id="right" class="column w-full flex">
       <div class="flex-shrink-0 bg-app-blue-soft py-4 md:space-y-0 border-b border-slate-700">
         <div class="flex">
-          <div class="w-full flex flex-row items-center px-4">
-            <div class="flex flex-col items-center lg:hidden mr-4">
+          <div class="flex w-full flex-row items-center px-4">
+            <div class="flex flex-col items-center lg:hidden mr-4 flex-1">
               <SiteLogo />
             </div>
-            <div class="w-full flex items-center justify-center">
-              <SearchInput :model-value="searchValue" @update:modelValue="searchHandler" class="max-w-4xl" />
+            <div class="w-full flex justify-end items-center">
+              <SearchInput :model-value="searchValue" @update:modelValue="searchHandler" />
             </div>
-            <div class="justify-self-end hidden md:flex flex-grow items-center ml-4">
+            <div class="justify-self-end hidden md:flex flex-grow items-center ml-4 flex-1">
               <BaseButton type="primary" @click="logout">Logout</BaseButton>
             </div>
           </div>

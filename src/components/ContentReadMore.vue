@@ -27,7 +27,7 @@ onMounted(async () => {
     <div
       ref="ContentRef"
       class="w-full h-full content-container scrollbar-thin scrollbar-thumb-orange-500 scrollbar-track-slate-800"
-      :class="{ 'line-clamp-4': showReadMore }"
+      :class="{ 'line-clamp-2': showReadMore }"
     >
       <slot />
     </div>
@@ -44,12 +44,5 @@ onMounted(async () => {
 .content-container {
   max-height: 24rem;
   overflow-y: auto;
-}
-.line-clamp-4 {
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  /* truncate to 4 lines */
-  -webkit-line-clamp: 2;
 }
 </style>

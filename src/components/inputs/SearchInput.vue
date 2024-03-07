@@ -21,9 +21,9 @@ const clearSearch = () => {
 </script>
 
 <template>
-  <div class="flex w-full">
+  <div class="flex justify-end">
     <label for="simple-search" class="sr-only">Search</label>
-    <div class="relative group w-6/12 transition-all hover:w-full focus-within:w-full">
+    <div class="relative group md:w-[100px] transition-all hover:w-[300px] focus-within:w-[300px]">
       <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
         <svg
           aria-hidden="true"
