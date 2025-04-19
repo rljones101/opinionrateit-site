@@ -1,17 +1,19 @@
 import axios from 'axios'
 import type { VideoChannelDetails } from '@/types'
+import type { SearchResult } from '@/models/GoogleApiModels'
 
 const googleAPI = axios.create({
   baseURL: import.meta.env.VITE_G_URL
 })
 
-function _videoInterface(videoData: any): VideoChannelDetails {
+function _videoInterface(videoData: SearchResult): VideoChannelDetails {
   return {
-    videoId: videoData['id']['videoId'] || videoData['id'],
-    title: videoData['snippet']['title'],
-    description: videoData['snippet']['description'],
-    creator: videoData['snippet']['channelTitle'],
-    thumbnail: videoData['snippet']['thumbnails']['medium']['url'],
+    videoId: videoData.id.videoId,
+    channelId: videoData.id.channelId,
+    title: videoData.snippet.title,
+    description: videoData.snippet.description,
+    creator: videoData.snippet.channelTitle,
+    thumbnail: videoData.snippet.thumbnails.medium.url,
     selected: false
   }
 }

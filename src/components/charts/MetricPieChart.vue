@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import PieChart from '@/components/charts/PieChart.vue'
 import { computed, reactive, ref } from 'vue'
-import { ChartData } from 'chart.js'
+import { type ChartData } from 'chart.js'
 import { useUserStore } from '@/stores/user'
 
 const props = defineProps<{
@@ -23,6 +23,7 @@ const chartData = ref<ChartData<'doughnut'>>({
   ]
 })
 const chartOptions = reactive({
+  /* @ts-ignore */
   onResize: (...args) => {
     const chart = args[0]
     chart.canvas.parentNode.style.width = '20vw'

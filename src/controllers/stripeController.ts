@@ -1,6 +1,7 @@
 import signupViewController from '@/controllers/signupViewController'
 import type { BillingDetails } from '@/types'
 
+/* @ts-ignore */
 const stripe = Stripe(import.meta.env.VITE_STRIPE_KEY)
 const elements = stripe.elements()
 

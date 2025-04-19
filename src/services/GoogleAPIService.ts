@@ -1,8 +1,10 @@
 import apiUtils from '@/utils/ApiUtils'
 import type { VideoChannelDetails } from '@/types'
+import type { SearchResult } from '@/models/GoogleApiModels'
+
 
 export default class GoogleAPIService {
-  getVideosByChannelId(youtubeChannelId: string, query: string = '') {
+  async getVideosByChannelId(youtubeChannelId: string, query: string = '') {
     const params = {
       part: 'snippet',
       type: 'video',
@@ -14,17 +16,14 @@ export default class GoogleAPIService {
       nextPageToken: ''
     }
 
-    return apiUtils
-      .get('search', params)
-      .then((response: any) => {
-        return response.data.items.map((item: any) => {
-          // console.log("Google search:", youtubeChannelId, item);
-          return this._videoInterface(item)
-        })
-      })
-      .catch((error: Error) => {
-        console.log(error)
-      })
+    try {
+      const response = await apiUtils.get('search', params)
+      return response.data.items.map((item: any) => {
+        return this._videoInterface(item)
+      }) as VideoChannelDetails[]
+    } catch(error: unknown) {
+      console.log(error)
+    }
   }
 
   getRating(videoId: string) {
@@ -68,13 +67,14 @@ export default class GoogleAPIService {
     })
   }
 
-  _videoInterface(videoData: any): VideoChannelDetails {
+  _videoInterface(videoData: SearchResult): VideoChannelDetails {
     return {
-      videoId: videoData['id']['videoId'],
-      title: videoData['snippet']['title'],
-      description: videoData['snippet']['description'],
-      creator: videoData['snippet']['channelTitle'],
-      thumbnail: videoData['snippet']['thumbnails']['medium']['url'],
+      videoId: videoData.id.videoId,
+      channelId: videoData.id.channelId,
+      title: videoData.snippet.title,
+      description: videoData.snippet.description,
+      creator: videoData.snippet.channelTitle,
+      thumbnail: videoData.snippet.thumbnails.medium.url,
       selected: false
     }
   }

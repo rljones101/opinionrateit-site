@@ -1,6 +1,6 @@
 import GoogleAPIService from '@/services/GoogleAPIService'
 import * as reviewerService from '@/services/ReviewerService'
-import type { PublishedVideo } from '@/types'
+import type { PublishedVideo, VideoChannelDetails } from '@/types'
 import type { Reviewer } from '@/types'
 import * as userService from '@/services/UserService'
 import { apiGet } from '@/utils/AppApi'
@@ -10,11 +10,11 @@ const googleApiService = new GoogleAPIService()
 const getReviewers = async (query?: URLSearchParams) => await reviewerService.getReviewers(query)
 
 const getVideos = async (youtubeChannelId: string) => {
+  let videos: VideoChannelDetails[] = []
+  if(!youtubeChannelId) return videos
   try {
-    let videos = []
-    if (youtubeChannelId) {
-      videos = await googleApiService.getVideosByChannelId(youtubeChannelId)
-    }
+    const result = await googleApiService.getVideosByChannelId(youtubeChannelId)
+    if(result) videos = result
     return videos
   } catch (err) {
     return new Error(`Could not get videos with id (${youtubeChannelId})`)

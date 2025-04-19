@@ -1,7 +1,9 @@
 <script setup lang="ts">
-defineProps<{
-  isChecked: boolean
-}>()
+withDefaults(defineProps<{
+  isChecked?: boolean
+}>(), {
+  isChecked: false
+})
 </script>
 
 <template>

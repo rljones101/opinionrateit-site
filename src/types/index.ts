@@ -118,11 +118,27 @@ export interface Review {
   share: number
 }
 
+export interface ReviewFormValues {
+  channelId: string,
+  videoId: string,
+  overall_presentation: number,
+  clarity: number,
+  product_view: number,
+  product_detail_explanation: number,
+  non_bias: number,
+  average_review_time: number,
+  product_focus: number,
+  provided_resources: number,
+  comment: string
+}
+
+export type KeyOfReviewFormValues = keyof ReviewFormValues
+
 export interface SurveyQuestion {
   id: number
   question: string
   model: {
-    field: string
+    field: KeyOfReviewFormValues
     value: number
   }
 }

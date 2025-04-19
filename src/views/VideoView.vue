@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import MediaPlayer from '@/components/mediaPlayer.vue'
 import videoViewController from '@/controllers/videoViewController'
 import { useRoute } from 'vue-router'
-import type { Review, SurveyQuestion } from '@/types'
+import type { KeyOfReviewFormValues, Review, SurveyQuestion } from '@/types'
 import { reviewDate } from '@/utils/DateUtils'
 import { replaceNewlines, urlify } from '@/utils/StringUtils'
 import BaseButton from '@/components/buttons/BaseButton.vue'
@@ -11,33 +11,7 @@ import MetricInput from '@/components/MetricInput.vue'
 import { useUserStore } from '@/stores/user'
 import { formatPercentageToRating } from '@/utils/StringUtils'
 import ContentReadMore from '@/components/ContentReadMore.vue'
-
-interface ReviewFormValues {
-  channelId: string,
-  videoId: string,
-  overall_presentation: number,
-  clarity: number,
-  product_view: number,
-  product_detail_explanation: number,
-  non_bias: number,
-  average_review_time: number,
-  product_focus: number,
-  provided_resources: number,
-  comment: string
-}
-
-type ReviewFormValuesKey = keyof ReviewFormValues
-
-interface Question {
-    id: number,
-    question: string,
-    model: {
-      field: ReviewFormValuesKey,
-      value: number
-    }
-}
-
-
+import type { ReviewFormValues } from '@/types'
 
 const route = useRoute()
 const user = useUserStore()
@@ -139,9 +113,9 @@ function useSurvey() {
     return reviewForm.value[key] = value
   }
 
-  const answerQuestion = (question: Question) => {
+  const answerQuestion = (question: SurveyQuestion) => {
     // set the question value
-    const key: ReviewFormValuesKey = question.model.field
+    const key: KeyOfReviewFormValues = question.model.field
     setFormValue(key, question?.model?.value)
     // get the next question
     questionNumber.value++
