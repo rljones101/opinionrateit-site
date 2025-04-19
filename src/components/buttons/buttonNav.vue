@@ -4,21 +4,25 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const props = defineProps<{
-  link: string,
-  path: string
+  label: string
+  name: string
+  params?: any
 }>()
-const goToPath = () => {
-  router.push(props.path)
+const goToPath = async () => {
+  await router.push({ name: props.name, params: props.params })
 }
 </script>
 
 <template>
   <div class="relative group ml-4 mr-4">
-    <button class="flex transition ease-out hover:ease-in duration-300 pt-2 pb-2 text-white font-bold" @click="goToPath">{{link}}</button>
+    <button
+      class="flex transition ease-out hover:ease-in duration-300 pt-2 pb-2 text-white font-bold uppercase"
+      @click="goToPath"
+    >
+      {{ label }}
+    </button>
     <span class="absolute -bottom-1 w-0 h-1 bg-orange-500 transition-all group-hover:w-full"></span>
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

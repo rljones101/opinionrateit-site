@@ -1,0 +1,73 @@
+[{
+  "name": "Zeos Pantera",
+  "email": "zeos@example.com",
+  "role": "reviewer-basic",
+  "password": "$2a$12$smFMNmvmw87L07xKEEG8/.IJHiayiqsOTUulv0ruAQx003bqhC1pG",
+  "active": true,
+  "youTubeChannelId": "UC3XdYJjWliOdKuZMNaTiP8Q",
+  "slug": "zeos-pantera"
+}, {
+  "name": "Bitwit",
+  "email": "bitwit@example.com",
+  "role": "reviewer-basic",
+  "password": "$2a$12$smFMNmvmw87L07xKEEG8/.IJHiayiqsOTUulv0ruAQx003bqhC1pG",
+  "active": true,
+  "youTubeChannelId": "UCftcLVz-jtPXoH3cWUUDwYw",
+  "slug": "bitwit"
+}, {
+  "name": "Badseed Tech",
+  "email": "badseedtech@example.com",
+  "role": "reviewer-basic",
+  "password": "$2a$12$smFMNmvmw87L07xKEEG8/.IJHiayiqsOTUulv0ruAQx003bqhC1pG",
+  "active": true,
+  "youTubeChannelId": "UCOFH59uoSs8SUF0L_p3W0sg",
+  "slug": "badseed-tech"
+}, {
+  "name": "randomfrankp",
+  "email": "randomfrankp@example.com",
+  "role": "reviewer-basic",
+  "password": "$2a$12$smFMNmvmw87L07xKEEG8/.IJHiayiqsOTUulv0ruAQx003bqhC1pG",
+  "active": true,
+  "youTubeChannelId": "UChnN9MPURwKV2PbEoT2vhTQ",
+  "slug": "randomfrankp"
+}, {
+  "name": "Joshua Valour",
+  "email": "joshua@example.com",
+  "role": "reviewer-basic",
+  "password": "$2a$12$smFMNmvmw87L07xKEEG8/.IJHiayiqsOTUulv0ruAQx003bqhC1pG",
+  "active": true,
+  "youTubeChannelId": "UCx9bOYEjkevIDYONBAstK-A",
+  "slug": "joshua-valour"
+}, {
+  "name": "Hardware Canucks",
+  "email": "hardwarecanucks@example.com",
+  "role": "reviewer-basic",
+  "password": "$2a$12$smFMNmvmw87L07xKEEG8/.IJHiayiqsOTUulv0ruAQx003bqhC1pG",
+  "active": true,
+  "youTubeChannelId": "UCTzLRZUgelatKZ4nyIKcAbg",
+  "slug": "hardware-canucks"
+}, {
+  "name": "JayzTwoCents",
+  "email": "jayztwocents@example.com",
+  "role": "reviewer-basic",
+  "password": "$2a$12$smFMNmvmw87L07xKEEG8/.IJHiayiqsOTUulv0ruAQx003bqhC1pG",
+  "active": true,
+  "youTubeChannelId": "UCkWQ0gDrqOCarmUKmppD7GQ",
+  "slug": "jayztwocents"
+}, {
+  "name": "DMS",
+  "email": "dms@example.com",
+  "role": "reviewer-basic",
+  "password": "$2a$12$smFMNmvmw87L07xKEEG8/.IJHiayiqsOTUulv0ruAQx003bqhC1pG",
+  "active": true,
+  "youTubeChannelId": "UC7WtLipHnndkqwSxvL0oyVQ",
+  "slug": "dms"
+},{
+  "name": "Paul's Hardware",
+  "email": "paul@example.com",
+  "role": "reviewer-basic",
+  "password": "$2a$12$smFMNmvmw87L07xKEEG8/.IJHiayiqsOTUulv0ruAQx003bqhC1pG",
+  "active": true,
+  "youTubeChannelId": "UCvWWf-LYjaujE50iYai8WgQ",
+  "slug": "pauls-hardware"
+}]

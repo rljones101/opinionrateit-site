@@ -1,7 +1,7 @@
 import { onMounted, onUnmounted, ref} from 'vue'
 import type { Slide } from "@/types";
 
-const useCarousel = (slides: Slide[]) => {
+export const useCarousel = (slides: Slide[]) => {
 
   let animateId: number
   const startAnimation = () => {
@@ -27,8 +27,8 @@ const useCarousel = (slides: Slide[]) => {
     stopAnimation()
 
     // Take the first element and add it at the end
-    const first: any = slideAlias.value.shift();
-    updateOpacity(first as Slide);
+    const first: Slide = slideAlias.value.shift() as Slide;
+    updateOpacity(first);
     slideAlias.value = [...slideAlias.value, first];
   }
 
@@ -36,8 +36,8 @@ const useCarousel = (slides: Slide[]) => {
     stopAnimation()
     // Save the last element and then add it back to the slides
     // at the beginning
-    const last: any = slideAlias.value.pop();
-    updateOpacity(last as Slide);
+    const last: Slide = slideAlias.value.pop() as Slide;
+    updateOpacity(last);
     slideAlias.value = [last, ...slideAlias.value];
   }
 
@@ -54,8 +54,4 @@ const useCarousel = (slides: Slide[]) => {
     next,
     previous
   }
-}
-
-export {
-  useCarousel
 }

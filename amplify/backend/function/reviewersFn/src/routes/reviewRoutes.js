@@ -1,15 +1,28 @@
-const express =  require('express')
-const reviewerController =  require('../controllers/reviewerController.js')
+const express = require('express')
+const reviewController = require('../controllers/reviewController.js')
+const authController = require('../controllers/authController.js')
 
 const reviewRoutes = express.Router()
 
-reviewRoutes.route('/')
-    .get(reviewerController.getAllReviewers)
-    .get(reviewerController.getOne)
-    .post(reviewerController.createReviewer)
+reviewRoutes.use(authController.protect)
 
-reviewRoutes.route('/:id')
-    .patch(reviewerController.updateOne)
-    .delete(reviewerController.deleteOne)
+reviewRoutes
+  .route('/')
+  .get(reviewController.getAllReviews)
+  .post(
+    authController.restrictTo('user'),
+    reviewController.setReviewUserId,
+    reviewController.createReview
+  )
+
+reviewRoutes.route('/:videoId/byVideo').get(reviewController.getReviewsByVideo)
+
+reviewRoutes.route('/:channelId/numReviews').get(reviewController.getNumReviews)
+
+reviewRoutes
+  .route('/:id')
+  .get(reviewController.getOne)
+  .patch(authController.restrictTo('admin'), reviewController.updateOne)
+  .delete(authController.restrictTo('admin'), reviewController.deleteOne)
 
 module.exports = reviewRoutes

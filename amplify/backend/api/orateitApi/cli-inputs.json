@@ -7,6 +7,41 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/api/v1/users/signup": {
+      "name": "/api/v1/users/signup",
+      "lambdaFunction": "reviewersFn",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/api/v1/users/login": {
+      "name": "/api/v1/users/login",
+      "lambdaFunction": "reviewersFn",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/api/v1/profile": {
+      "name": "/api/v1/profile",
+      "lambdaFunction": "reviewersFn",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/api/v1/reviews": {
+      "name": "/api/v1/reviews",
+      "lambdaFunction": "reviewersFn",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/api/v1/publishedVideos": {
+      "name": "/api/v1/publishedVideos",
+      "lambdaFunction": "reviewersFn",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }
