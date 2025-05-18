@@ -16,7 +16,9 @@ const goToPath = async (link: NavLink) => {
   <button
     :key="link.id"
     class="user-nav-btn text-orange-100 border border-transparent font-bold rounded-lg p-2 pl-4 pr-4 flex items-center gap-4 hover:bg-app-orange-muted hover:border hover:border-app-orange transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105"
-    :class="{ 'bg-white bg-opacity-10 text-app-orange pointer-events-none active': route.name === link.name }"
+    :class="{
+      'bg-white bg-opacity-10 text-app-orange pointer-events-none active': route.name === link.name
+    }"
     @click="goToPath(link)"
   >
     <span v-if="link.icon" class="text-orange-100"

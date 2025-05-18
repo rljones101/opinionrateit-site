@@ -23,7 +23,13 @@ const getClasses = computed(() => {
 </script>
 
 <template>
-  <button :type="btnType" class="btn transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 border hover:border-app-orange disabled:pointer-events-none disabled:bg-gray-700 disabled:text-slate-500 disabled:border-none hover:transform-none" :class="getClasses"><slot /></button>
+  <button
+    :type="btnType"
+    class="btn transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105 border hover:border-app-orange disabled:pointer-events-none disabled:bg-gray-700 disabled:text-slate-500 disabled:border-none hover:transform-none"
+    :class="getClasses"
+  >
+    <slot />
+  </button>
 </template>
 
 <style scoped>

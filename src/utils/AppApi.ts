@@ -67,7 +67,11 @@ const apiGet = async (url: string, config = {}): Promise<AppApiResponse | AppApi
   }
 }
 
-const apiPost = async (url: string, data: any, config = {}): Promise<AppApiResponse | AppApiErrorResponse> => {
+const apiPost = async (
+  url: string,
+  data: any,
+  config = {}
+): Promise<AppApiResponse | AppApiErrorResponse> => {
   try {
     const res = await appApi.post(url, data, config)
     return apiSuccessResponse(res.status, res.data)
@@ -77,7 +81,10 @@ const apiPost = async (url: string, data: any, config = {}): Promise<AppApiRespo
   }
 }
 
-const apiDelete = async (url: string, config = {}): Promise<AppApiResponse | AppApiErrorResponse> => {
+const apiDelete = async (
+  url: string,
+  config = {}
+): Promise<AppApiResponse | AppApiErrorResponse> => {
   try {
     const res = await appApi.delete(url, config)
     return apiSuccessResponse(res.status, res.data)
@@ -87,7 +94,11 @@ const apiDelete = async (url: string, config = {}): Promise<AppApiResponse | App
   }
 }
 
-const apiPatch = async (url: string, data: any, config = {}): Promise<AppApiResponse | AppApiErrorResponse> => {
+const apiPatch = async (
+  url: string,
+  data: any,
+  config = {}
+): Promise<AppApiResponse | AppApiErrorResponse> => {
   try {
     const res = await appApi.patch(url, data, config)
     return apiSuccessResponse(res.status, res.data)

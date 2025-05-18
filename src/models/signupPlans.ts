@@ -1,9 +1,10 @@
-import type { SignupPlan } from '@/types'
+import { type SignupPlan, SIGNUP_STEPS } from '@/types'
 
-const userPlan = {
+const userPlan: SignupPlan = {
   name: 'User Plan',
   role: 'user',
-  priceKey: 'price_1NPQZgAsO1Vic8ePmBWTc44U',
+  lookupKey: 'user_plan_price',
+  productKey: 'prod_OBoCixB4b4I3Jw',
   cost: 0.99,
   yearlyDiscount: 0,
   allowedReviewerAccess: true,
@@ -14,12 +15,18 @@ const userPlan = {
   patreonSupport: false,
   vinmeo: false,
   twitter: false,
-  steps: ['Choose Plan', 'Account', 'Billing', 'Complete']
+  steps: [
+    SIGNUP_STEPS.CHOOSE_PLAN,
+    SIGNUP_STEPS.ACCOUNT,
+    SIGNUP_STEPS.BILLING,
+    SIGNUP_STEPS.COMPLETE
+  ]
 }
-const reviewerPlan = {
+const reviewerPlan: SignupPlan = {
   name: 'Reviewer Plan',
   role: 'reviewer-basic',
-  priceKey: 'price_1NPQaiAsO1Vic8ePaVUDjPE4',
+  lookupKey: 'reviewer_plan_price',
+  productKey: 'prod_OAgstc19SD1o3Z',
   cost: 2.99,
   yearlyDiscount: 0.15,
   allowedReviewerAccess: true,
@@ -30,7 +37,13 @@ const reviewerPlan = {
   patreonSupport: false,
   vinmeo: false,
   twitter: false,
-  steps: ['Choose Plan', 'Add YouTube Account', 'Account', 'Billing', 'Complete']
+  steps: [
+    SIGNUP_STEPS.CHOOSE_PLAN,
+    SIGNUP_STEPS.ADD_YOUTUBE_ACCOUNT,
+    SIGNUP_STEPS.ACCOUNT,
+    SIGNUP_STEPS.BILLING,
+    SIGNUP_STEPS.COMPLETE
+  ]
 }
 
 const signupPlans: SignupPlan[] = [userPlan, reviewerPlan]

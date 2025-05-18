@@ -18,11 +18,11 @@ const user = useUserStore()
 const videoId = route.params.videoId as string
 const channelId = route.params.channelId as string
 const youTubeBaseUrl = 'https://www.youtube.com/watch?v='
-const { 
-  reviewForm, 
-  showReviewForm, 
-  allSurveyQuestionsAnswered, 
-  questionNumber, 
+const {
+  reviewForm,
+  showReviewForm,
+  allSurveyQuestionsAnswered,
+  questionNumber,
   currentQuestion,
   answerQuestion,
   showSurvey,
@@ -49,7 +49,6 @@ videoViewController.getVideo(videoId).then((res: any) => {
   }
 })
 
-
 function useReviews() {
   const reviews = ref<Review[]>([])
   const getReviews = () => {
@@ -64,20 +63,19 @@ function useReviews() {
 }
 
 function useSurvey() {
-  
   const defaultFormValues: ReviewFormValues = {
-      channelId: route.params.channelId as string,
-      videoId: route.params.videoId as string,
-      overall_presentation: 0,
-      clarity: 0,
-      product_view: 0,
-      product_detail_explanation: 0,
-      non_bias: 0,
-      average_review_time: 0,
-      product_focus: 0,
-      provided_resources: 0,
-      comment: ''
-    }
+    channelId: route.params.channelId as string,
+    videoId: route.params.videoId as string,
+    overall_presentation: 0,
+    clarity: 0,
+    product_view: 0,
+    product_detail_explanation: 0,
+    non_bias: 0,
+    average_review_time: 0,
+    product_focus: 0,
+    provided_resources: 0,
+    comment: ''
+  }
 
   const reviewForm = ref<ReviewFormValues>({ ...defaultFormValues })
 
@@ -110,7 +108,7 @@ function useSurvey() {
   })
 
   const setFormValue = <K extends keyof ReviewFormValues>(key: K, value: ReviewFormValues[K]) => {
-    return reviewForm.value[key] = value
+    return (reviewForm.value[key] = value)
   }
 
   const answerQuestion = (question: SurveyQuestion) => {

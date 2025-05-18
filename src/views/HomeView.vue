@@ -12,34 +12,32 @@ import { nextTick, onMounted, onBeforeUnmount } from 'vue'
 useSetActiveElement('.reveal')
 useSetIsPinnedElement('.app-header')
 
-
 function useSetActiveElement(className: string): void {
-    const callback = (entries: any[]) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('active')
-            } else {
-                entry.target.classList.remove('active')
-            }
-        })
-    }
-
-    const observer: IntersectionObserver = new IntersectionObserver(callback)
-
-    onMounted(async () => {
-        await nextTick()
-        document.querySelectorAll(className).forEach(el => {
-            observer.observe(el)
-        })
+  const callback = (entries: any[]) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active')
+      } else {
+        entry.target.classList.remove('active')
+      }
     })
+  }
 
-    onBeforeUnmount(() => {
-        observer.disconnect()
+  const observer: IntersectionObserver = new IntersectionObserver(callback)
+
+  onMounted(async () => {
+    await nextTick()
+    document.querySelectorAll(className).forEach((el) => {
+      observer.observe(el)
     })
+  })
+
+  onBeforeUnmount(() => {
+    observer.disconnect()
+  })
 }
 
-function useSetIsPinnedElement(className: string) :void {
-
+function useSetIsPinnedElement(className: string): void {
   const callback = (entries: any[]) => {
     entries.forEach((entry) => {
       entry.target.classList.toggle('is-pinned', entry.intersectionRatio < 1)
@@ -58,7 +56,6 @@ function useSetIsPinnedElement(className: string) :void {
     observer.disconnect()
   })
 }
-
 </script>
 
 <template>

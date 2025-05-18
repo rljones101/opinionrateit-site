@@ -38,11 +38,15 @@ const getReviewers = async (query?: URLSearchParams) => {
   return []
 }
 
-const getPublishedVideos = async (channelId: string): Promise<AppApiResponse | AppApiErrorResponse> => {
+const getPublishedVideos = async (
+  channelId: string
+): Promise<AppApiResponse | AppApiErrorResponse> => {
   return await apiGet(`/reviewers/${channelId}/publishedVideos`)
 }
 
-const publishVideos = async (videos: PublishedVideo[]): Promise<AppApiResponse | AppApiErrorResponse> => {
+const publishVideos = async (
+  videos: PublishedVideo[]
+): Promise<AppApiResponse | AppApiErrorResponse> => {
   return await apiPost('/publishedVideos', { videos })
 }
 

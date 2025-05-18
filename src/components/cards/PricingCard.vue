@@ -38,7 +38,10 @@ const emit = defineEmits(['selected'])
       <slot name="list"></slot>
     </ul>
     <BaseButton
-      :class="{ 'bg-orange-500 shadow-none border-none disabled:bg-app-blue hover:transition-none hover:translate-y-0 text-orange-500': active }"
+      :class="{
+        'bg-orange-500 shadow-none border-none disabled:bg-app-blue hover:transition-none hover:translate-y-0 text-orange-500':
+          active
+      }"
       type="primary"
       @click="emit('selected')"
       :disabled="active || isDisabled"
@@ -48,6 +51,4 @@ const emit = defineEmits(['selected'])
   </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

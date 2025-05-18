@@ -8,12 +8,10 @@ import {
   UserCircleIcon
 } from '@heroicons/vue/20/solid'
 import { useUserStore } from '@/stores/user'
-import { type NavLink } from '@/types';
-import NavButton from '../buttons/NavButton.vue';
-
+import { type NavLink } from '@/types'
+import NavButton from '../buttons/NavButton.vue'
 
 const user = useUserStore()
-
 
 const navLinks: NavLink[] = [
   {
@@ -62,7 +60,6 @@ const reviewerLinks = [
     params: { name: user.user.name }
   }
 ]
-
 </script>
 
 <template>
@@ -85,5 +82,4 @@ const reviewerLinks = [
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

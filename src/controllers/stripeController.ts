@@ -5,7 +5,10 @@ import type { BillingDetails } from '@/types'
 const stripe = Stripe(import.meta.env.VITE_STRIPE_KEY)
 const elements = stripe.elements()
 
-async function createPaymentMethod(cardElement: any, billingDetails: BillingDetails) {
+async function createPaymentMethod(
+  cardElement: Element | undefined,
+  billingDetails: BillingDetails
+) {
   return await stripe.createPaymentMethod({
     type: 'card',
     card: cardElement,
@@ -25,7 +28,7 @@ function createElement(elementType: string) {
     : getCardElement()
 }
 
-function getElement(elementType: string) {
+function getElement(elementType: string): Element | undefined {
   return elements.getElement(elementType)
 }
 

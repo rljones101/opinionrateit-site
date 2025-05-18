@@ -21,7 +21,6 @@ const getRole = (role: string): string => {
   }
   return ''
 }
-
 </script>
 
 <template>

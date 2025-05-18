@@ -68,21 +68,28 @@ exports.login = catchAsSync(async (req, res, next) => {
   }
 
   // 2) Check if the user exists and password is correct
-  let user = await User.findOne({ email }).select('+password -__v')
+  try {
+    console.log(User.db)
+    let user = await User.findOne({ email: email.trim() }).select('+password').exec()
+    console.log('user is:', user)
 
-  if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new AppError('Incorrect email or password', 401))
-  }
-
-  if (['reviewer-basic', 'reviewer-plus'].includes(user.role)) {
-    const reviewer = await Reviewer.findOne({ channelId: user.youTubeChannelId })
-    if (reviewer) {
-      user = { ...user.toObject(), avatar: reviewer.avatar }
+    if (!user || !(await user.correctPassword(password, user.password))) {
+      return next(new AppError('Incorrect email or password', 401))
     }
-  }
 
-  // 3) If everything is ok, send token to client
-  createAndSendToken(user, 200, res)
+    if (['reviewer-basic', 'reviewer-plus'].includes(user.role)) {
+      const reviewer = await Reviewer.findOne({ channelId: user.youTubeChannelId })
+      if (reviewer) {
+        user = { ...user.toObject(), avatar: reviewer.avatar }
+      }
+    }
+
+    // 3) If everything is ok, send token to client
+    createAndSendToken(user, 200, res)
+
+  } catch (error) {
+    return next(new AppError(`Could not find user with email: ${email}, Error: ${error}`, 401))
+  }
 })
 
 exports.forgotPassword = catchAsSync(async (req, res, next) => {

@@ -1,15 +1,15 @@
 const express = require('express')
-const bodyParser = require('body-parser')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 const mongoose = require('mongoose')
-const mongoSanitize = require('express-mongo-sanitize')
 const helmet = require('helmet')
-const xss = require('xss-clean')
 // const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const AppError = require('./utils/appError.js')
+
 const globalErrorHandler = require('./controllers/errorController.js')
 const stripeController = require('./controllers/stripeController.js')
+
+const loadEnvConfig = require('./utils/loadEnvConfig.js')
 
 // Routers
 const reviewerRouter = require('./routes/reviewerRoutes.js')
@@ -20,23 +20,22 @@ const reviewsRouter = require('./routes/reviewRoutes.js')
 const youTubeRouter = require('./routes/youTubeRoutes.js')
 const stripeRouter = require('./routes/stripeRoutes.js')
 
-const connectToDatabase = async () => {
-  if (process.env.NODE_ENV === 'development') {
-    const dotenv = await import('dotenv')
-    dotenv.config({ path: './config.env' })
-  }
+loadEnvConfig(process.env.NODE_ENV)
 
-  try {
-    const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD)
-    await mongoose.connect(DB, { useNewUrlParser: true })
-  } catch (err) {
-    throw new Error('Database connection failed')
-  }
+async function DatabaseConnect(){
+  const DATABASE_USER = process.env.DATABASE_USER
+  const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD
+  const DATABASE_HOST = process.env.DATABASE_HOST
+  const DATABASE_PORT = process.env.DATABASE_PORT
+  const DATABASE_NAME = process.env.DATABASE_NAME
+
+  //const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD)
+  await mongoose.connect(`mongodb://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}`, { dbName: DATABASE_NAME})
 }
 
-connectToDatabase().then(() => {
-  console.log('Database connected!')
-})
+DatabaseConnect().then(() => {
+  console.log('Database connection!')
+}).catch(error => console.log(error))
 
 // declare a new express app
 const app = express()
@@ -56,13 +55,13 @@ app.post(
 )
 
 // Body parser, reading data from the body into req.body
-app.use(bodyParser.json())
+app.use(express.json())
 
 // Data sanitization against NoSQL query inject
-app.use(mongoSanitize())
+
 
 // Data sanitization against XSS
-app.use(xss())
+
 
 // Enable CORS for all methods
 // app.use(function (req, res, next) {
@@ -72,22 +71,25 @@ app.use(xss())
 // })
 
 // Implement CORS
-app.use(cors())
-// app.use(
-//   cors({
-//     origin: 'http://localhost:5173'
-//   })
-// )
-//app.options('*', cors())
-app.options('*', cors())
+//app.use(cors())
+const corsOptions = {
+  origin: 'http://localhost:5173'
+}
+app.use(
+  cors(corsOptions)
+)
+app.options('/', cors(corsOptions))
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString()
-  // console.log(req.cookies)
-  // console.log('REQ HEADERS ======')
-  // console.log(req.url)
-  // console.log('REQ HEADERS ======')
-  // console.log(req.headers)
+  if(process.env.NODE_ENV === 'development') {
+    console.log('REQ COOKIES ======')
+    console.log(req.cookies)
+    console.log('REQ HEADERS ======')
+    console.log(req.url)
+    console.log('REQ HEADERS ======')
+    console.log(req.headers)
+  }
   next()
 })
 
@@ -99,7 +101,7 @@ app.use('/api/v1/reviews', reviewsRouter)
 app.use('/api/v1/youtube', youTubeRouter)
 app.use('/api/v1/stripe', stripeRouter)
 
-app.all('*', (req, res, next) => {
+app.all('/', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))
 })
 

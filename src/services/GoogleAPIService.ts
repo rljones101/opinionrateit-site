@@ -2,7 +2,6 @@ import apiUtils from '@/utils/ApiUtils'
 import type { VideoChannelDetails } from '@/types'
 import type { SearchResult } from '@/models/GoogleApiModels'
 
-
 export default class GoogleAPIService {
   async getVideosByChannelId(youtubeChannelId: string, query: string = '') {
     const params = {
@@ -21,7 +20,7 @@ export default class GoogleAPIService {
       return response.data.items.map((item: any) => {
         return this._videoInterface(item)
       }) as VideoChannelDetails[]
-    } catch(error: unknown) {
+    } catch (error: unknown) {
       console.log(error)
     }
   }

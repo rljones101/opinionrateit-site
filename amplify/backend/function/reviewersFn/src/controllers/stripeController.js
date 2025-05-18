@@ -1,5 +1,5 @@
 const loadEnvConfig = require('../utils/loadEnvConfig.js')
-loadEnvConfig()
+loadEnvConfig(process.env.NODE_ENV)
 const stripe = require('stripe')(process.env.STRIPE_API_KEY)
 const catchAsync = require('../utils/catchAsync')
 
@@ -17,21 +17,25 @@ exports.createCustomer = catchAsync(async (req, res) => {
   })
 })
 
-exports.createIntent = catchAsync(async (req, res) => {
-  const { priceKey, customer } = req.body
-  const price = await stripe.prices.retrieve(priceKey)
+const lookupPrice = async (lookupKey) => {
+  const prices = await stripe.prices.list({
+    lookup_keys: [lookupKey],
+    expand: ['data.product']
+  })
 
-  // const paymentIntent = await stripe.paymentIntents.create({
-  //   amount: price.unit_amount,
-  //   currency: price.currency,
-  //   automatic_payment_methods: { enabled: true }
-  // })
-  // const secret = paymentIntent.client_secret
+  return prices.data[0]
+}
 
-  // Create the subscription. Note we're expanding the Subscription's
-  // latest invoice and that invoice's payment_intent
-  // so we can pass it to the front end to confirm the payment
-  const subscription = await stripe.subscriptions.create({
+const createPaymentIntent = async (price) => {
+  return await stripe.paymentIntents.create({
+    amount: price.unit_amount,
+    currency: price.currency,
+    automatic_payment_methods: { enabled: true }
+  })
+}
+
+const createSubscription = async(customer, price) => {
+  return await stripe.subscriptions.create({
     customer,
     items: [
       {
@@ -40,9 +44,16 @@ exports.createIntent = catchAsync(async (req, res) => {
     ],
     payment_behavior: 'default_incomplete',
     payment_settings: { save_default_payment_method: 'on_subscription' },
-    expand: ['latest_invoice.payment_intent']
+    expand: ['latest_invoice']
   })
-  const secret = subscription.latest_invoice.payment_intent.client_secret
+}
+
+exports.createIntent = catchAsync(async (req, res) => {
+  const { lookupKey, customer } = req.body
+  const price = await lookupPrice(lookupKey)
+  const paymentIntent = await createPaymentIntent(price)
+  const secret = paymentIntent.client_secret
+  await createSubscription(customer, price)
 
   res.status(200).json({
     status: 'success',

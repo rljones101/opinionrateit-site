@@ -1,6 +1,6 @@
 export interface User {
-  _id: string,
-  name: string,
+  _id: string
+  name: string
   email: string
 }
 
@@ -54,11 +54,11 @@ export interface ChannelDetailsInterface {
 }
 
 export interface Video {
-  _id?: string,
-  videoId: string,
-  channelId: string,
-  title: string,
-  thumbnail: string,
+  _id?: string
+  videoId: string
+  channelId: string
+  title: string
+  thumbnail: string
   selected?: boolean
 }
 
@@ -119,16 +119,16 @@ export interface Review {
 }
 
 export interface ReviewFormValues {
-  channelId: string,
-  videoId: string,
-  overall_presentation: number,
-  clarity: number,
-  product_view: number,
-  product_detail_explanation: number,
-  non_bias: number,
-  average_review_time: number,
-  product_focus: number,
-  provided_resources: number,
+  channelId: string
+  videoId: string
+  overall_presentation: number
+  clarity: number
+  product_view: number
+  product_detail_explanation: number
+  non_bias: number
+  average_review_time: number
+  product_focus: number
+  provided_resources: number
   comment: string
 }
 
@@ -143,10 +143,19 @@ export interface SurveyQuestion {
   }
 }
 
+export enum SIGNUP_STEPS {
+  CHOOSE_PLAN = 'Choose Plan',
+  ADD_YOUTUBE_ACCOUNT = 'Add Youtube Account',
+  ACCOUNT = 'Account',
+  BILLING = 'Billing',
+  COMPLETE = 'Complete'
+}
+
 export interface SignupPlan {
   name: string
   role: string
-  priceKey: string
+  lookupKey: string,
+  productKey: string
   cost: number
   yearlyDiscount: number
   allowedReviewerAccess: boolean
@@ -157,7 +166,7 @@ export interface SignupPlan {
   patreonSupport: boolean
   vinmeo: boolean
   twitter: boolean
-  steps: string[]
+  steps: SIGNUP_STEPS[]
 }
 
 export interface BillingDetails {
@@ -200,4 +209,27 @@ export interface NavLink {
   name: string
   icon: any
   params?: any
+}
+
+// export interface BillingDetails {
+//   id: string,
+//   name: string,
+//   email: string,
+//   address: string,
+//   city: string,
+//   state: string,
+//   zip: string
+// }
+
+export interface AccountDetails {
+  youTubeChannelId: string
+  title: string
+  description: string
+  avatar: string
+  firstName: string
+  lastName: string
+  email: string
+  password: string
+  passwordConfirm: string
+  role: string
 }

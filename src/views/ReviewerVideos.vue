@@ -20,10 +20,9 @@ const showReview = (video: VideoChannelDetails) => {
 
 const reviewer = useReviewerStore()
 if (channelId) {
-    reviewer.getPublishedVideos(channelId)
-    reviewer.getReviewerDetails(channelId)
+  reviewer.getPublishedVideos(channelId)
+  reviewer.getReviewerDetails(channelId)
 }
-
 </script>
 
 <template>
@@ -37,7 +36,11 @@ if (channelId) {
       <h2 class="font-bold text-white mb-4">{{ reviewer.channelDetails.title }}</h2>
       <div class="flex-1 bg-app-blue-soft p-8 rounded-lg mb-8">
         <div class="border-b pb-8 mb-8 border-slate-500 flex items-center gap-8">
-          <UserAvatar :name="reviewer.channelDetails.name" :src="reviewer.channelDetails.avatar" class="w-16 h-16" />
+          <UserAvatar
+            :name="reviewer.channelDetails.name"
+            :src="reviewer.channelDetails.avatar"
+            class="w-16 h-16"
+          />
           <div class="flex-1 text-orange-100">
             <h2 class="text-lg text-white">{{ reviewer.channelDetails.name }}</h2>
             <ContentReadMore>

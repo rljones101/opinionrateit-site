@@ -132,13 +132,12 @@ const useProfile = () => {
   const publishVideos = async (channelId: string, selectedVideos: VideoChannelDetails[]) => {
     const videos: PublishedVideo[] = []
     selectedVideos.forEach((video: VideoChannelDetails) => {
-
       const publishedVideo: PublishedVideo = {
         videoId: video.videoId,
         user: {
           _id: profile.value.id,
           name: profile.value.name,
-          email: profile.value.email  
+          email: profile.value.email
         },
         title: video.title,
         active: true,

@@ -1,9 +1,12 @@
 <script setup lang="ts">
-withDefaults(defineProps<{
-  isChecked?: boolean
-}>(), {
-  isChecked: false
-})
+withDefaults(
+  defineProps<{
+    isChecked?: boolean
+  }>(),
+  {
+    isChecked: false
+  }
+)
 </script>
 
 <template>
@@ -24,6 +27,4 @@ withDefaults(defineProps<{
   </svg>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

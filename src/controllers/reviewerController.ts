@@ -11,10 +11,10 @@ const getReviewers = async (query?: URLSearchParams) => await reviewerService.ge
 
 const getVideos = async (youtubeChannelId: string) => {
   let videos: VideoChannelDetails[] = []
-  if(!youtubeChannelId) return videos
+  if (!youtubeChannelId) return videos
   try {
     const result = await googleApiService.getVideosByChannelId(youtubeChannelId)
-    if(result) videos = result
+    if (result) videos = result
     return videos
   } catch (err) {
     return new Error(`Could not get videos with id (${youtubeChannelId})`)

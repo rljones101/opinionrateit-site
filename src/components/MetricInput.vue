@@ -14,11 +14,10 @@ function updateRating(value: number) {
 
 const rateHandler = ($event: Event) => {
   const el = $event.target as HTMLInputElement
-  const value = el.value 
+  const value = el.value
   selected.value = value
   updateRating(Number(value))
 }
-
 </script>
 
 <template>
@@ -27,66 +26,31 @@ const rateHandler = ($event: Event) => {
       <label class="text-white text-center mb-2"><slot /></label>
       <ul class="flex flex-col sr-only">
         <li class="flex items-center pl-3">
-          <input
-            type="radio"
-            name="list-survey"
-            :value="1"
-            @input="rateHandler($event)"
-          />
+          <input type="radio" name="list-survey" :value="1" @input="rateHandler($event)" />
           <label class="ml-2">Strongly Disagree</label>
         </li>
         <li class="flex items-center pl-3">
-          <input
-            type="radio"
-            name="list-survey"
-            :value="2"
-            @input="rateHandler($event)"
-          />
+          <input type="radio" name="list-survey" :value="2" @input="rateHandler($event)" />
           <label class="ml-2">Disagree</label>
         </li>
         <li class="flex items-center pl-3">
-          <input
-            type="radio"
-            name="list-survey"
-            :value="3"
-            @input="rateHandler($event)"
-          />
+          <input type="radio" name="list-survey" :value="3" @input="rateHandler($event)" />
           <label class="ml-2">Slightly Disagree</label>
         </li>
         <li class="flex items-center pl-3">
-          <input
-            type="radio"
-            name="list-survey"
-            :value="4"
-            @input="rateHandler($event)"
-          />
+          <input type="radio" name="list-survey" :value="4" @input="rateHandler($event)" />
           <label class="ml-2">No opinion</label>
         </li>
         <li class="flex items-center pl-3">
-          <input
-            type="radio"
-            name="list-survey"
-            :value="5"
-            @input="rateHandler($event)"
-          />
+          <input type="radio" name="list-survey" :value="5" @input="rateHandler($event)" />
           <label class="ml-2">Slightly Agree</label>
         </li>
         <li class="flex items-center pl-3">
-          <input
-            type="radio"
-            name="list-survey"
-            :value="6"
-            @input="rateHandler($event)"
-          />
+          <input type="radio" name="list-survey" :value="6" @input="rateHandler($event)" />
           <label class="ml-2">Agree</label>
         </li>
         <li class="flex items-center pl-3">
-          <input
-            type="radio"
-            name="list-survey"
-            :value="7"
-            @input="rateHandler($event)"
-          />
+          <input type="radio" name="list-survey" :value="7" @input="rateHandler($event)" />
           <label class="ml-2">Strongly Agree</label>
         </li>
       </ul>

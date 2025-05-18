@@ -29,7 +29,7 @@ function isReviewerPlan(role: string): boolean {
   return ['reviewer-basic', 'reviewer-plus'].includes(role)
 }
 
-function getSignupPlans() : SignupPlan[] {
+function getSignupPlans(): SignupPlan[] {
   return signupPlans
 }
 

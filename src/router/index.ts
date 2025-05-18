@@ -6,7 +6,7 @@ import HomeView from '@/views/HomeView.vue'
 // which is lazy-loaded when the route is visited.
 const ReviewersView = () => import('@/views/ReviewersView.vue')
 const MyProfile = () => import('@/views/MyProfile.vue')
-const SignupView = () => import('@/views/SignupView.vue')
+const SignupView = () => import('@/views/SignupView/SignupView.vue')
 const ReviewerVideos = () => import('@/views/ReviewerVideos.vue')
 const VideoView = () => import('@/views/VideoView.vue')
 const LoginView = () => import('@/views/LoginView.vue')
