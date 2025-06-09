@@ -4,17 +4,17 @@ import HomeView from '@/views/HomeView.vue'
 // route level code-splitting
 // this generates a separate chunk (About.[hash].js) for this route
 // which is lazy-loaded when the route is visited.
-const ReviewersView = () => import('@/views/ReviewersView.vue')
-const MyProfile = () => import('@/views/MyProfile.vue')
+const ReviewersView = () => import('@/views/reviewers/ReviewersView.vue')
+const MyProfile = () => import('@/views/myProfile/MyProfile.vue')
 const SignupView = () => import('@/views/SignupView/SignupView.vue')
-const ReviewerVideos = () => import('@/views/ReviewerVideos.vue')
-const VideoView = () => import('@/views/VideoView.vue')
+const ReviewerVideos = () => import('@/views/reviewerVideos/ReviewerVideos.vue')
+const VideoView = () => import('@/views/videoView/VideoView.vue')
 const LoginView = () => import('@/views/LoginView.vue')
 const UserHomeView = () => import('@/views/UserHomeView.vue')
 const VideoListView = () => import('@/views/VideoListView.vue')
-const MySavedVideos = () => import('@/views/MySavedReviews.vue')
-const MyStats = () => import('@/features/MyStats/MyStats.vue')
-const MyVideos = () => import('@/features/MyVideos/MyVideos.vue')
+const MySavedVideos = () => import('@/views/mySavedReviews/MySavedReviews.vue')
+const MyStats = () => import('@/views/MyStats/MyStats.vue')
+const MyVideos = () => import('@/views/MyVideos/MyVideos.vue')
 const SearchView = () => import('@/views/SearchResults.vue')
 const SuccessView = () => import('@/views/stripe/SuccessView.vue')
 const CancelView = () => import('@/views/stripe/CancelView.vue')
@@ -92,7 +92,7 @@ const router = createRouter({
           name: 'reviewers-channelId-reviews',
           component: ReviewerVideos,
           meta: {
-            requiresAuth: true
+            requiresAuth: false
           }
         },
         {
@@ -100,7 +100,7 @@ const router = createRouter({
           name: 'reviewers-channelId-reviews-videoId',
           component: VideoView,
           meta: {
-            requiresAuth: true
+            requiresAuth: false
           }
         },
         {

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PageContainer from '@/components/containers/PageContainer.vue'
-import UserNav from '@/components/navs/UserNav.vue'
+import UserNav from '@/components/navs/MainNav.vue'
 import SearchInput from '@/components/inputs/SearchInput.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import { useRouter, useRoute } from 'vue-router'
@@ -30,38 +30,37 @@ const searchHandler = async (value: string) => {
 </script>
 
 <template>
-  <div class="w-full h-full flex background-gradient-color">
-    <div id="left" class="column flex-shrink-0 hidden md:flex">
-      <div class="flex items-center justify-center flex-shrink-0 bg-app-blue-soft px-4 py-4">
-        <div class="hidden lg:block">
-          <SiteLogo />
-        </div>
-        <UserAvatar :name="userStore.user.name" class="block lg:hidden w-10 h-10" />
+  <div class="w-full h-full flex">
+    <div id="left" class="column flex-shrink-0 hidden md:flex border-r-4 border-secondary-50">
+      <div class="flex items-center flex-shrink-0 px-8 py-4">
+        <SiteLogo />
       </div>
-      <div class="bottom bg-app-blue-soft border-r border-slate-700">
-        <div class="hidden lg:flex flex-col items-center pb-4 pt-4 lg:pt-4">
-          <UserAvatar
-            :name="userStore.user.name"
-            :src="userStore.user.avatar"
-            class="w-10 h-10 mb-2"
-          />
-          <p class="whitespace-nowrap hidden lg:block">{{ userStore.user.name }}</p>
-        </div>
+
+      <div class="bottom">
         <UserNav />
       </div>
     </div>
     <div id="right" class="column w-full flex">
-      <div class="flex-shrink-0 bg-app-blue-soft py-4 md:space-y-0 border-b border-slate-700">
+      <div class="flex-shrink-0 py-4 md:space-y-0">
         <div class="flex">
           <div class="flex w-full flex-row items-center px-4">
             <div class="flex flex-col items-center lg:hidden mr-4 flex-1">
               <SiteLogo />
             </div>
-            <div class="w-full flex justify-end items-center">
-              <SearchInput :model-value="searchValue" @update:modelValue="searchHandler" />
-            </div>
-            <div class="justify-self-end hidden md:flex flex-grow items-center ml-4 flex-1">
-              <BaseButton type="primary" @click="logout">Logout</BaseButton>
+            <div class="w-full flex items-center gap-2">
+              <div class="flex-1 w-full flex justify-center items-center">
+                <SearchInput :model-value="searchValue" @update:modelValue="searchHandler" />
+              </div>
+              <div v-if="userStore.user.name" class="flex items-center justify-center">
+                <UserAvatar
+                  :user="{ name: userStore.user.name, avatarUrl: userStore.user.avatar }"
+                  class="w-8 h-8"
+                  :title="userStore.user.name"
+                />
+              </div>
+              <div class="hidden md:flex items-center">
+                <BaseButton type="primary" @click="logout">Logout</BaseButton>
+              </div>
             </div>
           </div>
         </div>
@@ -82,7 +81,7 @@ const searchHandler = async (value: string) => {
   flex-direction: column;
 }
 .bottom {
-  @apply scrollbar-thin scrollbar-thumb-orange-500 scrollbar-track-slate-800;
+  @apply scrollbar-thin scrollbar-thumb-brand-500 scrollbar-track-brand-50;
   flex-grow: 1;
   overflow-y: auto;
 }

@@ -16,16 +16,16 @@ const signupStore = useSignupStore()
       ></div>
       <div class="flex flex-col mb-8">
         <div
-          class="z-10 flex items-center justify-center w-6 h-6 rounded-full ring-0 ring-white sm:ring-8 dark:ring-gray-900 shrink-0"
+          class="z-10 flex items-center justify-center w-6 h-6 rounded-full ring-0 ring-secondary-300 sm:ring-8 shrink-0"
           :class="[
-            { 'bg-blue-600 dark:bg-app-orange-muted': signupStore.isCurrentStepDone(step) },
+            { 'bg-brand-500': signupStore.isCurrentStepDone(step) },
             { 'bg-gray-200 dark:bg-gray-700': !signupStore.isCurrentStepDone(step) }
           ]"
         >
           <svg
             v-if="signupStore.isCurrentStepDone(step)"
             aria-hidden="true"
-            class="w-4 h-4 text-blue-100 dark:text-blue-300"
+            class="w-4 h-4 text-secondary-50"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
@@ -57,7 +57,7 @@ const signupStore = useSignupStore()
         <!--              ></div>-->
       </div>
       <div class="ml-8">
-        <h3 class="font-medium text-gray-900 dark:text-white">{{ step }}</h3>
+        <h3 class="font-medium">{{ step }}</h3>
       </div>
     </li>
   </ol>

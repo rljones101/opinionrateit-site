@@ -1,5 +1,5 @@
 <template>
-  <div class="text-orange-100">
+  <div>
     <div v-if="!hasPublishedVideos">
       <h3 class="text-2xl font-bold">No published videos found</h3>
       <p>

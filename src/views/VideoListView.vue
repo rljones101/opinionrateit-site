@@ -22,7 +22,7 @@ const showVideo = async (video: VideoChannelDetails) => {
 
 <template>
   <div>
-    <AppTitle class="mb-8">Videos</AppTitle>
+    <AppTitle>Videos</AppTitle>
     <div class="grid-layout w-full" v-if="videos.length">
       <VideoItem
         v-for="video in videos"

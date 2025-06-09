@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ReviewerItem from '@/components/ReviewerItem.vue'
+import ReviewerItem from '@/views/reviewers/partials/ReviewerItem.vue'
 import CarouselComponent from '@/components/CarouselComponent.vue'
 import reviewerController from '@/controllers/reviewerController'
 import type { Slide } from '@/types'

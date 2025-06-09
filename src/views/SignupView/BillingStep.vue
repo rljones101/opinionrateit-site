@@ -35,7 +35,7 @@ const onPaymentComplete = async (billingDetails: BillingDetails) => {
             <div class="flex flex-col">
               <span class="text-app-orange">Reviewer Plan</span><span>Monthly</span>
             </div>
-            <div class="text-white">${{ signupStore.selectedPlan.cost }}</div>
+            <div>${{ signupStore.selectedPlan.cost }}</div>
           </div>
         </div>
         <!--            <div class="flex justify-between mt-8 border-t border-app-blue pt-4">-->

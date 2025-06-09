@@ -7,8 +7,10 @@ import { ChatBubbleBottomCenterTextIcon } from '@heroicons/vue/20/solid'
 import { formatPercentageToRating } from '@/utils/StringUtils'
 import { getNumReviews } from '@/services/ReviewService'
 import { useUserStore } from '@/stores/user'
-const { profile } = useProfile()
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
+const { profile } = useProfile(route.params.name as string)
 const userStore = useUserStore()
 
 let numReviews = 0
@@ -20,21 +22,19 @@ getNumReviews(userStore.user.youTubeChannelId)
 
 <template>
   <div>
-    <AppTitle class="mb-8">My Stats</AppTitle>
+    <AppTitle>My Stats</AppTitle>
     <div v-if="profile.isReviewer && profile.metric > 0" class="flex flex-col lg:flex-row gap-4">
       <div class="app-card flex-1 hidden lg:flex max-w-md">
         <MetricPieChart :metric="profile.metric" class="max-w-md" />
       </div>
 
       <div class="app-card flex flex-col gap-8 justify-center p-8 grow">
-        <div class="flex items-center gap-2 border-b pb-8 border-orange-200 text-orange-200">
-          <div
-            class="bg-app-blue lg:hidden w-12 h-12 flex items-center justify-center rounded-lg text-xl"
-          >
+        <div class="flex items-center gap-2 border-b pb-8 border-orange-200">
+          <div class="lg:hidden w-12 h-12 flex items-center justify-center rounded-lg text-xl">
             {{ formatPercentageToRating(profile.metric) }}
           </div>
           <p class="lg:hidden block">Rating</p>
-          <span class="lg:hidden block rounded-full w-1 h-1 bg-orange-200"></span>
+          <span class="lg:hidden block rounded-full w-1 h-1 bg-brand-200"></span>
           <p>{{ numReviews }} review{{ numReviews > 1 ? `s` : '' }}</p>
         </div>
         <BaseBarMetric label="Presentation" :percentage="profile.avgOverallPresentation" />

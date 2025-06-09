@@ -106,7 +106,7 @@
 .grid-layout {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 2rem;
+  gap: 1rem;
 }
 #app {
   width: 100%;
@@ -120,22 +120,12 @@
 }
 
 .app-card {
-  @apply relative bg-app-blue-soft shadow shadow-black rounded-lg;
+  @apply relative bg-secondary-50 shadow shadow-default-200 rounded-lg;
 }
 
-.main-content-wrapper:before {
-  content: '';
-  display: block;
-  position: fixed;
-  inset: 0;
-  opacity: 0.3;
-  background: linear-gradient(to top, #f77216, #0f172a);
-  background-size: cover;
-  z-index: -1;
-}
 .main-content-wrapper {
   position: relative;
-  @apply scrollbar-thin scrollbar-thumb-orange-500 scrollbar-track-slate-800;
+  @apply scrollbar-thin;
 }
 
 .background-gradient-color {

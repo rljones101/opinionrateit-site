@@ -1,5 +1,5 @@
 <template>
-  <div class="text-orange-100">
+  <div>
     <p class="mb-8">Here you can search and select what videos you would like to have reviewed.</p>
     <div class="flex w-full gap-8 mb-8 bg-app-blue-soft p-4 rounded-lg">
       <BaseButton

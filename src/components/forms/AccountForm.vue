@@ -79,7 +79,7 @@ const handleSubmitAccount = registerForm.handleSubmit((values) => {
       <!-- YouTube Details -->
       <div v-if="form.youTubeChannelId" class="space-y-2">
         <div class="flex flex-col items-center text-slate-500">
-          <UserAvatar :src="form.avatar" :name="form.title" />
+          <UserAvatar :user="{ name: form.title, avatarUrl: form.title }" />
           <p>YouTube Channel ID:</p>
           <p class="text-white">{{ form.youTubeChannelId }}</p>
         </div>

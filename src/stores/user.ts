@@ -3,15 +3,17 @@ import { defineStore } from 'pinia'
 import { usersLogin, usersSignup } from '@/services/UserService'
 
 export const useUserStore = defineStore('user', () => {
-  const jwtToken = ref('')
-  const isLoggedIn = ref(false)
-  const user = ref({
+  const defaultUserDetails = {
     name: '',
     email: '',
     role: '',
     avatar: '',
     youTubeChannelId: ''
-  })
+  }
+
+  const jwtToken = ref('')
+  const isLoggedIn = ref(false)
+  const user = ref(defaultUserDetails)
 
   const saveUserAndToken = (user: any, token: string) => {
     saveUser(user)
@@ -20,7 +22,6 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const saveUser = (userDetails: any) => {
-    console.log({ userDetails })
     const { name, email, role, avatar, youTubeChannelId } = userDetails
     localStorage.setItem(
       'orateit-user',
@@ -54,7 +55,6 @@ export const useUserStore = defineStore('user', () => {
 
   const loginUser = async (email: string, password: string) => {
     const res = await usersLogin(email, password)
-    console.log('login result:', res)
     if (res.status === 'success') {
       if ('data' in res) {
         saveUserAndToken(res.data.user, res.originalData.token)
@@ -75,6 +75,7 @@ export const useUserStore = defineStore('user', () => {
   const logoutUser = () => {
     localStorage.removeItem('jwt')
     localStorage.removeItem('orateit-user')
+    user.value = { ...defaultUserDetails }
     isLoggedIn.value = false
   }
 
@@ -97,6 +98,7 @@ export const useUserStore = defineStore('user', () => {
     jwtToken,
     saveToken,
     getToken,
+    getUser,
     loginUser,
     logoutUser,
     signupUser,

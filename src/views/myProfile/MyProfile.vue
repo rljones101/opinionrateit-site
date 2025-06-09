@@ -9,7 +9,7 @@ import BaseButton from '@/components/buttons/BaseButton.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 
 const userStore = useUserStore()
-const { profile } = useProfile()
+const { profile } = useProfile(userStore.user.name)
 
 const getRole = (role: string): string => {
   if (role === 'user') {
@@ -24,38 +24,39 @@ const getRole = (role: string): string => {
 </script>
 
 <template>
-  <div class="w-full h-full relative text-orange-100">
+  <div class="w-full h-full relative">
     <!-- content here --->
     <AppTitle>My Profile</AppTitle>
-    <div class="app-card p-8 mt-8 space-y-8">
-      <div class="border-b border-b-app-blue pb-8 flex items-center justify-between">
+    <div class="app-card p-8 space-y-2">
+      <div class="border-b-2 border-b-brand-800 pb-8 flex items-center justify-between">
         <div class="flex items-center gap-2">
           <UserAvatar
-            :name="userStore.user.name"
-            :src="userStore.user.avatar"
+            :user="{ name: userStore.user.name, avatarUrl: userStore.user.avatar }"
             class="block w-10 h-10"
           />
-          <p class="text-3xl">{{ profile.name }}</p>
+          <p class="text-2xl text-brand-800 font-bold">{{ profile.name }}</p>
         </div>
         <BaseButton type="secondary">Edit</BaseButton>
       </div>
       <p class="flex flex-col">
-        <span class="profile-label flex-1">Created On:</span
-        ><span class="profile-user-value flex-1">{{ formatDate(profile.createdAt) }}</span>
+        <span class="profile-label">Created On:</span
+        ><span class="profile-user-value flex-1 font-semibold text-brand-800">{{
+          formatDate(profile.createdAt)
+        }}</span>
       </p>
       <!--      <p class="flex flex-col">-->
       <!--        <span class="profile-label flex-1">Name:</span-->
       <!--        ><span class="profile-user-value flex-1">{{ profile.name }}</span>-->
       <!--      </p>-->
       <p class="flex flex-col">
-        <span class="profile-label flex-1">Email:</span
-        ><span class="profile-user-value flex-1">{{ profile.email }}</span>
+        <span class="profile-label">Email:</span
+        ><span class="profile-user-value flex-1 font-semibold text-brand-800">{{
+          profile.email
+        }}</span>
       </p>
       <div class="flex flex-col">
-        <p class="profile-label flex-1">
-          Account type: <BaseButton type="small" class="ml-4">Change</BaseButton>
-        </p>
-        <p class="font-semibold flex-1 text-app-orange">{{ getRole(profile.role) }}</p>
+        <p class="profile-label">Account type:</p>
+        <p class="font-semibold text-brand-800">{{ getRole(profile.role) }}</p>
       </div>
     </div>
   </div>

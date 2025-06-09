@@ -1,7 +1,7 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "include": ["env.d.ts", "src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"],
-  "exclude": ["src/**/__tests__/*"],
+  "exclude": ["src/**/__tests__/*", "tailwind.config.js"],
   "compilerOptions": {
     "allowJs": true,
     "composite": true,
@@ -10,6 +10,5 @@
       "@/*": ["src/*"]
     },
     "skipLibCheck": true
-    //    "types": ["node"] // Needed to add this here so that the compiler will find the type 'process'
   }
 }

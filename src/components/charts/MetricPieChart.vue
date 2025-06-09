@@ -3,6 +3,16 @@ import PieChart from '@/components/charts/PieChart.vue'
 import { computed, reactive, ref } from 'vue'
 import { type ChartData } from 'chart.js'
 import { useUserStore } from '@/stores/user'
+import resolveConfig from 'tailwindcss/resolveConfig'
+import tailwindConfig from '../../../tailwind.config.js'
+
+type BrandColor = {
+  [key: number]: string
+}
+
+const fullConfig = resolveConfig(tailwindConfig)
+const colors = fullConfig.theme?.colors
+const brandColors = colors!.brand as BrandColor
 
 const props = defineProps<{
   metric: number
@@ -16,7 +26,7 @@ const chartData = ref<ChartData<'doughnut'>>({
     {
       label: 'score',
       data: [],
-      backgroundColor: ['#F97316', 'rgba(247,114,22,0.2)'],
+      backgroundColor: [brandColors['500'], brandColors['50']],
       borderColor: 'rgba(0,0,0,0)',
       borderWidth: 1
     }
@@ -53,7 +63,7 @@ const getMetricScore = () => {
 
     chartData.value.datasets[0].data.push(props.metric)
     chartData.value.datasets[0].data.push(Math.floor(100 - props.metric))
-    chartData.value.datasets[0].backgroundColor = ['#F97316', 'rgba(247,114,22,0.2)']
+    chartData.value.datasets[0].backgroundColor = [brandColors['500'], brandColors['50']]
   }
   return Math.floor(props.metric)
 }
@@ -69,13 +79,13 @@ const getMetricScore = () => {
     v-show="userStore.isLoggedIn"
   >
     <div
-      class="absolute w-full h-full flex flex-col items-center justify-center text-app-orange"
+      class="absolute w-full h-full flex flex-col items-center justify-center"
       style="font-size: 2vw"
     >
       <p>
         {{ metricScore + '%' }}
       </p>
-      <p class="text-sm font-semibold text-orange-300">Metric Score</p>
+      <p class="text-sm font-semibold">Metric Score</p>
     </div>
     <PieChart
       id="MetricPieChart"

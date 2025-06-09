@@ -23,13 +23,11 @@ const { value, errorMessage, meta, handleChange, handleBlur } = useField(
 <template>
   <div class="w-full py-2">
     <!--    <pre>Field touched: {{ meta.touched }}, valid: {{ meta.valid }}</pre>-->
-    <label v-if="label" :for="name" class="block mb-2 text-sm font-medium text-slate-300">{{
-      label
-    }}</label>
+    <label v-if="label" :for="name" class="block mb-2 text-sm font-medium">{{ label }}</label>
     <input
       :name="name"
       :id="name"
-      class="bg-app-blue shadow-inner border border-slate-700 text-slate-400 text-sm rounded-lg focus:ring-white focus:border-white block w-full p-2.5"
+      class="bg-app-blue shadow-inner border border-slate-700 text-sm rounded-lg focus:ring-white focus:border-white block w-full p-2.5"
       v-bind="$attrs"
       v-model="value"
       :class="{ invalid: meta.touched && !meta.valid }"

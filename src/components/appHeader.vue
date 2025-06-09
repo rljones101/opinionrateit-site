@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import type { Ref } from 'vue'
 import { useRouter } from 'vue-router'
-import buttonNav from './buttons/buttonNav.vue'
+import ButtonNav from './buttons/buttonNav.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import { useUserStore } from '@/stores/user'
 import SiteLogo from '@/components/siteLogo.vue'
@@ -33,9 +33,7 @@ const showLogin = () => {
 </script>
 
 <template>
-  <div
-    class="w-full flex flex-col relative bg-app-blue-soft border-b border-gray-700 shadow-lg shadow-black"
-  >
+  <div class="w-full flex flex-col relative bg-secondary-200 shadow">
     <div class="w-full p-4">
       <div class="flex justify-between items-center w-full">
         <div class="pl-4 w-full">
@@ -49,7 +47,7 @@ const showLogin = () => {
           </div>
           <nav id="nav" class="hidden md:flex flex-row items-center justify-between w-full">
             <div class="flex items-center">
-              <button-nav
+              <ButtonNav
                 v-for="(link, index) in navLinks"
                 :label="link.label"
                 :name="link.name"
@@ -61,7 +59,7 @@ const showLogin = () => {
               <SiteLogo />
             </div>
 
-            <BaseButton type="primary" @click="showLogin" v-if="!userStore.isLoggedIn"
+            <BaseButton type="secondary" @click="showLogin" v-if="!userStore.isLoggedIn"
               >login</BaseButton
             >
           </nav>
@@ -70,7 +68,7 @@ const showLogin = () => {
     </div>
     <div class="dropdown-nav-menu md:hidden block" :class="{ show: showMenu }">
       <nav id="hiddenNav" class="flex flex-col bg-app-blue w-full p-8 space-y-6">
-        <button-nav
+        <ButtonNav
           v-for="(link, index) in navLinks"
           :label="link.label"
           :name="link.name"

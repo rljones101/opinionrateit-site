@@ -21,9 +21,9 @@ const clearSearch = () => {
 </script>
 
 <template>
-  <div class="flex justify-end">
+  <div class="flex w-full">
     <label for="simple-search" class="sr-only">Search</label>
-    <div class="relative group md:w-[100px] transition-all hover:w-[300px] focus-within:w-[300px]">
+    <div class="relative group w-full transition-all">
       <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
         <svg
           aria-hidden="true"
@@ -43,7 +43,7 @@ const clearSearch = () => {
         v-model="search"
         @keydown="emitSearchChange"
         id="simple-search"
-        class="bg-app-blue text-slate-300 text-sm rounded-full focus:ring-orange-500 focus:border-orange-500 w-full transition-all pl-10 p-2.5"
+        class="bg-secondary-50 text-sm rounded-full focus:ring-brand-500 focus:border-brand-500 w-full transition-all pl-10 p-2.5"
         placeholder="Search"
         required
       />
@@ -51,7 +51,7 @@ const clearSearch = () => {
         v-if="search !== ''"
         @click="clearSearch"
         type="button"
-        class="absolute top-2.5 right-3 ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-full focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+        class="absolute top-2.5 right-3 ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-full focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8"
         aria-label="Close"
       >
         <span class="sr-only">Close</span>

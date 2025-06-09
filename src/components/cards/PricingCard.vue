@@ -15,10 +15,10 @@ const emit = defineEmits(['selected'])
 <template>
   <div
     :class="{ 'border border-orange-500': active }"
-    class="w-full flex flex-col max-w-sm p-4 bg-app-blue-soft text-white rounded-lg shadow-lg shadow-black sm:p-8"
+    class="w-full flex flex-col max-w-sm p-4 bg-secondary-50 rounded-lg shadow sm:p-8"
   >
-    <h5 class="mb-4 text-xl font-medium dark:text-gray-400">{{ planName }}</h5>
-    <div class="flex items-baseline dark:text-white" v-if="!isDisabled">
+    <h5 class="mb-4 text-xl font-medium">{{ planName }}</h5>
+    <div class="flex items-baseline" v-if="!isDisabled">
       <span class="text-3xl font-semibold" v-if="pricing">$</span>
       <span class="text-5xl font-extrabold tracking-tight" v-if="pricing">{{ pricing }}</span>
       <span class="text-5xl font-extrabold tracking-tight" v-if="!pricing">Free</span>

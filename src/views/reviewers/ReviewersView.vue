@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import AppTitle from '@/components/AppTitle.vue'
-import ReviewerItem from '@/components/ReviewerItem.vue'
-import { useReviewersStore } from '@/stores/reviewers'
+import ReviewerItem from '@/views/reviewers/partials/ReviewerItem.vue'
+import { useReviewersStore } from '@/views/reviewers/stores/reviewers'
 
 const reviewersState = useReviewersStore()
 reviewersState.getReviewers()
@@ -22,7 +22,7 @@ reviewersState.getReviewers()
 
 <template>
   <div class="w-full">
-    <AppTitle class="mb-8">Reviewers</AppTitle>
+    <AppTitle>Reviewers</AppTitle>
     <div class="grid-layout" v-show="reviewersState.reviewers.length">
       <ReviewerItem
         v-for="reviewer in reviewersState.reviewers"

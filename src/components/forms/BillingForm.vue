@@ -3,6 +3,8 @@ import FormInput from '@/components/inputs/FormInput.vue'
 import SubmitButton from '@/components/buttons/SubmitButton.vue'
 import { useBillingForm } from '@/composables/useBillingForm'
 
+const emit = defineEmits(['paymentComplete'])
+
 const {
   customer,
   productKey,
@@ -13,7 +15,7 @@ const {
   isFormValid,
   loading,
   handleSubmit
-} = useBillingForm()
+} = useBillingForm(emit)
 </script>
 
 <template>
@@ -42,7 +44,7 @@ const {
         <FormInput name="zip" label="Zip" placeholder="Your Zip" v-model="billingFormData.zip" />
       </div>
       <div>
-        <label class="block mb-2 text-sm font-medium text-slate-300">Credit Card Information</label>
+        <label class="block mb-2 text-sm font-medium">Credit Card Information</label>
         <div id="stripe-element-mount-point" class="bg-app-blue rounded-lg text-white p-2.5"></div>
       </div>
     </div>

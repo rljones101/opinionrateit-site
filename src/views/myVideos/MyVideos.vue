@@ -2,14 +2,15 @@
 import { computed, ref } from 'vue'
 import TabsComponent from '@/components/forms/TabsComponent.vue'
 import ComponentSpinner from '@/components/spinners/ComponentSpinner.vue'
-import PublishedVideos from './PublishedVideos.vue'
-import YoutubeVideos from './YoutubeVideos.vue'
-import ConfirmSelection from './ConfirmSelection.vue'
+import PublishedVideos from './partials/PublishedVideos.vue'
+import YoutubeVideos from './partials/YoutubeVideos.vue'
+import ConfirmSelection from './partials/ConfirmSelection.vue'
 // Import types
 import type { VideoChannelDetails } from '@/types'
 // Import controllers or other utils
 import { useProfile } from '@/composables/useProfile'
 import { useModal } from '@/composables/useModal'
+import { useRoute } from 'vue-router'
 
 // Variables
 const tabs = [{ label: 'My Published Videos' }, { label: 'My Youtube Videos' }]
@@ -19,7 +20,8 @@ const selectedTabIndex = ref(0)
 
 // Composables
 const { hide, show } = useModal('#modalPublishVideos')
-const { searchVideos, publishVideos, profile, status } = useProfile()
+const route = useRoute()
+const { searchVideos, publishVideos, profile, status } = useProfile(route.params.name as string)
 
 // Computed methods
 const publishedVideos = computed(() => profile.value.publishedVideos || [])

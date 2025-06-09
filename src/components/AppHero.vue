@@ -10,8 +10,10 @@
       </div>
       <div class="flex md:ml-4 flex-col text-left hero-text">
         <h1 class="text-3xl lg:text-5xl mb-4 uppercase">
-          Create <br /><span class="font-bold text-orange-500">Product Reviews</span><br />
-          With Confidence
+          <span class="text-brand-800">Create</span> <br /><span class="font-bold text-brand-500"
+            >Product Reviews</span
+          ><br />
+          <span class="text-brand-800">With Confidence</span>
         </h1>
         <p>
           Need to know what content is right for you? Get on demand information that will help you

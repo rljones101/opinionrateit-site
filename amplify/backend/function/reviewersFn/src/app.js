@@ -22,7 +22,7 @@ const stripeRouter = require('./routes/stripeRoutes.js')
 
 loadEnvConfig(process.env.NODE_ENV)
 
-async function DatabaseConnect(){
+async function DatabaseConnect() {
   const DATABASE_USER = process.env.DATABASE_USER
   const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD
   const DATABASE_HOST = process.env.DATABASE_HOST
@@ -30,12 +30,17 @@ async function DatabaseConnect(){
   const DATABASE_NAME = process.env.DATABASE_NAME
 
   //const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD)
-  await mongoose.connect(`mongodb://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}`, { dbName: DATABASE_NAME})
+  await mongoose.connect(
+    `mongodb://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}`,
+    { dbName: DATABASE_NAME }
+  )
 }
 
-DatabaseConnect().then(() => {
-  console.log('Database connection!')
-}).catch(error => console.log(error))
+DatabaseConnect()
+  .then(() => {
+    console.log('Database connection!')
+  })
+  .catch((error) => console.log(error))
 
 // declare a new express app
 const app = express()
@@ -59,9 +64,7 @@ app.use(express.json())
 
 // Data sanitization against NoSQL query inject
 
-
 // Data sanitization against XSS
-
 
 // Enable CORS for all methods
 // app.use(function (req, res, next) {
@@ -75,21 +78,19 @@ app.use(express.json())
 const corsOptions = {
   origin: 'http://localhost:5173'
 }
-app.use(
-  cors(corsOptions)
-)
+app.use(cors(corsOptions))
 app.options('/', cors(corsOptions))
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString()
-  if(process.env.NODE_ENV === 'development') {
-    console.log('REQ COOKIES ======')
-    console.log(req.cookies)
-    console.log('REQ HEADERS ======')
-    console.log(req.url)
-    console.log('REQ HEADERS ======')
-    console.log(req.headers)
-  }
+  // if(process.env.NODE_ENV === 'development') {
+  //   console.log('REQ COOKIES ======')
+  //   console.log(req.cookies)
+  //   console.log('REQ HEADERS ======')
+  //   console.log(req.url)
+  //   console.log('REQ HEADERS ======')
+  //   console.log(req.headers)
+  // }
   next()
 })
 

@@ -8,6 +8,7 @@ import FormContainer from '@/components/containers/FormContainer.vue'
 import ComponentSpinner from '@/components/spinners/ComponentSpinner.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import ButtonClose from '@/components/buttons/ButtonClose.vue'
+import AppLink from '@/components/AppLink.vue'
 
 const router = useRouter()
 
@@ -60,7 +61,7 @@ const closeDialog = () => {
     <FormContainer class="w-full max-w-sm">
       <h5 class="text-xl font-medium">Login</h5>
       <ButtonClose
-        class="mr-3 !bg-transparent border border-app-orange !text-app-orange hover:!bg-app-orange hover:!text-white"
+        class="mr-3 !bg-transparent border border-brand-500 !text-brand-500 hover:!bg-brand-500 hover:!text-white"
         @click="closeDialog"
       />
       <FormInput
@@ -83,25 +84,25 @@ const closeDialog = () => {
         required
         label="Your password"
       />
-      <div class="flex items-start">
-        <!--        <div class="flex items-start">-->
-        <!--          <div class="flex items-center h-5">-->
-        <!--            <input-->
-        <!--              id="remember"-->
-        <!--              type="checkbox"-->
-        <!--              value=""-->
-        <!--              class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-orange-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-orange-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"-->
-        <!--            />-->
-        <!--          </div>-->
-        <!--          <label for="remember" class="ml-2 text-sm font-medium">Remember me</label>-->
-        <!--        </div>-->
-        <a href="#" class="ml-auto text-sm hover:underline">Lost Password?</a>
-      </div>
+      <!--      <div class="flex items-start">-->
+      <!--        <div class="flex items-start">-->
+      <!--          <div class="flex items-center h-5">-->
+      <!--            <input-->
+      <!--              id="remember"-->
+      <!--              type="checkbox"-->
+      <!--              value=""-->
+      <!--              class="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-orange-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-orange-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"-->
+      <!--            />-->
+      <!--          </div>-->
+      <!--          <label for="remember" class="ml-2 text-sm font-medium">Remember me</label>-->
+      <!--        </div>-->
+      <!--      </div>-->
       <div v-if="showError" class="text-red-500">{{ errorMessage }}</div>
       <BaseButton type="primary" class="w-full" @click="login">Login to your account</BaseButton>
-      <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
+      <div class="flex text-sm font-medium items-center gap-2">
         Not registered?
-        <router-link to="/signup">Create account</router-link>
+        <AppLink to="/signup">Create Account</AppLink> |
+        <AppLink to="/forgot-password">Lost Password?</AppLink>
       </div>
     </FormContainer>
     <ComponentSpinner v-if="loading" />

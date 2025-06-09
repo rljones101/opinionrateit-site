@@ -3,41 +3,22 @@ import reviewerController from '@/controllers/reviewerController'
 import { computed, ref } from 'vue'
 
 const props = defineProps<{
-  src?: string
-  name: string
+  user: {
+    name: string
+    avatarUrl: string
+  }
 }>()
 
-// template refs
-const showImage = ref(false)
-
-function testImage(url: string) {
-  return new Promise(function (resolve, reject) {
-    const image = new Image()
-    image.addEventListener('load', resolve)
-    image.addEventListener('error', reject)
-    image.src = url
-  })
-}
-
-if (props.src) {
-  testImage(props.src)
-    .then(() => {
-      showImage.value = true
-    })
-    .catch(() => {
-      showImage.value = false
-    })
-}
-
-const initials = computed(() => reviewerController.getInitials(props.name))
+const avatarImage = ref<string | null>(null)
+const initials = computed(() => reviewerController.getInitials(props.user.name))
 </script>
 
 <template>
   <div>
-    <img :alt="name" :src="src" v-if="showImage" class="rounded-full shadow-lg shadow-black" />
+    <img :alt="user.name" :src="avatarImage" v-if="avatarImage" class="rounded-full shadow" />
     <div
       v-else
-      class="bg-app-blue w-full h-full flex items-center justify-center text-app-orange font-bold text-lg uppercase rounded-full shadow-lg shadow-black"
+      class="bg-default-50 border-brand-500 border-2 w-full h-full flex items-center justify-center text-brand-500 font-bold uppercase rounded-full shadow p-2"
     >
       {{ initials }}
     </div>

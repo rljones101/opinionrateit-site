@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-import PageWithAsideContainer from '@/components/containers/PageWithAsideContainer.vue'
+import PageWithAsideContainer from '@/components/layouts/PageWithLeftNav.vue'
 </script>
 
 <template>

@@ -51,7 +51,7 @@ testImage(props.reviewer.thumbnailMedium)
 
 <template>
   <div
-    class="text-orange-100 text-sm app-card flex flex-col transition-all duration-300 group hover:font-bold hover:scale-105 hover:shadow-lg hover:shadow-black"
+    class="text-default-500 text-sm app-card flex flex-col transition-all duration-300 group hover:font-bold hover:scale-105 hover:shadow-lg hover:shadow-black"
   >
     <BadgeSmall
       v-if="pastNumOfDays(props.reviewer.createdAt) >= -7"
@@ -68,7 +68,7 @@ testImage(props.reviewer.thumbnailMedium)
       />
       <img
         v-else
-        src="../assets/img/default-card-image-320.png"
+        src="../../../assets/img/default-card-image-320.png"
         alt="Card Image"
         style="object-fit: cover; opacity: 0.2"
         class="rounded-tl-lg rounded-tr-lg max-h-36 w-full"
@@ -80,37 +80,42 @@ testImage(props.reviewer.thumbnailMedium)
       {{ reviewer.name }}
     </p>
     <div class="relative flex flex-col items-center justify-between">
-      <UserAvatar :name="reviewer.name" :src="reviewer.avatar" class="absolute -top-8 w-16 h-16" />
+      <UserAvatar
+        :user="{ name: reviewer.name, avatarUrl: reviewer.avatar }"
+        class="absolute -top-8 w-16 h-16 text-xl"
+      />
       <div class="flex flex-col gap-2 items-center justify-between w-full">
         <div class="reviewer-details">
           <p>
-            <span class="reviewer-details__text !text-app-orange"
-              >{{ formatPercentageToRating(reviewer.metric) }} / 10</span
-            >
-            <span class="reviewer-details__label">Rating</span>
+            <span class="reviewer-details__text !text-brand-500 font-bold">{{
+              formatPercentageToRating(reviewer.metric)
+            }}</span>
+            <span class="reviewer-details__label text-xs">Rating</span>
           </p>
           <p>
-            <span class="reviewer-details__text">{{
+            <span class="reviewer-details__text font-bold text-brand-800">{{
               formatDate(reviewer.createdAt, 'short_no_time')
             }}</span>
-            <span class="reviewer-details__label">Joined</span>
+            <span class="reviewer-details__label text-xs">Joined</span>
           </p>
           <p>
-            <span class="reviewer-details__text">{{
+            <span class="reviewer-details__text font-bold text-brand-800">{{
               nFormatter(reviewer.numPublishedVideos, 1)
             }}</span>
-            <span class="reviewer-details__label">videos</span>
+            <span class="reviewer-details__label text-xs">videos</span>
           </p>
           <p>
-            <span class="reviewer-details__text"> {{ nFormatter(reviewer.views, 1) }}</span>
-            <span class="reviewer-details__label">views</span>
+            <span class="reviewer-details__text font-bold text-brand-800">
+              {{ nFormatter(reviewer.views, 1) }}</span
+            >
+            <span class="reviewer-details__label text-xs">views</span>
           </p>
         </div>
       </div>
       <div class="flex justify-between items-end w-full p-4" v-if="userStore.isLoggedIn">
         <BaseButton type="secondary">
           <svg
-            class="w-6 h-6 text-app-orange"
+            class="w-6 h-6 text-brand-500"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -170,7 +175,5 @@ testImage(props.reviewer.thumbnailMedium)
 
 .reviewer-details__text {
   text-transform: capitalize;
-  font-size: 1rem;
-  color: #ffffff;
 }
 </style>

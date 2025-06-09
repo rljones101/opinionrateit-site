@@ -26,15 +26,12 @@ onMounted(async () => {
   <div class="w-full">
     <div
       ref="ContentRef"
-      class="w-full h-full content-container scrollbar-thin scrollbar-thumb-orange-500 scrollbar-track-slate-800"
+      class="w-full h-full content-container scrollbar-thin scrollbar-thumb-brand-500 scrollbar-track-brand-50 text-brand-800"
       :class="{ 'line-clamp-2': showReadMore }"
     >
       <slot />
     </div>
-    <button
-      class="text-app-orange mt-4 hover:border-b hover:border-app-orange"
-      @click="showReadMore = !showReadMore"
-    >
+    <button class="mt-4 text-brand-500 hover:text-brand-600" @click="showReadMore = !showReadMore">
       {{ showReadMore ? 'Read More...' : 'Read less...' }}
     </button>
   </div>

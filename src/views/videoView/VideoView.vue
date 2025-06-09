@@ -149,27 +149,29 @@ getReviews()
 
 <template>
   <div class="w-full relative">
-    <div class="mb-8">
-      <router-link to="/reviewers" class="text-orange-500 hover:underline">Reviewers</router-link>
+    <div class="mb-2">
+      <router-link to="/reviewers" class="text-brand-500 hover:text-brand-600"
+        >Reviewers</router-link
+      >
       /
       <router-link
         :to="{ name: 'reviewers-channelId-reviews', params: { channelId } }"
-        class="text-orange-500 hover:underline"
+        class="text-brand-500 hover:text-brand-600"
         >{{ itemDetail.creator }}</router-link
       >
       /
       {{ itemDetail.title }}
       review
     </div>
-    <div class="max-w-7xl mx-auto">
-      <div class="shadow-lg shadow-black">
-        <div key="videoArea" class="relative bg-app-blue border border-slate-800 p-8 rounded">
-          <div class="w-full flex flex-col gap-8" v-if="itemDetail && itemDetail.youTubeId">
+    <div class="flex flex-col gap-2 w-full sm:max-w-7xl mx-auto">
+      <div class="shadow">
+        <div key="videoArea" class="relative bg-secondary-50 p-2 rounded">
+          <div class="w-full flex flex-col gap-2" v-if="itemDetail && itemDetail.youTubeId">
             <!-- video player -->
             <MediaPlayer class="media-player" :video-id="itemDetail.youTubeId"></MediaPlayer>
-            <div class="flex justify-between items-center">
+            <div class="flex justify-between items-center gap-2">
               <div>
-                <h3 class="font-bold text-white uppercase">{{ itemDetail.title }}</h3>
+                <h3 class="font-bold uppercase">{{ itemDetail.title }}</h3>
                 <p class="text-sm" v-if="itemDetail.creator">
                   Review by:
                   <router-link
@@ -181,11 +183,7 @@ getReviews()
               <BaseButton type="primary"> Bookmark </BaseButton>
             </div>
             <!-- description container -->
-            <div class="rounded bg-app-blue-soft p-4 max-w-full">
-              <div class="flex items-center gap-4 text-white">
-                <span>99K views</span>
-                <span>8 days ago</span>
-              </div>
+            <div class="rounded bg-default-50 p-4">
               <ContentReadMore>
                 <div class="text-sm description-content" v-html="itemDetail.description"></div>
               </ContentReadMore>
@@ -193,10 +191,7 @@ getReviews()
           </div>
         </div>
       </div>
-      <div
-        class="bg-app-blue-soft p-4 mt-8 rounded-lg shadow shadow-black"
-        v-if="user.restrictTo('user')"
-      >
+      <div class="bg-secondary-50 p-4 mt-8 rounded- shadow" v-if="user.restrictTo('user')">
         <!-- review form -->
         <div class="form-wrapper" :class="[{ open: showReviewForm }]">
           <!--          <pre key="10">{{ reviewForm }}</pre>-->
@@ -242,13 +237,13 @@ getReviews()
       </div>
 
       <!-- comments and form -->
-      <div class="comments w-full mt-8">
+      <div class="comments w-full">
         <div
           v-for="review in reviews"
           :key="review._id"
-          class="flex mb-4 bg-app-blue-soft rounded-lg p-4 shadow shadow-black"
+          class="flex mb-4 bg-secondary-50 rounded p-4 shadow"
         >
-          <div class="rounded-full w-12 h-12 bg-app-blue flex items-center justify-center mr-4">
+          <div class="rounded-full w-12 h-12 bg-default-500 flex items-center justify-center mr-4">
             <span
               :style="{
                 color: videoViewController.getColor(videoViewController.reviewMetric(review))
@@ -257,8 +252,10 @@ getReviews()
             >
           </div>
           <div>
-            <div class="text-sm">{{ review.user.name }} - {{ reviewDate(review.createdAt) }}</div>
-            <div class="text-white">{{ review.comment }}</div>
+            <div class="text-sm font-semibold">
+              {{ review.user.name }} - {{ reviewDate(review.createdAt) }}
+            </div>
+            <p>{{ review.comment }}</p>
           </div>
         </div>
       </div>

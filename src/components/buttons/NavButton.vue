@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { type NavLink } from '@/types'
 import { useRoute, useRouter } from 'vue-router'
+import { computed } from 'vue'
 
-defineProps<{ link: NavLink }>()
+const props = defineProps<{ link: NavLink }>()
 
 const route = useRoute()
 const router = useRouter()
@@ -10,18 +11,26 @@ const router = useRouter()
 const goToPath = async (link: NavLink) => {
   await router.push({ name: link.name, params: link.params })
 }
+
+const isActive = computed(() => {
+  return route.name === props.link.name
+})
 </script>
 
 <template>
   <button
     :key="link.id"
-    class="user-nav-btn text-orange-100 border border-transparent font-bold rounded-lg p-2 pl-4 pr-4 flex items-center gap-4 hover:bg-app-orange-muted hover:border hover:border-app-orange transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-105"
+    class="group user-nav-btn border border-transparent font-bold rounded p-2 pl-4 pr-4 flex items-center gap-4 hover:bg-brand-500 hover:text-white ease-in-out transition-all duration-300"
     :class="{
-      'bg-white bg-opacity-10 text-app-orange pointer-events-none active': route.name === link.name
+      'bg-gray-700 border border-red bg-opacity-10 text-brand-500 pointer-events-none active':
+        isActive
     }"
     @click="goToPath(link)"
   >
-    <span v-if="link.icon" class="text-orange-100"
+    <span
+      v-if="link.icon"
+      class="group-hover:text-secondary-50"
+      :class="[{ 'text-brand-500': isActive }, { 'text-brand-800': !isActive }]"
       ><component :is="link.icon" class="w-6 h-6"
     /></span>
     <span class="hidden lg:flex uppercase font-bold">{{ link.label }}</span>
@@ -32,13 +41,6 @@ const goToPath = async (link: NavLink) => {
 .user-nav-btn {
   min-height: 48px;
   line-height: 1rem;
-  transform: translateY(0);
-  transition: all 0.3s ease-in-out;
   white-space: nowrap;
-}
-
-.user-nav-btn:hover:not(.active) {
-  transform: translate(0, -0.5em);
-  box-shadow: rgba(0, 0, 0, 0.5) 0 10px 10px;
 }
 </style>

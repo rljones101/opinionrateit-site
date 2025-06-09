@@ -20,9 +20,9 @@ const selectedHandler = (index: number) => {
 </script>
 
 <template>
-  <div class="text-sm font-medium text-center border-b border-app-blue-soft">
+  <div class="text-sm font-medium text-center border-b border-default-200">
     <ul class="flex flex-wrap -mb-px">
-      <li class="mr-2" v-for="(tab, idx) in tabs" :key="tab.label">
+      <li v-for="(tab, idx) in tabs" :key="tab.label">
         <button
           class="tab font-bold"
           :class="{ 'tab-active': idx === active }"
@@ -37,7 +37,7 @@ const selectedHandler = (index: number) => {
 
 <style scoped>
 .tab {
-  @apply inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-orange-500 dark:hover:text-gray-300;
+  @apply text-default-200 inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-default-400;
 }
 
 .tab:disabled {
@@ -45,6 +45,6 @@ const selectedHandler = (index: number) => {
 }
 
 .tab-active {
-  @apply text-orange-500 bg-app-blue-soft;
+  @apply text-brand-500;
 }
 </style>

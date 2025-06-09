@@ -11,7 +11,7 @@ defineProps<{
     <svg
       aria-hidden="true"
       class="flex-shrink-0 w-5 h-5"
-      :class="[{ 'text-app-orange': isChecked }, { 'text-gray-500': !isChecked }]"
+      :class="[{ 'text-brand-500': isChecked }, { 'text-default-500': !isChecked }]"
       fill="currentColor"
       viewBox="0 0 20 20"
       xmlns="http://www.w3.org/2000/svg"
@@ -26,8 +26,8 @@ defineProps<{
     <span
       class="text-base font-normal leading-tight"
       :class="[
-        { 'line-through text-gray-500 decoration-gray-500': !isChecked },
-        { 'text-slate-300': isChecked }
+        { 'line-through text-default-200 decoration-default-200': !isChecked },
+        { 'text-default-500': isChecked }
       ]"
       ><slot
     /></span>

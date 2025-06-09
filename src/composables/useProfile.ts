@@ -1,10 +1,8 @@
-import { useRoute } from 'vue-router'
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, type MaybeRefOrGetter, toValue } from 'vue'
 import type { Ref } from 'vue'
 import * as userService from '@/services/UserService'
 import type { PublishedVideo, VideoChannelDetails } from '@/types'
 import reviewerController from '@/controllers/reviewerController'
-import { debounce } from '@/utils/SearchUtils'
 
 interface Profile {
   id: string
@@ -29,9 +27,7 @@ interface Profile {
   metric: number
 }
 
-const useProfile = () => {
-  const route = useRoute()
-
+const useProfile = (name: MaybeRefOrGetter<string>) => {
   const profileLoaded = ref(false)
   const status = ref('loading')
 
@@ -71,7 +67,7 @@ const useProfile = () => {
     })
   }
 
-  const searchCallBack = async (searchParams: string) => {
+  const searchVideos = async (searchParams: string) => {
     if (profile.value.youTubeChannelId) {
       status.value = 'searching'
       profile.value.videos = [
@@ -80,9 +76,6 @@ const useProfile = () => {
       status.value = 'idle'
     }
   }
-
-  // const searchVideos = debounce(searchCallBack, 500)
-  const searchVideos = searchCallBack
 
   const getVideos = async () => {
     if (profile.value.isReviewer) {
@@ -209,7 +202,7 @@ const useProfile = () => {
     }
   }
 
-  watch(() => route.params.name as string, setProfile, { immediate: true })
+  watch(() => toValue(name), setProfile, { immediate: true })
 
   return {
     profile,

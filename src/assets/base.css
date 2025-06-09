@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-app-blue text-app-text-color;
+    @apply bg-app-blue text-default-500;
   }
 }
 
@@ -14,18 +14,11 @@
   --vt-c-white-soft: #f8f8f8;
   --vt-c-white-mute: #f2f2f2;
 
-  --vt-c-black: #00071e;
-  --vt-c-black-soft: #182542;
-  --vt-c-black-mute: #0a101c;
-
-  --vt-c-indigo: #2c3e50;
-
   --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
   --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
   --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
   --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
 
-  --vt-c-text-light-1: var(--vt-c-indigo);
   --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
   --vt-c-text-dark-1: var(--vt-c-white);
   --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
@@ -33,10 +26,6 @@
 
 /* semantic color variables for this project */
 :root {
-  --color-background: var(--vt-c-black);
-  --color-background-soft: var(--vt-c-black-soft);
-  --color-background-mute: var(--vt-c-black-mute);
-
   --color-border: var(--vt-c-divider-dark-2);
   --color-border-hover: var(--vt-c-divider-dark-1);
 
@@ -44,9 +33,6 @@
   --color-text: var(--vt-c-text-dark-2);
 
   --section-gap: 160px;
-
-  --color-links-and-buttons: hsla(25, 95%, 53%, 1);
-  --color-links-and-buttons-hover: hsla(25, 95%, 53%, 0.7);
 }
 
 *,
@@ -74,14 +60,4 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /*background: linear-gradient(to top, #00f260, #0575e6);*/
-}
-
-a,
-a:visited {
-  color: var(--color-links-and-buttons);
-}
-
-a:hover {
-  text-decoration: underline;
 }

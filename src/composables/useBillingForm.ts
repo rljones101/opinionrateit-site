@@ -11,10 +11,11 @@ import {
 } from '@/controllers/stripeController'
 import { createPaymentIntent } from '@/services/stripeService'
 
-export function useBillingForm() {
+export function useBillingForm(
+  emit: (event: 'paymentComplete', billingDetails: BillingDetails) => void
+) {
   const signupStore = useSignupStore()
-
-  const emit = defineEmits(['paymentComplete'])
+  // const emit = defineEmits(['paymentComplete'])
   const productKey = ref('')
   const fullName = ref('')
   const email = ref('')
@@ -69,7 +70,7 @@ export function useBillingForm() {
     return res.data.data.secret
   }
 
-  const handleSubmit = billingForm.handleSubmit(async (values: any) => {
+  const handleSubmit = billingForm.handleSubmit(async () => {
     if (loading.value) return
     loading.value = true
     try {

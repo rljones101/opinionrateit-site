@@ -4,7 +4,7 @@ const urlify = (text: string) => {
     return (
       '<a href="' +
       url +
-      '" class="text-orange-500 hover:underline" target="_blank">' +
+      '" class="text-brand-500 hover:text-brand-600" target="_blank">' +
       url +
       '</a>'
     )
