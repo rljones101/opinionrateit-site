@@ -4,7 +4,11 @@ const createCheckoutSession = async (formData: any) => {
   return await apiPost('/stripe/create-checkout-session', formData)
 }
 
-const createPaymentIntent = async (formData: { lookupKey: string, productKey: string, customer: string }) => {
+const createPaymentIntent = async (formData: {
+  lookupKey: string
+  productKey: string
+  customer: string
+}) => {
   return await apiPost('/stripe/create-intent', formData)
 }
 

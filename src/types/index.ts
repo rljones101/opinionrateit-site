@@ -154,7 +154,7 @@ export enum SIGNUP_STEPS {
 export interface SignupPlan {
   name: string
   role: string
-  lookupKey: string,
+  lookupKey: string
   productKey: string
   cost: number
   yearlyDiscount: number
