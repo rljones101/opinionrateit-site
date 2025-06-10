@@ -10,6 +10,7 @@ type BrandColor = {
   [key: number]: string
 }
 
+// @ts-ignore-next-line if using TypeScript
 const fullConfig = resolveConfig(tailwindConfig)
 const colors = fullConfig.theme?.colors
 const brandColors = colors!.brand as BrandColor

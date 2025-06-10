@@ -7,7 +7,7 @@ defineOptions({
 })
 
 const props = defineProps({
-  // add @ts-ignore if using TypeScript
+  // @ts-ignore if using TypeScript
   ...RouterLink.props
 })
 
@@ -17,8 +17,8 @@ const isExternalLink = computed(() => {
 </script>
 
 <template>
-  <a v-if="isExternalLink" :href="to" class="text-brand-500 hover:underline"><slot /></a>
-  <RouterLink v-else :to="to" class="text-brand-500 hover:underline"><slot /></RouterLink>
+  <a v-if="isExternalLink" :href="props.to" class="text-brand-500 hover:underline"><slot /></a>
+  <RouterLink v-else :to="props.to" class="text-brand-500 hover:underline"><slot /></RouterLink>
 </template>
 
 <style scoped></style>
