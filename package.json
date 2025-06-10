@@ -17,10 +17,10 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@aws-amplify/ui-vue": "^3.1.20",
+    "@aws-amplify/ui-vue": "^4.3.3",
     "@heroicons/vue": "^2.0.18",
     "@stripe/stripe-js": "^1.54.1",
-    "aws-amplify": "^5.3.2",
+    "aws-amplify": "^6.15.0",
     "axios": "1.8.2",
     "chart.js": "^3.9.1",
     "flowbite": "^1.6.5",
@@ -37,9 +37,9 @@
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.2.0",
-    "@tsconfig/node18": "^2.0.1",
+    "@tsconfig/node22": "^22.0.2",
     "@types/luxon": "^3.3.0",
-    "@types/node": "^18.16.8",
+    "@types/node": "^22.15.30",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/eslint-config-prettier": "^7.1.0",
     "@vue/eslint-config-typescript": "^11.0.3",
@@ -55,6 +55,6 @@
     "tailwindcss": "^3.3.2",
     "typescript": "~5.0.4",
     "vite": "6.3.4",
-    "vue-tsc": "^1.6.4"
+    "vue-tsc": "^2.2.10"
   }
 }
