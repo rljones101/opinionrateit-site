@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import IconArrow from '@/components/icons/IconArrow.vue'
-import { useCarousel } from '@/controllers/carouselController'
+import { useCarousel } from '@/composables/useCarousel'
 import type { Slide } from '@/types'
 
 const props = defineProps<{
   slides: Slide[]
+  hideButtons?: boolean
 }>()
 
 const { slides, next, previous } = useCarousel(props.slides)
@@ -12,12 +13,15 @@ const { slides, next, previous } = useCarousel(props.slides)
 
 <template>
   <div class="carousel_container">
-    <transition-group class="carousel flex overflow-hidden justify-center gap-4" tag="div">
+    <transition-group
+      class="carousel isolate overflow-hidden w-full flex justify-center gap-4"
+      tag="div"
+    >
       <div v-for="slide in slides" :key="slide.id" class="slide" :style="slide.style">
         <slot name="slide" v-bind="slide.data"></slot>
       </div>
     </transition-group>
-    <div class="controls">
+    <div class="controls" v-if="!hideButtons">
       <button class="controls_button" @click="previous">
         <IconArrow />
       </button>
@@ -34,16 +38,17 @@ const { slides, next, previous } = useCarousel(props.slides)
   align-items: center;
   justify-content: center;
   position: relative;
+  margin: -2rem 0;
 }
 
 .carousel_container .carousel {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
   border-radius: 10px;
   padding: 4rem 0;
-  margin: -4rem 0;
+  margin: 2rem 0;
+  min-height: 430px;
 }
 
 .carousel_container .carousel .slide {
@@ -51,7 +56,7 @@ const { slides, next, previous } = useCarousel(props.slides)
   opacity: 1;
   justify-content: center;
   transition: all 0.5s ease-in-out;
-  background: var(--vt-c-blue);
+  background: var(--vt-c-black);
   max-width: 305px;
   max-height: 450px;
   box-shadow: 0 4px 8px 4px rgba(0, 0, 0, 0.2);
@@ -74,7 +79,7 @@ const { slides, next, previous } = useCarousel(props.slides)
   justify-center
   items-center
   border
-  border-slate-700
+  border-slate-800
   font-bold
   bg-orange-500
   hover:bg-orange-600

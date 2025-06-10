@@ -5,7 +5,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue'
 import { DoughnutChart } from 'vue-chart-3'
-import { Chart, registerables  } from 'chart.js'
+import { Chart, registerables } from 'chart.js'
 Chart.register(...registerables)
 
 export default defineComponent({
@@ -20,32 +20,31 @@ export default defineComponent({
       type: Object,
       default: () => {
         return {
-          datasets: [{ x: '' }]
+          datasets: [{ x: '0' }]
         }
       }
     }
   },
   setup(props) {
-
     const dnOptions = ref({
       responsive: true,
       plugins: {
         legend: {
           display: false
-        },
+        }
       },
       datasets: {
         doughnut: {
           cutout: '90%'
         }
       },
-      ...props?.options,
+      ...props?.options
     })
 
     const dnChartData = computed(() => {
       return {
         datasets: [],
-        ...props?.chartData,
+        ...props?.chartData
       }
     })
 
@@ -54,6 +53,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

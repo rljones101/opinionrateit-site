@@ -1,81 +1,118 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import buttonNav from './buttons/buttonNav.vue'
-import siteLogo from './siteLogo.vue'
-import BaseButton from "@/components/buttons/BaseButton.vue";
+import type { Ref } from 'vue'
+import { useRouter } from 'vue-router'
+import ButtonNav from './buttons/buttonNav.vue'
+import BaseButton from '@/components/buttons/BaseButton.vue'
+import { useUserStore } from '@/stores/user'
+import SiteLogo from '@/components/siteLogo.vue'
 
-// const search = ref('')
+interface linkItem {
+  label: string
+  name: string
+  params?: any
+}
+
+const router = useRouter()
+const userStore = useUserStore()
 const showMenu = ref(false)
-
-const navLinks = ref([
+const navLinks: Ref<linkItem[]> = ref([
   {
-    link: 'Home',
-    path: '/'
+    label: 'Home',
+    name: 'home'
   },
   {
-    link: 'Reviewers',
-    path: '/reviewers'
-  },
-  {
-    link: 'About',
-    path: '/about'
-  },
-  {
-    link: 'Contact',
-    path: '/contact'
-  },
-])
-
-const userLinks = ref([
-  {
-    link: 'Sign Up',
-    path: '/signup'
+    label: 'Sign Up',
+    name: 'signup'
   }
 ])
 
+const showLogin = () => {
+  router.push({ name: 'login' })
+}
 </script>
 
 <template>
-  <div class="flex flex-col w-full items-center justify-between pt-4 pb-4 pl-8 pr-8 transition">
-    <div class="flex justify-between items-center w-full">
-      <div class="flex flex-row items-center justify-center">
-        <site-logo class="-mt-5" />
-      </div>
-      <div>
-        <div id="menu-button" class="md:hidden">
-          <button @click="showMenu=!showMenu" v-if="!showMenu"><i class="material-icons">menu</i></button>
-          <button @click="showMenu=!showMenu" v-if="showMenu"><i class="material-icons">close</i></button>
+  <div class="w-full flex flex-col relative bg-secondary-200 shadow">
+    <div class="w-full p-4">
+      <div class="flex justify-between items-center w-full">
+        <div class="pl-4 w-full">
+          <div id="menu-button" class="md:hidden">
+            <button @click="showMenu = !showMenu" v-if="!showMenu">
+              <i class="material-icons">menu</i>
+            </button>
+            <button @click="showMenu = !showMenu" v-if="showMenu">
+              <i class="material-icons">close</i>
+            </button>
+          </div>
+          <nav id="nav" class="hidden md:flex flex-row items-center justify-between w-full">
+            <div class="flex items-center">
+              <ButtonNav
+                v-for="(link, index) in navLinks"
+                :label="link.label"
+                :name="link.name"
+                :key="index"
+              />
+            </div>
+            <!-- site logo -->
+            <div class="site-logo hidden mr-24">
+              <SiteLogo />
+            </div>
+
+            <BaseButton type="secondary" @click="showLogin" v-if="!userStore.isLoggedIn"
+              >login</BaseButton
+            >
+          </nav>
         </div>
-        <nav id="nav" class="hidden md:flex flex-row items-center justify-end w-full transition" >
-          <button-nav v-for="(link, index) in navLinks" :link="link.link" :path="link.path" :key="index"/>
-          <span>|</span>
-          <button-nav v-for="(link, index) in userLinks" :link="link.link" :path="link.path" :key="index"/>
-          <BaseButton>login</BaseButton>
-        </nav>
       </div>
     </div>
-
-    <div class="dropdown-nav-menu" :class="{'show': showMenu}">
-      <nav id="hiddenNav" class="flex flex-col items-start">
-        <button-nav v-for="(link, index) in navLinks" :link="link.link" :path="link.path" :key="index"/>
-        <span class="hidden md:inline">|</span>
-        <button-nav v-for="(link, index) in userLinks" :link="link.link" :path="link.path" :key="index"/>
-        <BaseButton>login</BaseButton>
+    <div class="dropdown-nav-menu md:hidden block" :class="{ show: showMenu }">
+      <nav id="hiddenNav" class="flex flex-col bg-app-blue w-full p-8 space-y-6">
+        <ButtonNav
+          v-for="(link, index) in navLinks"
+          :label="link.label"
+          :name="link.name"
+          :key="index"
+        />
+        <BaseButton
+          class="border border-app-orange text-app-orange hover:bg-app-orange hover:text-white"
+          @click="showLogin"
+          v-if="!userStore.isLoggedIn"
+          type="secondary"
+          >login</BaseButton
+        >
       </nav>
     </div>
   </div>
 </template>
 
 <style scoped>
+.app-header.is-pinned .site-logo {
+  display: block;
+  padding-top: 1px;
+}
 .dropdown-nav-menu {
-  transition: height 0ms 400ms, opacity 400ms 0ms;
-  height: 0;
+  position: absolute;
+  top: 4rem;
+  left: 0;
+  right: 0;
+  z-index: 200;
+  transition: opacity 400ms 0ms;
   opacity: 0;
   overflow: hidden;
 }
+
 .dropdown-nav-menu.show {
   opacity: 1;
-  height: auto;
-  transition: height 0ms 0ms, opacity 600ms 0ms;
+  transition: opacity 1s;
+}
+
+.dropdown-nav-menu #hiddenNav {
+  max-height: 4rem;
+  transition: max-height 1s;
+}
+
+.dropdown-nav-menu.show #hiddenNav {
+  max-height: 250px;
 }
 </style>

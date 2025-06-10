@@ -1,0 +1,30 @@
+version: '3.9'
+
+services:
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
+    restart: always
+    container_name: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DATABASE_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${DATABASE_PASSWORD}
+      - MONGO_INITDB_DATABASE=${DATABASE_NAME}
+    volumes:
+      - database-v:/data/db/
+
+volumes:
+  database-v:
+    name: 'database-v'
+#  mongo-express:
+#    image: mongo-express
+#    restart: always
+#    container_name: mongo_ui
+#    ports:
+#      - 8081:8081
+#    environment:
+#      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+#      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+#      ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
