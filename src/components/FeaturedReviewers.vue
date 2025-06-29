@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import ReviewerItem from '@/views/reviewers/partials/ReviewerItem.vue'
 import CarouselComponent from '@/components/CarouselComponent.vue'
+import ReviewerService from '@/services/ReviewerService'
 import reviewerController from '@/controllers/reviewerController'
 import type { Slide } from '@/types'
 import { ref } from 'vue'
 
 let slides = ref<Slide[]>([])
 
-reviewerController.getReviewers().then((reviewers) => {
+ReviewerService.getReviewers().then((reviewers) => {
   if (reviewers.length) {
     slides.value = reviewers.map(
       (item) =>

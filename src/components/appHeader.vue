@@ -4,7 +4,7 @@ import type { Ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ButtonNav from './buttons/buttonNav.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 import SiteLogo from '@/components/siteLogo.vue'
 
 interface linkItem {

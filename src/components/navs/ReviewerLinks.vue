@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import NavButton from '@/components/buttons/NavButton.vue'
 import { ChartBarIcon, VideoCameraIcon } from '@heroicons/vue/20/solid'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 
 const user = useUserStore()
 

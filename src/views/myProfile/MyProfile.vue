@@ -1,26 +1,16 @@
 <script setup lang="ts">
-import { useProfile } from '@/composables/useProfile'
 import { formatDate } from '@/utils/DateUtils'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
+import { useProfileStore } from '@/stores/profileStore'
 
 // Import components
 import AppTitle from '@/components/AppTitle.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 
+// TODO replace with profileStore
 const userStore = useUserStore()
-const { profile } = useProfile(userStore.user.name)
-
-const getRole = (role: string): string => {
-  if (role === 'user') {
-    return '👤User'
-  } else if (role === 'reviewer-basic') {
-    return '⭐Reviewer'
-  } else if (role === 'reviewer-plus') {
-    return '✨Reviewer Plus'
-  }
-  return ''
-}
+const profileStore = useProfileStore()
 </script>
 
 <template>
@@ -34,14 +24,14 @@ const getRole = (role: string): string => {
             :user="{ name: userStore.user.name, avatarUrl: userStore.user.avatar }"
             class="block w-10 h-10"
           />
-          <p class="text-2xl text-brand-800 font-bold">{{ profile.name }}</p>
+          <p class="text-2xl text-brand-800 font-bold">{{ profileStore.profile.name }}</p>
         </div>
         <BaseButton type="secondary">Edit</BaseButton>
       </div>
       <p class="flex flex-col">
         <span class="profile-label">Created On:</span
         ><span class="profile-user-value flex-1 font-semibold text-brand-800">{{
-          formatDate(profile.createdAt)
+          formatDate(profileStore.profile.createdAt)
         }}</span>
       </p>
       <!--      <p class="flex flex-col">-->
@@ -51,12 +41,12 @@ const getRole = (role: string): string => {
       <p class="flex flex-col">
         <span class="profile-label">Email:</span
         ><span class="profile-user-value flex-1 font-semibold text-brand-800">{{
-          profile.email
+          profileStore.profile.email
         }}</span>
       </p>
       <div class="flex flex-col">
         <p class="profile-label">Account type:</p>
-        <p class="font-semibold text-brand-800">{{ getRole(profile.role) }}</p>
+        <p class="font-semibold text-brand-800">{{ profileStore.getRole }}</p>
       </div>
     </div>
   </div>

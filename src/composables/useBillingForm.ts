@@ -67,7 +67,7 @@ export function useBillingForm(
     }
     const res = await createPaymentIntent(formData)
     // get the secret
-    return res.data.data.secret
+    return res.data.secret
   }
 
   const handleSubmit = billingForm.handleSubmit(async () => {

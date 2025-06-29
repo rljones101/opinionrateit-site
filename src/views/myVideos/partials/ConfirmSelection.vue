@@ -8,7 +8,7 @@
       <ul class="ml-8 mt-4">
         <li v-for="video in selectedVideos" :key="video.videoId">
           <CheckListItem :line-through="false" :is-checked="true" class="flex gap-4 items-center"
-            ><span class="text-white">{{ video.title }}</span></CheckListItem
+            ><span>{{ video.title }}</span></CheckListItem
           >
         </li>
       </ul>

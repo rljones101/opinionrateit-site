@@ -12,7 +12,6 @@ const cache = new CacheService(ttl)
 const get = async (path, params, config) => {
   const apiKey = process.env.YOUTUBE_API_KEY
   let url = `${path}?${new URLSearchParams(params).toString()}&key=${apiKey}`
-  console.log('url:', url)
   return await apiInstance.get(url, config)
 }
 
@@ -35,15 +34,13 @@ exports.getVideosByChannel = catchAsync(async (req, res) => {
     }
 
     let response = await get('search', params)
-    return response.data.items.map((item) => _videoInterface(item))
+    return response.data.items.map(youTubeVideo)
   })
 
   res.status(200).json({
     status: 'success',
     results: videos.length,
-    data: {
-      data: videos
-    }
+    data: { videos }
   })
 })
 
@@ -62,7 +59,7 @@ exports.getVideosByChannel = catchAsync(async (req, res) => {
 //     return get('search', params)
 //         .then((response) => {
 //             return response.data.items.map((item) => {
-//                 return _videoInterface(item)
+//                 return youTubeVideo(item)
 //             })
 //         })
 //         .catch((error) => {
@@ -70,7 +67,7 @@ exports.getVideosByChannel = catchAsync(async (req, res) => {
 //         })
 // }
 
-function _videoInterface(videoData) {
+function youTubeVideo(videoData) {
   return {
     videoId: videoData['id']['videoId'],
     title: videoData['snippet']['title'],

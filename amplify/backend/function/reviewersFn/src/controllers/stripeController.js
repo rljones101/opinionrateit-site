@@ -11,9 +11,7 @@ exports.createCustomer = catchAsync(async (req, res) => {
   })
   res.status(200).json({
     status: 'success',
-    data: {
-      data: customer
-    }
+    data: { customer }
   })
 })
 
@@ -34,7 +32,7 @@ const createPaymentIntent = async (price) => {
   })
 }
 
-const createSubscription = async(customer, price) => {
+const createSubscription = async (customer, price) => {
   return await stripe.subscriptions.create({
     customer,
     items: [
@@ -57,11 +55,7 @@ exports.createIntent = catchAsync(async (req, res) => {
 
   res.status(200).json({
     status: 'success',
-    data: {
-      data: {
-        secret
-      }
-    }
+    data: { secret }
   })
 })
 

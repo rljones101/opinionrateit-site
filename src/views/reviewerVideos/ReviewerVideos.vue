@@ -15,12 +15,7 @@ const showReview = (video: VideoChannelDetails) => {
   })
 }
 
-const { channelDetails, publishedVideos, getPublishedVideos, getReviewerDetails } =
-  useReviewer(channelId)
-if (channelId) {
-  getPublishedVideos()
-  getReviewerDetails()
-}
+const { channelDetails, publishedVideos } = useReviewer(channelId)
 </script>
 
 <template>

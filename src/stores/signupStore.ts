@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 import { computed, ref } from 'vue'
 import { type AccountDetails, SIGNUP_STEPS, type SignupPlan } from '@/types'
 import signupViewController from '@/controllers/signupViewController'
@@ -54,7 +54,7 @@ export const useSignupStore = defineStore('useSignupStore', () => {
         accountFormData.value.firstName.trim() + ' ' + accountFormData.value.lastName.trim()
       const res = await createCustomer({ email: formData.email, name: fullName })
       // console.log(res)
-      billingFormData.value.id = res.data.data.id
+      billingFormData.value.id = res.data.id
       billingFormData.value.name = fullName
       billingFormData.value.email = accountFormData.value.email.trim()
     } catch (error: unknown) {

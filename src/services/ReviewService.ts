@@ -1,7 +1,14 @@
-import { apiGet } from '@/utils/AppApi'
+import ApiClient from '@/services/ApiClient'
+import type { Review } from '@/types'
 
 const getNumReviews = async (channelId: string) => {
-  return await apiGet(`/reviews/${channelId}/numReviews`)
+  const response = await ApiClient.get<{ numReviews: number }>(`/reviews/${channelId}/numReviews`)
+  return response.data.numReviews
 }
 
-export { getNumReviews }
+const getReviewsByVideo = async (videoId: string) => {
+  const response = await ApiClient.get<{ reviews: Review[] }>(`/reviews/${videoId}/byVideo`)
+  return response.data.reviews
+}
+
+export default { getNumReviews, getReviewsByVideo }

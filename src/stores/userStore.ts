@@ -2,7 +2,7 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 import { usersLogin, usersSignup } from '@/services/UserService'
 
-export const useUserStore = defineStore('user', () => {
+export const useUserStore = defineStore('useUserStore', () => {
   const defaultUserDetails = {
     name: '',
     email: '',
@@ -87,7 +87,7 @@ export const useUserStore = defineStore('user', () => {
     isLoggedIn.value = !!(token && user.name)
   }
 
-  const restrictTo = (...roles: any[]) => {
+  const restrictTo = (...roles: string[]) => {
     const user = getUser()
     return roles.includes(user.role)
   }

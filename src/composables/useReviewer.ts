@@ -1,9 +1,11 @@
-import { type MaybeRefOrGetter, ref, type Ref, toValue } from 'vue'
+import { type MaybeRefOrGetter, ref, toValue, watch } from 'vue'
 import type { PublishedVideo } from '@/types'
-import reviewerController from '@/controllers/reviewerController'
+import ReviewerService from '@/services/ReviewerService'
+import VideoService from '@/services/VideoService'
 
 export function useReviewer(channelId: MaybeRefOrGetter<string>) {
-  const publishedVideos: Ref<PublishedVideo[]> = ref([])
+  const publishedVideos = ref<PublishedVideo[]>([])
+  const _channelId = ref(toValue(channelId))
 
   const channelDetails = ref({
     avatar: '',
@@ -17,23 +19,37 @@ export function useReviewer(channelId: MaybeRefOrGetter<string>) {
   })
 
   const getPublishedVideos = async () => {
-    publishedVideos.value = await reviewerController.getPublishedVideos(toValue(channelId))
+    publishedVideos.value = await VideoService.getPublishedVideos(_channelId.value)
   }
 
   const getReviewerDetails = async () => {
+    if (!_channelId.value) return
     try {
-      const res = await reviewerController.getReviewerDetails(toValue(channelId))
+      const res = await ReviewerService.getReviewerDetails(_channelId.value)
       const reviewerData = res.data
       channelDetails.value = { ...reviewerData }
     } catch (err) {
+      console.log('Not able to get the reviewer details.')
       console.error(err)
     }
   }
 
+  watch(
+    () => toValue(channelId),
+    async (value) => {
+      _channelId.value = value
+      if (_channelId.value) {
+        console.log('has channelId')
+        await getReviewerDetails()
+        await getPublishedVideos()
+        await getReviewerDetails()
+      }
+    },
+    { immediate: true }
+  )
+
   return {
     publishedVideos,
-    getPublishedVideos,
-    channelDetails,
-    getReviewerDetails
+    channelDetails
   }
 }

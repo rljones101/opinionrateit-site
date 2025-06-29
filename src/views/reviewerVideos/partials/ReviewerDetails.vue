@@ -8,10 +8,7 @@ import { useReviewer } from '@/composables/useReviewer'
 
 const route = useRoute()
 const channelId = route.params.channelId as string
-const { channelDetails, getReviewerDetails } = useReviewer(channelId)
-if (channelId) {
-  getReviewerDetails()
-}
+const { channelDetails } = useReviewer(channelId)
 </script>
 
 <template>

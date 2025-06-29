@@ -4,15 +4,16 @@
     <div class="flex w-full gap-8 mb-8 bg-app-blue-soft p-4 rounded-lg">
       <BaseButton
         type="primary"
-        v-if="profile.isReviewer"
-        :disabled="selectedVideos.length === 0"
+        class="relative"
+        v-if="profileStore.getIsReviewer"
+        :disabled="videosStore.getSelectedVideos.length === 0"
         @click="handlePublishSelected"
         >Publish Selected
         <span
-          v-if="selectedVideos.length"
-          class="inline-flex items-center justify-center w-4 h-4 ml-2 text-blue-800 bg-blue-200 rounded-full font-bold absolute -top-2 -right-2"
+          v-if="videosStore.getSelectedVideos.length"
+          class="inline-flex items-center justify-center w-4 h-4 ml-2 text-brand-500 bg-brand-50 rounded-full font-bold"
         >
-          {{ selectedVideos.length }}
+          {{ videosStore.getSelectedVideos.length }}
         </span>
       </BaseButton>
       <SearchInput :model-value="searchValue" @update:modelValue="searchHandler" class="flex-1" />
@@ -21,7 +22,7 @@
       <div
         class="video-wrapper"
         @click="selectVideoHandler(video)"
-        v-for="video in profile.videos"
+        v-for="video in videosStore.getNonPublishedVideos"
         :key="video.videoId"
       >
         <span class="relative">
@@ -36,20 +37,20 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 // Import types
-import type { VideoChannelDetails, Profile } from '@/types'
+import type { VideoChannelDetails } from '@/types'
 
 // Components
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import SearchInput from '@/components/inputs/SearchInput.vue'
 import VideoItem from '@/components/VideoItem.vue'
 import RadioCheckIcon from '@/components/forms/controls/RadioCheckIcon.vue'
-
-defineProps<{
-  profile: Profile
-  selectedVideos: VideoChannelDetails[]
-}>()
+import { useProfileStore } from '@/stores/profileStore'
+import { useVideosStore } from '@/stores/videosStore'
 
 const emit = defineEmits(['selected', 'search', 'publishSelected'])
+
+const profileStore = useProfileStore()
+const videosStore = useVideosStore()
 
 const searchValue = ref('')
 

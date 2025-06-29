@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import type { Video } from '@/types'
 import AppCard from '@/components/cards/AppCard.vue'
-import UserAvatar from '@/components/UserAvatar.vue'
-import { useReviewer } from '@/composables/useReviewer'
+// import UserAvatar from '@/components/UserAvatar.vue'
+// import { useReviewer } from '@/composables/useReviewer'
+// import { useProfileStore } from '@/stores/profileStore'
 
-const props = defineProps<{
+defineProps<{
   video: Video
 }>()
 
-const { channelDetails, getReviewerDetails } = useReviewer(props.video.channelId)
-getReviewerDetails()
+// const profileStore = useProfileStore()
+// const { channelDetails } = useReviewer(profileStore.profile.youTubeChannelId)
 </script>
 
 <template>
@@ -28,11 +29,12 @@ getReviewerDetails()
       />
     </div>
     <div class="flex-1 p-2 flex w-full items-center justify-center gap-2">
-      <UserAvatar
-        class="w-8 h-8"
-        :user="{ name: channelDetails.name, avatarUrl: channelDetails.avatar }"
-      />
-      <p class="font-semibold text-xs" v-html="video.title"></p>
+      <!--          <UserAvatar-->
+      <!--            v-if="profileStore.profile.youTubeChannelId"-->
+      <!--            class="w-8 h-8"-->
+      <!--            :user="{ name: channelDetails.name, avatarUrl: channelDetails.avatar }"-->
+      <!--          />-->
+      <p class="font-semibold text-xs lg:text-sm" v-html="video.title"></p>
     </div>
   </AppCard>
 </template>

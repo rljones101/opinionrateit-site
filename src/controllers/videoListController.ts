@@ -8,7 +8,7 @@ const getAllPublishedVideos = async (query = {}) => {
   }
   const res = await apiGet(url)
   if (res.originalData.results > 0) {
-    return res.data.data as VideoChannelDetails[]
+    return res.data as VideoChannelDetails[]
   }
   return []
 }

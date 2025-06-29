@@ -25,10 +25,10 @@ const confirm = () => {
   >
     <div class="relative w-full max-w-2xl max-h-full">
       <!-- Modal content -->
-      <div class="relative bg-slate-800 rounded-lg shadow dark:bg-app-blue-soft">
+      <div class="relative rounded-lg bg-white shadow">
         <!-- Modal header -->
-        <div class="flex items-start justify-between p-5 border-b rounded-t border-slate-600">
-          <h3 class="text-xl font-semibold text-text-white lg:text-2xl dark:text-orange-100">
+        <div class="flex items-start justify-between p-5 rounded-t">
+          <h3 class="text-xl font-semibold lg:text-2xl">
             <slot name="title" />
           </h3>
           <button
@@ -52,13 +52,11 @@ const confirm = () => {
           </button>
         </div>
         <!-- Modal body -->
-        <div class="p-6 space-y-6 text-sm leading-relaxed text-orange-100">
+        <div class="p-6 space-y-6 text-sm leading-relaxed">
           <slot name="confirmMessage" />
         </div>
         <!-- Modal footer -->
-        <div
-          class="flex items-center justify-end p-6 space-x-2 border-t border-slate-600 rounded-b"
-        >
+        <div class="flex items-center justify-end p-6 space-x-2 rounded-b">
           <BaseButton type="primary" @click="confirm">
             {{ yesLabel ? yesLabel : 'Yes' }}
           </BaseButton>

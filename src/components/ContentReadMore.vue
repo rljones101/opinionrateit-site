@@ -1,45 +1,30 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
+import AppSimpleCollapsibile from '@/components/base/AppSimpleCollapsibile.vue'
 
-const showReadMore = ref(true)
-const ContentRef = ref<HTMLElement | null>(null)
-
-async function showHideReadMore() {
-  try {
-    setTimeout(() => {
-      const el = ContentRef.value
-      if (el) {
-        showReadMore.value = el.offsetHeight < el.scrollHeight || el.offsetWidth < el.scrollHeight
-      }
-    }, 500)
-  } catch (err) {
-    console.error(err)
-  }
+const HeaderText = {
+  READ_MORE: 'Read more',
+  READ_LESS: 'Read less'
 }
 
-onMounted(async () => {
-  await showHideReadMore()
-})
+const accordionHeaderText = ref(HeaderText.READ_MORE)
+
+const handleUpdate = (value: undefined | null | string | string[]) => {
+  if (value !== null) {
+    accordionHeaderText.value = HeaderText.READ_LESS
+  } else {
+    accordionHeaderText.value = HeaderText.READ_MORE
+  }
+}
 </script>
 
 <template>
-  <div class="w-full">
-    <div
-      ref="ContentRef"
-      class="w-full h-full content-container scrollbar-thin scrollbar-thumb-brand-500 scrollbar-track-brand-50 text-brand-800"
-      :class="{ 'line-clamp-2': showReadMore }"
-    >
-      <slot />
-    </div>
-    <button class="mt-4 text-brand-500 hover:text-brand-600" @click="showReadMore = !showReadMore">
-      {{ showReadMore ? 'Read More...' : 'Read less...' }}
-    </button>
-  </div>
+  <AppSimpleCollapsibile @update:value="handleUpdate">
+    <template #header>{{ accordionHeaderText }}</template>
+    <template #content>
+      <slot></slot>
+    </template>
+  </AppSimpleCollapsibile>
 </template>
 
-<style scoped>
-.content-container {
-  max-height: 24rem;
-  overflow-y: auto;
-}
-</style>
+<style></style>

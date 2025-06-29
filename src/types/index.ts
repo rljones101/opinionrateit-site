@@ -1,13 +1,9 @@
+import type { Slide } from '@/models/SlideModels'
+
 export interface User {
   _id: string
   name: string
   email: string
-}
-
-export interface Slide {
-  id: number
-  data: any
-  style: { opacity: number }
 }
 
 export interface IconStartProps {
@@ -187,20 +183,6 @@ export interface Profile {
   role: string
   createdAt: string
   youTubeChannelId: string
-  isReviewer: boolean
-  videos: VideoChannelDetails[]
-  publishedVideos: VideoChannelDetails[]
-  numberOfPublishedVideos?: number
-  avgAverageReviewTime: number
-  avgClarity: number
-  avgNonBias: number
-  avgOverallPresentation: number
-  avgProductDetailExplanation: number
-  avgProductFocus: number
-  avgProductView: number
-  avgProvidedResources: number
-  avgShare: number
-  metric: number
 }
 
 export interface NavLink {
@@ -233,3 +215,5 @@ export interface AccountDetails {
   passwordConfirm: string
   role: string
 }
+
+export { type Slide }

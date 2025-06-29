@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 import type { AppApiResponse, AppApiErrorResponse } from '@/types'
 import { useRouter } from 'vue-router'
 import FormInput from '@/components/inputs/FormInput.vue'

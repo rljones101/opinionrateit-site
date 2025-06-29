@@ -2,7 +2,7 @@
 import PieChart from '@/components/charts/PieChart.vue'
 import { computed, reactive, ref } from 'vue'
 import { type ChartData } from 'chart.js'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 import resolveConfig from 'tailwindcss/resolveConfig'
 import tailwindConfig from '../../../tailwind.config.js'
 

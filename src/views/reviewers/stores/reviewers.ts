@@ -1,23 +1,22 @@
 import { defineStore } from 'pinia'
 import type { Reviewer } from '@/types'
-import reviewerController from '@/controllers/reviewerController'
+import ReviewerService from '@/services/ReviewerService'
+import { ref } from 'vue'
 
 export type ReviewerState = {
   reviewers: Reviewer[]
 }
 
-export const useReviewersStore = defineStore('reviewers', {
-  state: (): ReviewerState => {
-    return {
-      reviewers: []
-    }
-  },
+export const useReviewersStore = defineStore('reviewers', () => {
+  const reviewers = ref<Reviewer[]>([])
 
-  actions: {
-    getReviewers() {
-      reviewerController.getReviewers().then((reviewers: Reviewer[]) => {
-        this.reviewers = reviewers
-      })
-    }
+  const getReviewers = () => {
+    ReviewerService.getReviewers().then((reviewersList: Reviewer[]) => {
+      reviewers.value = reviewersList
+    })
+  }
+  return {
+    reviewers,
+    getReviewers
   }
 })

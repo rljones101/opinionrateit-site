@@ -27,9 +27,7 @@ exports.getVideosByChannel = catchAsync(async (req, res) => {
   res.status(200).json({
     status: 'success',
     results: videos.length,
-    data: {
-      data: videos
-    }
+    data: { videos }
   })
 })
 
@@ -40,8 +38,6 @@ exports.getVideosByUser = catchAsync(async (req, res) => {
   res.status(200).json({
     status: 'success',
     results: videos.length,
-    data: {
-      data: videos
-    }
+    data: { videos }
   })
 })

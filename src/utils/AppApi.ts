@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import type { AppApiResponse, AppApiErrorResponse } from '@/types'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 
 const appApi = axios.create({
   baseURL: `${import.meta.env.VITE_API_URL}/api/v1`
@@ -23,7 +23,7 @@ appApi.interceptors.request.use(
 )
 
 const apiSuccessResponse = (statusCode: number, data: any): AppApiResponse => {
-  return { status: 'success', statusCode, data: data.data, originalData: data }
+  return { status: 'success', statusCode, data: data?.data, originalData: data }
 }
 
 const apiErrorResponse = (

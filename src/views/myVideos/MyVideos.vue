@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import TabsComponent from '@/components/forms/TabsComponent.vue'
 import ComponentSpinner from '@/components/spinners/ComponentSpinner.vue'
 import PublishedVideos from './partials/PublishedVideos.vue'
@@ -8,9 +8,8 @@ import ConfirmSelection from './partials/ConfirmSelection.vue'
 // Import types
 import type { VideoChannelDetails } from '@/types'
 // Import controllers or other utils
-import { useProfile } from '@/composables/useProfile'
 import { useModal } from '@/composables/useModal'
-import { useRoute } from 'vue-router'
+import { useVideosStore } from '@/stores/videosStore'
 
 // Variables
 const tabs = [{ label: 'My Published Videos' }, { label: 'My Youtube Videos' }]
@@ -20,12 +19,7 @@ const selectedTabIndex = ref(0)
 
 // Composables
 const { hide, show } = useModal('#modalPublishVideos')
-const route = useRoute()
-const { searchVideos, publishVideos, profile, status } = useProfile(route.params.name as string)
-
-// Computed methods
-const publishedVideos = computed(() => profile.value.publishedVideos || [])
-const selectedVideos = computed(() => profile.value.videos.filter((video) => video.selected))
+const videosStore = useVideosStore()
 
 // Static methods
 const selectedTabHandler = (index: number) => {
@@ -39,7 +33,7 @@ const selectVideoHandler = (video: VideoChannelDetails) => {
 const setSelectedVideosToPublish = async () => {
   try {
     // Publish the videos that were selected
-    await publishVideos(profile.value.youTubeChannelId, selectedVideos.value)
+    await videosStore.publishVideos()
     // hide the modal
     hide()
   } catch (err) {
@@ -48,12 +42,12 @@ const setSelectedVideosToPublish = async () => {
 }
 
 const cancelSelection = () => {
-  profile.value.videos.map((video) => (video.selected = false))
+  videosStore.unSelectVideos()
   hide()
 }
 
 const handleSearch = (value: string) => {
-  searchVideos(value)
+  videosStore.searchVideos(value)
 }
 </script>
 
@@ -62,18 +56,21 @@ const handleSearch = (value: string) => {
     <!-- modals --->
     <ConfirmSelection
       id="modalPublishVideos"
-      :selected-videos="selectedVideos"
+      :selected-videos="videosStore.getSelectedVideos"
       @confirmed="setSelectedVideosToPublish"
       @cancelled="cancelSelection"
     />
     <TabsComponent :tabs="tabs" class="mb-8" @selected-index="selectedTabHandler" />
-    <ComponentSpinner class="-left-8 -right-8 -top-8" v-if="status === 'loading'" />
+    <ComponentSpinner class="-left-8 -right-8 -top-8" v-if="videosStore.status === 'loading'" />
     <TransitionGroup name="fade" tag="div" class="relative h-full flex-grow" v-else>
-      <PublishedVideos v-if="selectedTabIndex === 0" :published-videos="publishedVideos" />
+      <PublishedVideos
+        v-show="selectedTabIndex === 0"
+        :key="0"
+        :published-videos="videosStore.getPublishedVideos"
+      />
       <YoutubeVideos
-        v-if="selectedTabIndex === 1"
-        :profile="profile"
-        :selected-videos="selectedVideos"
+        v-show="selectedTabIndex === 1"
+        :key="1"
         @selected="selectVideoHandler"
         @search="handleSearch"
         @publishSelected="show"

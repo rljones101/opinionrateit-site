@@ -12,8 +12,6 @@ exports.getUserByName = catchAsync(async (req, res) => {
 
   res.status(200).json({
     status: 'success',
-    data: {
-      data: user
-    }
+    data: { user }
   })
 })

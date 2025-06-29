@@ -26,8 +26,8 @@ defineProps<{
     <span
       class="text-base font-normal leading-tight"
       :class="[
-        { 'line-through text-default-200 decoration-default-200': !isChecked },
-        { 'text-default-500': isChecked }
+        { 'line-through text-gray-200 decoration-gray-200': !isChecked },
+        { 'text-gray-500': isChecked }
       ]"
       ><slot
     /></span>

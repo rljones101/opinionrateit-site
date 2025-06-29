@@ -14,9 +14,7 @@ exports.getReviewsByVideo = catchAsync(async (req, res) => {
   res.status(200).json({
     status: 'success',
     results: reviews.length,
-    data: {
-      data: reviews
-    }
+    data: { reviews }
   })
 })
 
@@ -25,9 +23,7 @@ exports.getNumReviews = catchAsync(async (req, res) => {
 
   res.status(200).json({
     status: 'success',
-    data: {
-      numReviews
-    }
+    data: { numReviews }
   })
 })
 

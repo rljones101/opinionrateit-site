@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/user'
+import { useUserStore } from '@/stores/userStore'
 import type { Reviewer } from '@/types'
 import UserAvatar from '@/components/UserAvatar.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
@@ -113,23 +113,23 @@ testImage(props.reviewer.thumbnailMedium)
         </div>
       </div>
       <div class="flex justify-between items-end w-full p-4" v-if="userStore.isLoggedIn">
-        <BaseButton type="secondary">
-          <svg
-            class="w-6 h-6 text-brand-500"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 14 20"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m13 19-6-5-6 5V2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17Z"
-            />
-          </svg>
-        </BaseButton>
+        <!--        <BaseButton type="secondary">-->
+        <!--          <svg-->
+        <!--            class="w-6 h-6 text-brand-500"-->
+        <!--            aria-hidden="true"-->
+        <!--            xmlns="http://www.w3.org/2000/svg"-->
+        <!--            fill="none"-->
+        <!--            viewBox="0 0 14 20"-->
+        <!--          >-->
+        <!--            <path-->
+        <!--              stroke="currentColor"-->
+        <!--              stroke-linecap="round"-->
+        <!--              stroke-linejoin="round"-->
+        <!--              stroke-width="2"-->
+        <!--              d="m13 19-6-5-6 5V2a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17Z"-->
+        <!--            />-->
+        <!--          </svg>-->
+        <!--        </BaseButton>-->
         <BaseButton type="primary" @click="showVideoReviews">View</BaseButton>
       </div>
     </div>

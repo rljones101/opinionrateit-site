@@ -1,6 +1,4 @@
-// import axios from 'axios';
-import { apiGet, apiPost } from '@/utils/AppApi'
-import type { AppApiErrorResponse, AppApiResponse, PublishedVideo } from '@/types'
+import ApiClient from '@/services/ApiClient'
 
 // Doc template for quick inserts
 
@@ -21,6 +19,10 @@ import type { AppApiErrorResponse, AppApiResponse, PublishedVideo } from '@/type
 //   }
 // }
 
+const getReviewerDetails = async (channelId: string) => {
+  return ApiClient.get(`/reviewers/${channelId}`)
+}
+
 const getReviewers = async (query?: URLSearchParams) => {
   try {
     let url = '/reviewers'
@@ -28,8 +30,8 @@ const getReviewers = async (query?: URLSearchParams) => {
       url += `?${new URLSearchParams(query)}`
     }
 
-    const res = await apiGet(url)
-    return [...res.data.data].map((reviewerChannel) => {
+    const res = await ApiClient.get(url)
+    return [...res.data].map((reviewerChannel) => {
       return { ...reviewerChannel, id: reviewerChannel._id }
     })
   } catch (err) {
@@ -38,16 +40,7 @@ const getReviewers = async (query?: URLSearchParams) => {
   return []
 }
 
-const getPublishedVideos = async (
-  channelId: string
-): Promise<AppApiResponse | AppApiErrorResponse> => {
-  return await apiGet(`/reviewers/${channelId}/publishedVideos`)
+export default {
+  getReviewerDetails,
+  getReviewers
 }
-
-const publishVideos = async (
-  videos: PublishedVideo[]
-): Promise<AppApiResponse | AppApiErrorResponse> => {
-  return await apiPost('/publishedVideos', { videos })
-}
-
-export { getReviewers, getPublishedVideos, publishVideos }
