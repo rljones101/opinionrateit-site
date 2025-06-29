@@ -19,7 +19,7 @@ export function useReviewer(channelId: MaybeRefOrGetter<string>) {
   })
 
   const getPublishedVideos = async () => {
-    publishedVideos.value = await VideoService.getPublishedVideos(_channelId.value)
+    publishedVideos.value = await VideoService.getPublishedVideosByChannelId(_channelId.value)
   }
 
   const getReviewerDetails = async () => {

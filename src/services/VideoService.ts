@@ -1,7 +1,21 @@
-import type { AppApiErrorResponse, AppApiResponse, PublishedVideo } from '@/types'
+import type {
+  AppApiErrorResponse,
+  AppApiResponse,
+  PublishedVideo,
+  VideoChannelDetails
+} from '@/types'
 import ApiClient from '@/services/ApiClient'
 
-const getPublishedVideos = async (channelId: string) => {
+const getVideoList = async (query = {}) => {
+  let url = '/publishedVideos'
+  if (Object.keys(query).length > 0) {
+    url += `/search?${new URLSearchParams(query)}`
+  }
+  const res = await ApiClient.get(url)
+  return res.data as VideoChannelDetails[]
+}
+
+const getPublishedVideosByChannelId = async (channelId: string) => {
   const response = await ApiClient.get<{ videos: PublishedVideo[] }>(
     `/reviewers/${channelId}/publishedVideos`
   )
@@ -29,7 +43,8 @@ const searchVideosByChannel = async (youTubeChannelId: string, searchParams: str
 }
 
 export default {
-  getPublishedVideos,
+  getVideoList,
+  getPublishedVideosByChannelId,
   getVideosByChannelId,
   publishVideos,
   searchVideosByChannel

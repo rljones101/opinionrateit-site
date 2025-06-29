@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import AppTitle from '@/components/AppTitle.vue'
-import { getAllPublishedVideos } from '@/controllers/videoListController'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import VideoItem from '@/components/VideoItem.vue'
 import type { VideoChannelDetails } from '@/types'
+import VideoService from '@/services/VideoService'
 
 const router = useRouter()
 const videos = ref<VideoChannelDetails[]>([])
-getAllPublishedVideos().then((res) => {
+VideoService.getVideoList().then((res) => {
   videos.value = res as VideoChannelDetails[]
 })
 

@@ -3,9 +3,9 @@ import VideoItem from '@/components/VideoItem.vue'
 import AppTitle from '@/components/AppTitle.vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ref, watch } from 'vue'
-import { getAllPublishedVideos } from '@/controllers/videoListController'
 import PageLoadContainer from '@/components/containers/PageLoadContainer.vue'
 import type { VideoChannelDetails } from '@/types'
+import VideoService from '@/services/VideoService'
 
 const router = useRouter()
 const route = useRoute()
@@ -16,7 +16,7 @@ watch(
   () => route.query,
   (query) => {
     isLoading.value = true
-    getAllPublishedVideos(query).then((res) => {
+    VideoService.getVideoList(query).then((res) => {
       videos.value = res as VideoChannelDetails[]
       isLoading.value = false
     })
