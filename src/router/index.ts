@@ -16,6 +16,7 @@ const MySavedVideos = () => import('@/views/mySavedReviews/MySavedReviews.vue')
 const MyStats = () => import('@/views/myStats/MyStats.vue')
 const MyVideos = () => import('@/views/myVideos/MyVideos.vue')
 const MyFavorites = () => import('@/views/myFavorites/MyFavorites.vue')
+const MyWatchHistory = () => import('@/views/myWatchHistory/MyWatchHistory.vue')
 const SearchView = () => import('@/views/SearchResults.vue')
 const SuccessView = () => import('@/views/stripe/SuccessView.vue')
 const CancelView = () => import('@/views/stripe/CancelView.vue')
@@ -89,6 +90,14 @@ const router = createRouter({
           path: 'favorites',
           name: 'favorites',
           component: MyFavorites,
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          path: 'watch-history',
+          name: 'watch-history',
+          component: MyWatchHistory,
           meta: {
             requiresAuth: true
           }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { UserCircleIcon, HeartIcon } from '@heroicons/vue/20/solid'
+import { UserCircleIcon, HeartIcon, ClockIcon } from '@heroicons/vue/20/solid'
 import { useUserStore } from '@/stores/userStore'
 import NavButton from '@/components/buttons/NavButton.vue'
 
@@ -18,6 +18,12 @@ const links = [
     label: 'My Favorites',
     name: 'favorites',
     icon: HeartIcon
+  },
+  {
+    id: 2,
+    label: 'Watch History',
+    name: 'watch-history',
+    icon: ClockIcon
   }
   // {
   //   id: 2,
