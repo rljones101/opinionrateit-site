@@ -6,7 +6,7 @@ import AppHeader from '@/components/appHeader.vue'
 
 <template>
   <div class="main-content-wrapper flex flex-col w-full h-full overflow-y-auto">
-    <div class="relative max-w-7xl mx-auto p-8 flex flex-col items-center justify-center pl-4 pr-4">
+    <div class="relative max-w-7xl mx-auto p-8 flex-col items-center justify-center pl-4 pr-4 hidden md:flex">
       <SiteLogo />
     </div>
     <div class="relative flex flex-col w-full max-w-7xl mx-auto rounded-lg shadow bg-secondary-50">

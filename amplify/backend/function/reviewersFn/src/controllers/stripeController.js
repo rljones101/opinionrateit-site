@@ -1,9 +1,23 @@
 const loadEnvConfig = require('../utils/loadEnvConfig.js')
 loadEnvConfig(process.env.NODE_ENV)
-const stripe = require('stripe')(process.env.STRIPE_API_KEY)
+
+// Initialize Stripe only if API key is provided and not a placeholder
+let stripe = null
+if (process.env.STRIPE_SECRET_KEY && 
+    process.env.STRIPE_SECRET_KEY !== 'your-stripe-secret-key' && 
+    process.env.STRIPE_SECRET_KEY.startsWith('sk_')) {
+  stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
+}
 const catchAsync = require('../utils/catchAsync')
 
 exports.createCustomer = catchAsync(async (req, res) => {
+  if (!stripe) {
+    return res.status(503).json({
+      status: 'error',
+      message: 'Stripe is not configured. Please set STRIPE_SECRET_KEY environment variable.'
+    })
+  }
+  
   const { email, name } = req.body
   const customer = await stripe.customers.create({
     email,
@@ -47,6 +61,13 @@ const createSubscription = async (customer, price) => {
 }
 
 exports.createIntent = catchAsync(async (req, res) => {
+  if (!stripe) {
+    return res.status(503).json({
+      status: 'error',
+      message: 'Stripe is not configured. Please set STRIPE_SECRET_KEY environment variable.'
+    })
+  }
+  
   const { lookupKey, customer } = req.body
   const price = await lookupPrice(lookupKey)
   const paymentIntent = await createPaymentIntent(price)
@@ -60,12 +81,19 @@ exports.createIntent = catchAsync(async (req, res) => {
 })
 
 exports.stripeWebHook = (req, res) => {
+  if (!stripe) {
+    return res.status(503).json({
+      status: 'error',
+      message: 'Stripe is not configured. Please set STRIPE_SECRET_KEY environment variable.'
+    })
+  }
+  
   let event = req.body
   // Replace this endpoint secret with your endpoint's unique secret
   // If you are testing with the CLI, find the secret by running 'stripe listen'
   // If you are using an endpoint defined with the API or dashboard, look in your webhook settings
   // at https://dashboard.stripe.com/webhooks
-  const endpointSecret = process.env.STRIPE_END_POINT_SECRET
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET
   // Only verify the event if you have an endpoint secret defined.
   // Otherwise use the basic event deserialized with JSON.parse
   if (endpointSecret) {

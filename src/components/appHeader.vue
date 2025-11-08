@@ -33,6 +33,8 @@ const navLinks: Ref<linkItem[]> = ref([
   }
 ])
 
+
+
 const showLogin = () => {
   router.push({ name: 'login' })
   closeMenu()
@@ -115,11 +117,6 @@ onUnmounted(() => {
             class="nav-link"
           />
         </div>
-        
-        <!-- Site Logo (shown when pinned) -->
-        <div class="site-logo-container">
-          <SiteLogo />
-        </div>
 
         <!-- Auth Actions -->
         <div class="auth-actions">
@@ -163,6 +160,9 @@ onUnmounted(() => {
 
     <!-- Mobile Navigation Menu -->
     <div class="mobile-nav" :class="{ 'mobile-nav-open': showMenu }">
+      <div class="site-logo-container">
+          <SiteLogo /> 
+        </div>
       <nav class="mobile-nav-content">
         <div class="mobile-nav-links">
           <ButtonNav
@@ -226,12 +226,58 @@ onUnmounted(() => {
   @apply max-w-7xl mx-auto px-4 py-3;
 }
 
+/* Mobile header layout */
+@media (max-width: 768px) {
+  .header-container {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .mobile-menu-button {
+    grid-column: 1;
+  }
+  
+  .site-logo-container {
+    grid-column: 2;
+    justify-self: center;
+  }
+  
+  .auth-actions {
+    grid-column: 3;
+    justify-self: end;
+  }
+}
+
 .mobile-menu-button {
   @apply p-2 text-gray-700 hover:text-brand-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 rounded-md;
 }
 
 .desktop-nav {
-  @apply hidden md:flex items-center justify-between w-full;
+  @apply hidden md:flex items-center w-full;
+}
+
+/* Desktop layout: nav-links on left, auth on right, centered spacing */
+@media (min-width: 768px) {
+  .desktop-nav {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .nav-links {
+    justify-self: start;
+  }
+  
+  .auth-actions {
+    justify-self: end;
+  }
+  
+  /* .site-logo-container {
+    display: none; 
+  } */
 }
 
 .nav-links {
@@ -239,15 +285,18 @@ onUnmounted(() => {
 }
 
 .nav-link {
-  @apply px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-500 transition-colors duration-200;
+  @apply px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-500 transition-colors duration-200 flex items-center justify-center text-center;
 }
 
-.site-logo-container {
+/* .site-logo-container {
   @apply flex-1 flex justify-center;
-}
+} */
 
-.app-header.is-pinned .site-logo-container {
-  @apply block;
+/* Show logo on mobile only */
+@media (max-width: 768px) {
+  .site-logo-container {
+    @apply block;
+  }
 }
 
 .auth-actions {
@@ -301,7 +350,7 @@ onUnmounted(() => {
 }
 
 .mobile-nav-link {
-  @apply block px-3 py-2 text-base font-medium text-gray-700 hover:text-brand-500 hover:bg-gray-50 rounded-md transition-colors duration-200;
+  @apply block px-3 py-2 text-base font-medium text-gray-700 hover:text-brand-500 hover:bg-gray-50 rounded-md transition-colors duration-200 text-center;
 }
 
 .mobile-auth-actions {

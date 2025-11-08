@@ -14,14 +14,14 @@ const goToPath = async () => {
 </script>
 
 <template>
-  <div class="relative group ml-4 mr-4">
+  <div class="relative group">
     <button
-      class="flex transition ease-out hover:ease-in duration-300 pt-2 pb-2 font-bold text-brand-800 uppercase"
+      class="flex items-center justify-center transition ease-out hover:ease-in duration-300 px-3 py-2 font-medium text-gray-700 hover:text-brand-500 uppercase text-center"
       @click="goToPath"
     >
       {{ label }}
     </button>
-    <span class="absolute -bottom-1 w-0 h-1 bg-brand-500 transition-all group-hover:w-full"></span>
+    <span class="absolute -bottom-1 left-0 w-0 h-1 bg-brand-500 transition-all group-hover:w-full"></span>
   </div>
 </template>
 

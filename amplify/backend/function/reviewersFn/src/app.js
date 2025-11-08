@@ -123,12 +123,15 @@ app.use(hpp({
 // })
 
 // Implement CORS
-//app.use(cors())
 const corsOptions = {
-  origin: 'http://localhost:5173'
+  origin: ['http://localhost:5173', 'http://localhost:3000'],
+  credentials: true, // This is crucial for cookie-based authentication
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  exposedHeaders: ['Set-Cookie']
 }
 app.use(cors(corsOptions))
-app.options('/', cors(corsOptions))
+app.options('*', cors(corsOptions)) // Enable preflight for all routes
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString()
@@ -151,7 +154,7 @@ app.use('/api/v1/reviews', reviewsRouter)
 app.use('/api/v1/youtube', youTubeRouter)
 app.use('/api/v1/stripe', stripeRouter)
 
-app.all('/', (req, res, next) => {
+app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))
 })
 
