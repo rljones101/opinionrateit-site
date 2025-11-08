@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { UserCircleIcon } from '@heroicons/vue/20/solid'
+import { UserCircleIcon, HeartIcon } from '@heroicons/vue/20/solid'
 import { useUserStore } from '@/stores/userStore'
 import NavButton from '@/components/buttons/NavButton.vue'
 
@@ -12,9 +12,15 @@ const links = [
     name: 'my-profile',
     icon: UserCircleIcon,
     params: { name: user.user.name }
+  },
+  {
+    id: 1,
+    label: 'My Favorites',
+    name: 'favorites',
+    icon: HeartIcon
   }
   // {
-  //   id: 1,
+  //   id: 2,
   //   label: 'My Saved Reviews',
   //   name: 'my-saved-reviews',
   //   icon: BookmarkIcon

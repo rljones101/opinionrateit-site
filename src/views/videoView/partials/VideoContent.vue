@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import VideoDescription from '@/views/videoView/partials/VideoDescription.vue'
 import MediaPlayer from '@/components/mediaPlayer.vue'
-import BaseButton from '@/components/buttons/BaseButton.vue'
+import BookmarkButton from '@/components/bookmarks/BookmarkButton.vue'
 import { ref } from 'vue'
 import videoViewController from '@/controllers/videoViewController'
 import { replaceNewlines, urlify } from '@/utils/StringUtils'
@@ -48,7 +48,11 @@ videoViewController.getVideo(videoId).then((res: any) => {
               }}</router-link>
             </p>
           </div>
-          <BaseButton type="primary"> Bookmark </BaseButton>
+          <BookmarkButton 
+            :video-id="videoId" 
+            size="lg" 
+            variant="with-text"
+          />
         </div>
         <!-- description container -->
         <VideoDescription :description="itemDetail.description" />

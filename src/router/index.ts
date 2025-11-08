@@ -15,6 +15,7 @@ const VideoListView = () => import('@/views/VideoListView.vue')
 const MySavedVideos = () => import('@/views/mySavedReviews/MySavedReviews.vue')
 const MyStats = () => import('@/views/myStats/MyStats.vue')
 const MyVideos = () => import('@/views/myVideos/MyVideos.vue')
+const MyFavorites = () => import('@/views/myFavorites/MyFavorites.vue')
 const SearchView = () => import('@/views/SearchResults.vue')
 const SuccessView = () => import('@/views/stripe/SuccessView.vue')
 const CancelView = () => import('@/views/stripe/CancelView.vue')
@@ -80,6 +81,14 @@ const router = createRouter({
           path: 'my-saved-reviews',
           name: 'my-saved-reviews',
           component: MySavedVideos,
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          path: 'favorites',
+          name: 'favorites',
+          component: MyFavorites,
           meta: {
             requiresAuth: true
           }

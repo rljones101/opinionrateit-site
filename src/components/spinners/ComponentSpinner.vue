@@ -2,7 +2,7 @@
 
 <template>
   <div class="fixed left-0 right-0 top-0 bottom-0 z-50">
-    <div class="bg-black bg-opacity-20 absolute left-0 right-0 top-0 bottom-0"></div>
+    <div class="bg-black/20 absolute left-0 right-0 top-0 bottom-0"></div>
     <div role="status" class="absolute -translate-x-1/2 -translate-y-1/2 top-2/4 left-1/2">
       <svg
         aria-hidden="true"

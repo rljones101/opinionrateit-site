@@ -22,7 +22,7 @@ const isActive = computed(() => {
     :key="link.id"
     class="group user-nav-btn border border-transparent font-bold rounded p-2 pl-4 pr-4 flex items-center gap-4 hover:bg-brand-500 hover:text-white ease-in-out transition-all duration-300"
     :class="{
-      'bg-gray-700 border border-red bg-opacity-10 text-brand-500 pointer-events-none active':
+      'bg-gray-700/10 border border-red text-brand-500 pointer-events-none active':
         isActive
     }"
     @click="goToPath(link)"

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Video } from '@/types'
 import AppCard from '@/components/cards/AppCard.vue'
+import BookmarkButton from '@/components/bookmarks/BookmarkButton.vue'
 
 defineProps<{
   video: Video
@@ -75,6 +76,11 @@ const formatViews = (viewCount: number): string => {
       <div v-if="video.duration" class="duration-badge">
         {{ formatDuration(video.duration) }}
       </div>
+      
+      <!-- Bookmark Button -->
+      <div class="bookmark-button-container">
+        <BookmarkButton :video-id="video.id" size="sm" />
+      </div>
     </div>
     
     <!-- Content -->
@@ -114,8 +120,7 @@ const formatViews = (viewCount: number): string => {
 }
 
 .selection-overlay {
-  @apply absolute inset-0 flex items-center justify-center z-10 rounded-t-lg;
-  background-color: rgba(0, 0, 0, 0.5);
+  @apply absolute inset-0 flex items-center justify-center z-10 rounded-t-lg bg-black/50;
 }
 
 .selection-checkmark {
@@ -127,8 +132,16 @@ const formatViews = (viewCount: number): string => {
 }
 
 .duration-badge {
-  @apply absolute bottom-2 right-2 text-white text-xs px-2 py-1 rounded;
-  background-color: rgba(0, 0, 0, 0.8);
+  @apply absolute bottom-2 right-2 text-white text-xs px-2 py-1 rounded bg-black/80;
+}
+
+.bookmark-button-container {
+  @apply absolute top-2 right-2 z-20;
+  @apply opacity-0 transition-opacity duration-200;
+}
+
+.thumbnail-container:hover .bookmark-button-container {
+  @apply opacity-100;
 }
 
 .video-content {
