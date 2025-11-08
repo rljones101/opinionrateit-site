@@ -7,6 +7,11 @@ interface User {
   id: string
   name: string
   email: string
+  role?: string
+  photo?: string
+  avatar?: string
+  createdAt?: string
+  lastLoginAt?: string
 }
 
 interface ActivityItem {

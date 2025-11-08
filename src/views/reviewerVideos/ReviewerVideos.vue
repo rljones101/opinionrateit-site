@@ -48,6 +48,8 @@ const { channelDetails, publishedVideos } = useReviewer(channelId)
 </template>
 
 <style scoped>
+@reference "#main.css";
+
 .reviewer-details > p {
   display: block;
   padding: 1rem;

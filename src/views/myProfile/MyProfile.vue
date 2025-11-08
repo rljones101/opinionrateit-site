@@ -1,55 +1,135 @@
 <script setup lang="ts">
-import { formatDate } from '@/utils/DateUtils'
+import { ref, onMounted } from 'vue'
 import { useUserStore } from '@/stores/userStore'
-import { useProfileStore } from '@/stores/profileStore'
-
-// Import components
+import { useRouter } from 'vue-router'
 import AppTitle from '@/components/AppTitle.vue'
-import BaseButton from '@/components/buttons/BaseButton.vue'
-import UserAvatar from '@/components/UserAvatar.vue'
+import LoadingState from '@/components/ui/LoadingState.vue'
+import ErrorBoundary from '@/components/ui/ErrorBoundary.vue'
+import ProfileHeader from '@/components/profile/ProfileHeader.vue'
+import ProfileTabs from '@/components/profile/ProfileTabs.vue'
+import ProfileSettings from '@/components/profile/ProfileSettings.vue'
+import ProfileActivity from '@/components/profile/ProfileActivity.vue'
+import ProfilePreferences from '@/components/profile/ProfilePreferences.vue'
+import ProfileSecurity from '@/components/profile/ProfileSecurity.vue'
 
-// TODO replace with profileStore
 const userStore = useUserStore()
-const profileStore = useProfileStore()
+const router = useRouter()
+
+const isLoading = ref(true)
+const error = ref<string | null>(null)
+const activeTab = ref('overview')
+
+const tabs = [
+  { id: 'overview', label: 'Overview', icon: 'user' },
+  { id: 'settings', label: 'Settings', icon: 'settings' },
+  { id: 'activity', label: 'Activity', icon: 'activity' },
+  { id: 'preferences', label: 'Preferences', icon: 'heart' },
+  { id: 'security', label: 'Security', icon: 'shield' }
+]
+
+const loadProfile = async () => {
+  try {
+    isLoading.value = true
+    error.value = null
+
+    // Check if user is authenticated
+    if (!userStore.isAuthenticated) {
+      router.push({ name: 'login' })
+      return
+    }
+
+    // Load user profile data
+    await userStore.fetchCurrentUser()
+
+  } catch (err: any) {
+    error.value = err.message || 'Failed to load profile'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const handleTabChange = (tabId: string) => {
+  activeTab.value = tabId
+}
+
+const handleRetry = () => {
+  loadProfile()
+}
+
+onMounted(() => {
+  loadProfile()
+})
 </script>
 
 <template>
-  <div class="w-full h-full relative">
-    <!-- content here --->
+  <div class="profile-view">
     <AppTitle>My Profile</AppTitle>
-    <div class="app-card p-8 space-y-2">
-      <div class="border-b-2 border-b-brand-800 pb-8 flex items-center justify-between">
-        <div class="flex items-center gap-2">
-          <UserAvatar
-            :user="{ name: userStore.user.name, avatarUrl: userStore.user.avatar }"
-            class="block w-10 h-10"
-          />
-          <p class="text-2xl text-brand-800 font-bold">{{ profileStore.profile.name }}</p>
+
+    <ErrorBoundary v-if="error" :error="error" @retry="handleRetry" />
+
+    <LoadingState v-else-if="isLoading" message="Loading your profile..." />
+
+    <div v-else class="profile-container">
+      <!-- Profile Header -->
+      <ProfileHeader :user="userStore.currentUser" />
+
+      <!-- Profile Navigation Tabs -->
+      <ProfileTabs :tabs="tabs" :active-tab="activeTab" @tab-change="handleTabChange" />
+
+      <!-- Profile Content -->
+      <div class="profile-content">
+        <!-- Overview Tab -->
+        <div v-if="activeTab === 'overview'" class="tab-content">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <ProfileSettings :user="userStore.currentUser" :compact="true" />
+            <ProfileActivity :user="userStore.currentUser" :compact="true" />
+          </div>
         </div>
-        <BaseButton type="secondary">Edit</BaseButton>
-      </div>
-      <p class="flex flex-col">
-        <span class="profile-label">Created On:</span
-        ><span class="profile-user-value flex-1 font-semibold text-brand-800">{{
-          formatDate(profileStore.profile.createdAt)
-        }}</span>
-      </p>
-      <!--      <p class="flex flex-col">-->
-      <!--        <span class="profile-label flex-1">Name:</span-->
-      <!--        ><span class="profile-user-value flex-1">{{ profile.name }}</span>-->
-      <!--      </p>-->
-      <p class="flex flex-col">
-        <span class="profile-label">Email:</span
-        ><span class="profile-user-value flex-1 font-semibold text-brand-800">{{
-          profileStore.profile.email
-        }}</span>
-      </p>
-      <div class="flex flex-col">
-        <p class="profile-label">Account type:</p>
-        <p class="font-semibold text-brand-800">{{ profileStore.getRole }}</p>
+
+        <!-- Settings Tab -->
+        <ProfileSettings v-else-if="activeTab === 'settings'" :user="userStore.currentUser" />
+
+        <!-- Activity Tab -->
+        <ProfileActivity v-else-if="activeTab === 'activity'" :user="userStore.currentUser" />
+
+        <!-- Preferences Tab -->
+        <ProfilePreferences v-else-if="activeTab === 'preferences'" :user="userStore.currentUser" />
+
+        <!-- Security Tab -->
+        <ProfileSecurity v-else-if="activeTab === 'security'" :user="userStore.currentUser" />
       </div>
     </div>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@reference "#main.css";
+
+.profile-view {
+  @apply max-w-6xl mx-auto p-6;
+}
+
+.profile-container {
+  @apply space-y-6;
+}
+
+.profile-content {
+  @apply min-h-96;
+}
+
+.tab-content {
+  animation: fade-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style>

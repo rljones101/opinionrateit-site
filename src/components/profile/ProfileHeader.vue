@@ -10,6 +10,7 @@ interface User {
   email: string
   role: string
   photo?: string
+  avatar?: string
   createdAt: string
   lastLoginAt?: string
 }
@@ -88,7 +89,7 @@ const handleEditProfile = () => {
       <div class="avatar-section">
         <div class="avatar-container" @click="handleAvatarClick">
           <UserAvatar 
-            :user="user" 
+            :user="{ name: user.name, avatarUrl: user.photo || user.avatar || '' }" 
             size="xl" 
             class="avatar-image"
           />
@@ -170,7 +171,7 @@ const handleEditProfile = () => {
 }
 
 .avatar-container {
-  @apply relative cursor-pointer group;
+  @apply relative cursor-pointer;
 }
 
 .avatar-image {
@@ -178,7 +179,12 @@ const handleEditProfile = () => {
 }
 
 .avatar-overlay {
-  @apply absolute inset-0 bg-black bg-opacity-50 rounded-full flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-200;
+  opacity: .5;
+  @apply absolute inset-0 bg-black rounded-full flex items-center justify-center text-white opacity-0 transition-opacity duration-200;
+}
+
+.avatar-container:hover .avatar-overlay {
+  opacity: 1;
 }
 
 .user-info {

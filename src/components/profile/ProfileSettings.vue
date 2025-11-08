@@ -10,6 +10,9 @@ interface User {
   email: string
   role: string
   photo?: string
+  avatar?: string
+  createdAt?: string
+  lastLoginAt?: string
 }
 
 interface Props {
@@ -68,14 +71,11 @@ const handleSave = async () => {
     isSaving.value = true
     saveError.value = ''
     
-    // TODO: Implement API call to update user profile
-    await new Promise(resolve => setTimeout(resolve, 1000)) // Simulate API call
-    
-    // Update user store
-    // await userStore.updateProfile({
-    //   name: formData.name,
-    //   email: formData.email
-    // })
+    // Update user profile via API
+    await userStore.updateProfile({
+      name: formData.name,
+      email: formData.email
+    })
     
     saveMessage.value = 'Profile updated successfully!'
     isEditing.value = false
@@ -95,8 +95,8 @@ const handleSave = async () => {
 const handleDeleteAccount = async () => {
   if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
     try {
-      // TODO: Implement account deletion
-      console.log('Delete account requested')
+      await userStore.deleteAccount()
+      // User will be logged out and redirected automatically
     } catch (error: any) {
       saveError.value = error.message || 'Failed to delete account'
     }

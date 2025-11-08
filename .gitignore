@@ -16,6 +16,9 @@ coverage
 
 *.env
 
+# TODO and development notes
+/todo
+
 /src/backend/node_modules/
 
 /cypress/videos/

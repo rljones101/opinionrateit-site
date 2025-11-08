@@ -3,11 +3,19 @@ import { ref, reactive, onMounted } from 'vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import { formatDate } from '@/utils/DateUtils'
+import { useUserStore } from '@/stores/userStore'
+
+const userStore = useUserStore()
 
 interface User {
   id: string
   name: string
   email: string
+  role?: string
+  photo?: string
+  avatar?: string
+  createdAt?: string
+  lastLoginAt?: string
 }
 
 interface LoginSession {
@@ -113,8 +121,12 @@ const handlePasswordChange = async () => {
     isSaving.value = true
     saveError.value = ''
     
-    // TODO: Call API to change password
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    // Call API to change password
+    await userStore.changePassword({
+      passwordCurrent: passwordForm.currentPassword,
+      password: passwordForm.newPassword,
+      passwordConfirm: passwordForm.confirmPassword
+    })
     
     // Clear form
     passwordForm.currentPassword = ''
