@@ -111,6 +111,8 @@ onMounted(() => {
 </template>
 
 <style scoped>
+@reference "#main.css";
+
 .video-list-container {
   @apply p-4;
 }

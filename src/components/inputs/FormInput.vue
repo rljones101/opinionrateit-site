@@ -44,6 +44,6 @@ const { value, errorMessage, meta, handleChange, handleBlur } = useField(
 
 <style scoped>
 .invalid {
-  @apply border-red-500;
+  border-color: var(--color-red-500);
 }
 </style>

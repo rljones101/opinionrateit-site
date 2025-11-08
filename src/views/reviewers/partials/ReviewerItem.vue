@@ -5,7 +5,7 @@ import { useUserStore } from '@/stores/userStore'
 import type { Reviewer } from '@/types'
 import UserAvatar from '@/components/UserAvatar.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
-import { formatDate, pastNumOfDays } from '@/utils/DateUtils'
+import { formatDateShort, pastNumOfDays } from '@/utils/DateUtils'
 import BadgeSmall from '@/components/badges/BadgeSmall.vue'
 import { formatPercentageToRating, nFormatter } from '@/utils/StringUtils'
 
@@ -94,7 +94,7 @@ testImage(props.reviewer.thumbnailMedium)
           </p>
           <p>
             <span class="reviewer-details__text font-bold text-brand-800">{{
-              formatDate(reviewer.createdAt, 'short_no_time')
+              formatDateShort(reviewer.createdAt)
             }}</span>
             <span class="reviewer-details__label text-xs">Joined</span>
           </p>
@@ -137,6 +137,8 @@ testImage(props.reviewer.thumbnailMedium)
 </template>
 
 <style scoped>
+@reference "#main.css";
+
 .reviewer-details {
   display: grid;
   width: 100%;

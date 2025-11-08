@@ -28,7 +28,11 @@ appApi.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as any
     
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Don't retry if this is already a refresh token request or if we've already retried
+    if (error.response?.status === 401 && 
+        !originalRequest._retry && 
+        !originalRequest.url?.includes('/users/refresh-token')) {
+      
       originalRequest._retry = true
       
       try {
@@ -38,6 +42,7 @@ appApi.interceptors.response.use(
         return appApi(originalRequest)
       } catch (refreshError) {
         // Refresh failed, redirect to login
+        console.log('Token refresh failed, redirecting to login')
         window.location.href = '/login'
         return Promise.reject(refreshError)
       }

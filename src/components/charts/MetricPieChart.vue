@@ -3,17 +3,19 @@ import PieChart from '@/components/charts/PieChart.vue'
 import { computed, reactive, ref } from 'vue'
 import { type ChartData } from 'chart.js'
 import { useUserStore } from '@/stores/userStore'
-import resolveConfig from 'tailwindcss/resolveConfig'
-import tailwindConfig from '../../../tailwind.config.js'
-
-type BrandColor = {
-  [key: number]: string
+// TailwindCSS v4.1 - Use CSS custom properties instead of resolveConfig
+const brandColors = {
+  '50': '#fdefeb',
+  '100': '#fadfd7',
+  '200': '#f5bfaf',
+  '300': '#f09f87',
+  '400': '#eb7f5f',
+  '500': '#e65f37',
+  '600': '#b84c2c',
+  '700': '#8a3921',
+  '800': '#5c2616',
+  '900': '#2e130b'
 }
-
-// @ts-ignore-next-line if using TypeScript
-const fullConfig = resolveConfig(tailwindConfig)
-const colors = fullConfig.theme?.colors
-const brandColors = colors!.brand as BrandColor
 
 const props = defineProps<{
   metric: number

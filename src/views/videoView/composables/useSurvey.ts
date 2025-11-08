@@ -2,9 +2,11 @@ import type { KeyOfReviewFormValues, ReviewFormValues, SurveyQuestion } from '@/
 import { computed, ref } from 'vue'
 import videoViewController from '@/controllers/videoViewController'
 import { useRoute } from 'vue-router'
+import { useReviews } from './useReviews'
 
 export function useSurvey() {
   const route = useRoute()
+  const { getReviews } = useReviews()
 
   const defaultFormValues: ReviewFormValues = {
     channelId: route.params.channelId as string,

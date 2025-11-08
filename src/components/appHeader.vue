@@ -143,8 +143,11 @@ onUnmounted(() => {
             
             <!-- User Dropdown -->
             <div v-if="showUserMenu" class="user-dropdown">
-              <router-link :to="{ name: 'my-profile', params: { name: userStore.user.name } }" class="dropdown-item">
+              <router-link :to="{ name: 'profile' }" class="dropdown-item">
                 Profile
+              </router-link>
+              <router-link :to="{ name: 'my-profile', params: { name: userStore.user.name } }" class="dropdown-item">
+                My Profile (Legacy)
               </router-link>
               <router-link :to="{ name: 'my-stats', params: { name: userStore.user.name } }" class="dropdown-item">
                 Statistics
@@ -187,11 +190,18 @@ onUnmounted(() => {
           
           <div v-else class="mobile-user-actions">
             <router-link 
-              :to="{ name: 'my-profile', params: { name: userStore.user.name } }" 
+              :to="{ name: 'profile' }" 
               class="mobile-user-link"
               @click="closeMenu"
             >
               Profile
+            </router-link>
+            <router-link 
+              :to="{ name: 'my-profile', params: { name: userStore.user.name } }" 
+              class="mobile-user-link"
+              @click="closeMenu"
+            >
+              My Profile (Legacy)
             </router-link>
             <router-link 
               :to="{ name: 'my-stats', params: { name: userStore.user.name } }" 
@@ -219,11 +229,21 @@ onUnmounted(() => {
 
 <style scoped>
 .app-header {
-  @apply w-full bg-secondary-200 shadow-md relative z-40;
+  width: 100%;
+  background-color: var(--color-secondary-200);
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  position: relative;
+  z-index: 40;
 }
 
 .header-container {
-  @apply max-w-7xl mx-auto px-4 py-3;
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
 }
 
 /* Mobile header layout */
@@ -251,11 +271,31 @@ onUnmounted(() => {
 }
 
 .mobile-menu-button {
-  @apply p-2 text-gray-700 hover:text-brand-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 rounded-md;
+  padding: 0.5rem;
+  color: #374151;
+  border-radius: 0.375rem;
+  transition: color 0.2s;
+}
+
+.mobile-menu-button:hover {
+  color: var(--color-brand-500);
+}
+
+.mobile-menu-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-brand-500), 0 0 0 4px rgba(230, 95, 55, 0.1);
 }
 
 .desktop-nav {
-  @apply hidden md:flex items-center w-full;
+  display: none;
+  align-items: center;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .desktop-nav {
+    display: flex;
+  }
 }
 
 /* Desktop layout: nav-links on left, auth on right, centered spacing */
@@ -281,11 +321,28 @@ onUnmounted(() => {
 }
 
 .nav-links {
-  @apply flex items-center space-x-1;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
 }
 
 .nav-link {
-  @apply px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-500 transition-colors duration-200 flex items-center justify-center text-center;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: var(--color-brand-500);
 }
 
 /* .site-logo-container {
@@ -300,41 +357,111 @@ onUnmounted(() => {
 }
 
 .auth-actions {
-  @apply flex items-center space-x-4;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .login-button {
-  @apply px-4 py-2 text-sm font-medium;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .user-menu {
-  @apply relative;
+  position: relative;
 }
 
 .user-menu-button {
-  @apply flex items-center px-3 py-2 text-sm font-medium text-gray-700 hover:text-brand-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 rounded-md;
+  display: flex;
+  align-items: center;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  border-radius: 0.375rem;
+  transition: color 0.2s;
+}
+
+.user-menu-button:hover {
+  color: var(--color-brand-500);
+}
+
+.user-menu-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--color-brand-500), 0 0 0 4px rgba(230, 95, 55, 0.1);
 }
 
 .user-name {
-  @apply max-w-xs truncate;
+  max-width: 20rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .user-dropdown {
-  @apply absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200;
+  position: absolute;
+  right: 0;
+  margin-top: 0.5rem;
+  width: 12rem;
+  background-color: white;
+  border-radius: 0.375rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  z-index: 50;
+  border: 1px solid #e5e7eb;
 }
 
 .dropdown-item {
-  @apply block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200 w-full text-left;
+  display: block;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 0.875rem;
+  color: #374151;
+  width: 100%;
+  text-align: left;
+  transition: background-color 0.2s;
+}
+
+.dropdown-item:hover {
+  background-color: #f3f4f6;
 }
 
 .logout-item {
-  @apply border-t border-gray-200 text-red-600 hover:bg-red-50;
+  border-top: 1px solid #e5e7eb;
+  color: #dc2626;
+}
+
+.logout-item:hover {
+  background-color: #fef2f2;
 }
 
 /* Mobile Navigation */
 .mobile-nav {
-  @apply md:hidden fixed inset-x-0 top-16 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-30;
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 4rem;
+  background-color: white;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   transform: translateY(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 30;
+}
+
+@media (min-width: 768px) {
+  .mobile-nav {
+    display: none;
+  }
 }
 
 .mobile-nav-open {
@@ -342,63 +469,131 @@ onUnmounted(() => {
 }
 
 .mobile-nav-content {
-  @apply p-4 max-h-screen overflow-y-auto;
+  padding: 1rem;
+  max-height: 100vh;
+  overflow-y: auto;
 }
 
 .mobile-nav-links {
-  @apply space-y-2 mb-6;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .mobile-nav-link {
-  @apply block px-3 py-2 text-base font-medium text-gray-700 hover:text-brand-500 hover:bg-gray-50 rounded-md transition-colors duration-200 text-center;
+  display: block;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+  border-radius: 0.375rem;
+  text-align: center;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.mobile-nav-link:hover {
+  color: var(--color-brand-500);
+  background-color: #f9fafb;
 }
 
 .mobile-auth-actions {
-  @apply border-t border-gray-200 pt-4;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1rem;
 }
 
 .mobile-login-button {
-  @apply w-full justify-center;
+  width: 100%;
+  justify-content: center;
 }
 
 .mobile-user-actions {
-  @apply space-y-2;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .mobile-user-link {
-  @apply block px-3 py-2 text-base font-medium text-gray-700 hover:text-brand-500 hover:bg-gray-50 rounded-md transition-colors duration-200;
+  display: block;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+  border-radius: 0.375rem;
+  transition: color 0.2s, background-color 0.2s;
+}
+
+.mobile-user-link:hover {
+  color: var(--color-brand-500);
+  background-color: #f9fafb;
 }
 
 .mobile-logout-button {
-  @apply block w-full px-3 py-2 text-base font-medium text-red-600 hover:bg-red-50 rounded-md transition-colors duration-200 text-left;
+  display: block;
+  width: 100%;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #dc2626;
+  border-radius: 0.375rem;
+  text-align: left;
+  transition: background-color 0.2s;
+}
+
+.mobile-logout-button:hover {
+  background-color: #fef2f2;
 }
 
 .mobile-backdrop {
-  @apply md:hidden fixed inset-0 bg-black bg-opacity-50 z-20;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 20;
+}
+
+@media (min-width: 768px) {
+  .mobile-backdrop {
+    display: none;
+  }
 }
 
 /* Responsive adjustments */
 @media (max-width: 640px) {
   .header-container {
-    @apply px-2 py-2;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
   }
   
   .user-name {
-    @apply max-w-sm;
+    max-width: 24rem;
   }
 }
 
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   .mobile-nav {
-    @apply transition-none;
+    transition: none;
   }
   
   .mobile-menu-button,
   .user-menu-button,
   .dropdown-item,
   .mobile-nav-link {
-    @apply transition-none;
+    transition: none;
   }
 }
 </style>

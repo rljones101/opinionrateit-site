@@ -18,6 +18,7 @@ const MyVideos = () => import('@/views/myVideos/MyVideos.vue')
 const SearchView = () => import('@/views/SearchResults.vue')
 const SuccessView = () => import('@/views/stripe/SuccessView.vue')
 const CancelView = () => import('@/views/stripe/CancelView.vue')
+const ProfileView = () => import('../views/ProfileView.vue')
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -49,14 +50,18 @@ const router = createRouter({
     },
     {
       path: '/access',
-      name: 'user-home',
       component: UserHomeView,
       meta: {
         requiresAuth: true
       },
       children: [
         {
-          path: '/videos',
+          path: '',
+          name: 'user-home',
+          redirect: { name: 'videos' }
+        },
+        {
+          path: 'videos',
           name: 'videos',
           component: VideoListView,
           meta: {
@@ -64,7 +69,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/search',
+          path: 'search',
           name: 'search',
           component: SearchView,
           meta: {
@@ -72,7 +77,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/my-saved-reviews',
+          path: 'my-saved-reviews',
           name: 'my-saved-reviews',
           component: MySavedVideos,
           meta: {
@@ -80,7 +85,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/reviewers',
+          path: 'reviewers',
           name: 'reviewers',
           component: ReviewersView,
           meta: {
@@ -88,7 +93,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/reviewers/:channelId/reviews',
+          path: 'reviewers/:channelId/reviews',
           name: 'reviewers-channelId-reviews',
           component: ReviewerVideos,
           meta: {
@@ -96,7 +101,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/reviewers/:channelId/reviews/:videoId',
+          path: 'reviewers/:channelId/reviews/:videoId',
           name: 'reviewers-channelId-reviews-videoId',
           component: VideoView,
           meta: {
@@ -104,7 +109,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/u/:name/my-stats',
+          path: 'u/:name/my-stats',
           name: 'my-stats',
           component: MyStats,
           meta: {
@@ -112,7 +117,7 @@ const router = createRouter({
           }
         },
         {
-          path: '/u/:name/profile',
+          path: 'u/:name/profile',
           name: 'my-profile',
           component: MyProfile,
           meta: {
@@ -120,9 +125,17 @@ const router = createRouter({
           }
         },
         {
-          path: '/u/:name/my-videos',
+          path: 'u/:name/my-videos',
           name: 'my-videos',
           component: MyVideos,
+          meta: {
+            requiresAuth: true
+          }
+        },
+        {
+          path: 'profile',
+          name: 'profile',
+          component: ProfileView,
           meta: {
             requiresAuth: true
           }
@@ -145,8 +158,26 @@ const isAuthenticated = async () => {
 
 router.beforeEach(async (to, from, next) => {
   const authenticated = await isAuthenticated()
-  
+
   if (!authenticated && to?.meta?.requiresAuth) {
+    // Clear user store when session is invalid
+    const { useUserStore } = await import('@/stores/userStore')
+    const userStore = useUserStore()
+    if (userStore.isLoggedIn) {
+      localStorage.removeItem('orateit-user')
+      userStore.isLoggedIn = false
+      userStore.user = {
+        id: '',
+        name: '',
+        email: '',
+        role: '',
+        avatar: '',
+        photo: '',
+        youTubeChannelId: '',
+        createdAt: '',
+        lastLoginAt: ''
+      }
+    }
     next({ name: 'home' })
   } else if (authenticated && to.name === 'home') {
     next({ name: 'reviewers' })

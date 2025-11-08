@@ -50,6 +50,8 @@ const textSizeClass = computed(() => {
 </script>
 
 <style scoped>
+@reference "#main.css";
+
 .loading-spinner {
   @apply gap-2;
 }

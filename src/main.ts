@@ -19,7 +19,7 @@ const addSecurityHeaders = () => {
   if (!document.querySelector('meta[http-equiv="Content-Security-Policy"]')) {
     const cspMeta = document.createElement('meta')
     cspMeta.httpEquiv = 'Content-Security-Policy'
-    cspMeta.content = "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' " + import.meta.env.VITE_API_URL
+    cspMeta.content = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://www.googleapis.com https://www.youtube.com " + import.meta.env.VITE_API_URL + "; frame-src 'self' https://www.youtube.com"
     document.head.appendChild(cspMeta)
   }
   

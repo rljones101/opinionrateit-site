@@ -76,6 +76,8 @@ const searchHandler = async (value: string) => {
 </template>
 
 <style scoped>
+@reference "#main.css";
+
 .column {
   height: 100%;
   flex-direction: column;

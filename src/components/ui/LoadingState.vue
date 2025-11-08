@@ -31,6 +31,7 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import LoadingSpinner from './LoadingSpinner.vue'
 
 interface Props {
@@ -74,6 +75,8 @@ const skeletonClass = computed(() => {
 </script>
 
 <style scoped>
+@reference "#main.css";
+
 .loading-state {
   @apply w-full;
 }

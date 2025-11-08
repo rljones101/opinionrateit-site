@@ -103,6 +103,8 @@ const formatViews = (viewCount: number): string => {
 </template>
 
 <style scoped>
+@reference "#main.css";
+
 .video-item-card {
   @apply flex flex-col h-full bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer;
 }
@@ -112,7 +114,8 @@ const formatViews = (viewCount: number): string => {
 }
 
 .selection-overlay {
-  @apply absolute inset-0 bg-black bg-opacity-70 flex items-center justify-center z-10 rounded-t-lg;
+  @apply absolute inset-0 flex items-center justify-center z-10 rounded-t-lg;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .selection-checkmark {
@@ -124,7 +127,8 @@ const formatViews = (viewCount: number): string => {
 }
 
 .duration-badge {
-  @apply absolute bottom-2 right-2 bg-black bg-opacity-80 text-white text-xs px-2 py-1 rounded;
+  @apply absolute bottom-2 right-2 text-white text-xs px-2 py-1 rounded;
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .video-content {

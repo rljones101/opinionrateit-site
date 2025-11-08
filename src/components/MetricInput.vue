@@ -106,6 +106,8 @@ const rateHandler = ($event: Event) => {
 </template>
 
 <style scoped>
+@reference "#main.css";
+
 .disagree-btn {
   @apply rounded-full border-2 border-yellow-500 hover:bg-yellow-500 cursor-pointer;
 }

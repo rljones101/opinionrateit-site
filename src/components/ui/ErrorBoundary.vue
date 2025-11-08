@@ -113,6 +113,8 @@ defineExpose({
 </script>
 
 <style scoped>
+@reference "#main.css";
+
 .error-boundary {
   @apply min-h-96 flex items-center justify-center p-8;
 }

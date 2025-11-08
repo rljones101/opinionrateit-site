@@ -119,7 +119,10 @@ function useSetIsPinnedElement(className: string): void {
 
 <style scoped>
 .icon-wrapper {
-  @apply bg-brand-500 text-secondary-50 rounded-full p-4;
+  background-color: var(--color-brand-500);
+  color: var(--color-secondary-50);
+  border-radius: 9999px;
+  padding: 1rem;
   width: 50px;
   height: 50px;
 }

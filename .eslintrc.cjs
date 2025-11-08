@@ -7,7 +7,6 @@ module.exports = {
       "/amplify/**/*.js",
       "/amplify/types/**/*.ts",
       "env.d.ts",
-    "tailwind.config.js",
     "*.spec.js",
     "*.spec.ts",
     ".eslintrc.cjs"

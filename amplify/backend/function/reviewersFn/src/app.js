@@ -42,7 +42,9 @@ async function DatabaseConnect() {
 
 DatabaseConnect()
   .then(() => {
-    console.log('Database connection!')
+    console.log('Database connection successful!')
+    console.log('Connected to database:', mongoose.connection.db.databaseName)
+    console.log('Connection string used:', `mongodb://${process.env.DATABASE_USER}:***@${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}`)
   })
   .catch((error) => console.log(error))
 
@@ -68,9 +70,9 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false
 }))
 
-// Rate limiting
+// Rate limiting - relaxed for development
 const limiter = rateLimit({
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: process.env.NODE_ENV === 'development' ? 10000 : 100, // Higher limit for development
   windowMs: 15 * 60 * 1000, // 15 minutes
   message: 'Too many requests from this IP, please try again later.',
   standardHeaders: true,
@@ -124,14 +126,52 @@ app.use(hpp({
 
 // Implement CORS
 const corsOptions = {
-  origin: ['http://localhost:5173', 'http://localhost:3000'],
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true)
+    
+    const allowedOrigins = [
+      'http://localhost:5173', // Vite default
+      'http://localhost:5174', // Vite alternative port
+      'http://localhost:3000',  // Alternative port
+      'http://localhost:8080',  // Vue CLI default
+      'http://127.0.0.1:5173',
+      'http://127.0.0.1:5174',
+      'http://127.0.0.1:3000',
+      'http://127.0.0.1:8080'
+    ]
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      console.log('CORS blocked origin:', origin)
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   credentials: true, // This is crucial for cookie-based authentication
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
   exposedHeaders: ['Set-Cookie']
 }
 app.use(cors(corsOptions))
 app.options('*', cors(corsOptions)) // Enable preflight for all routes
+
+// Additional CORS headers for development
+if (process.env.NODE_ENV === 'development') {
+  app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', req.headers.origin)
+    res.header('Access-Control-Allow-Credentials', 'true')
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control, Pragma')
+    
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
+      res.sendStatus(200)
+    } else {
+      next()
+    }
+  })
+}
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString()

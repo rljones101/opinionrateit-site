@@ -34,7 +34,13 @@ const login = async () => {
         showError.value = false
         email.value = ''
         password.value = ''
-        await router.push({ name: 'videos' })
+        try {
+          await router.push({ name: 'videos' })
+        } catch (routerError) {
+          console.error('Router navigation error:', routerError)
+          // Fallback to a known route
+          await router.push({ name: 'reviewers' })
+        }
       } else {
         showError.value = true
         if ('message' in res) {
@@ -62,28 +68,11 @@ const closeDialog = () => {
       <h5 class="text-xl font-medium">Login</h5>
       <ButtonClose
         class="mr-3 !bg-transparent border border-brand-500 !text-brand-500 hover:!bg-brand-500 hover:!text-white"
-        @click="closeDialog"
-      />
-      <FormInput
-        id="email"
-        type="email"
-        name="email"
-        placeholder="name@company.com"
-        autocomplete="username"
-        v-model="email"
-        required
-        label="Your email"
-      />
-      <FormInput
-        id="password"
-        type="password"
-        name="password"
-        placeholer="••••••••"
-        autocomplete="password"
-        v-model="password"
-        required
-        label="Your password"
-      />
+        @click="closeDialog" />
+      <FormInput id="email" type="email" name="email" placeholder="name@company.com" autocomplete="username"
+        v-model="email" required label="Your email" />
+      <FormInput id="password" type="password" name="password" placeholer="••••••••" autocomplete="password"
+        v-model="password" required label="Your password" />
       <!--      <div class="flex items-start">-->
       <!--        <div class="flex items-start">-->
       <!--          <div class="flex items-center h-5">-->

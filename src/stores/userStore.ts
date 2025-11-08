@@ -4,24 +4,50 @@ import { usersLogin, usersSignup } from '@/services/UserService'
 
 export const useUserStore = defineStore('useUserStore', () => {
   const defaultUserDetails = {
+    id: '',
     name: '',
     email: '',
     role: '',
     avatar: '',
-    youTubeChannelId: ''
+    photo: '',
+    youTubeChannelId: '',
+    createdAt: '',
+    lastLoginAt: ''
   }
 
   const isLoggedIn = ref(false)
   const user = ref(defaultUserDetails)
 
   const saveUser = (userDetails: any) => {
-    const { name, email, role, avatar, youTubeChannelId } = userDetails
+    const { 
+      _id, 
+      id, 
+      name, 
+      email, 
+      role, 
+      avatar, 
+      photo, 
+      youTubeChannelId, 
+      createdAt,
+      lastLoginAt 
+    } = userDetails
+    
+    // Normalize user data
+    const normalizedUser = {
+      id: _id || id || '',
+      name: name || '',
+      email: email || '',
+      role: role || 'user',
+      avatar: avatar || photo || '',
+      photo: photo || avatar || '',
+      youTubeChannelId: youTubeChannelId || '',
+      createdAt: createdAt || new Date().toISOString(),
+      lastLoginAt: lastLoginAt || new Date().toISOString()
+    }
+    
     // Store non-sensitive user data in localStorage
-    localStorage.setItem(
-      'orateit-user',
-      JSON.stringify({ name, email, role, avatar, youTubeChannelId })
-    )
-    user.value = userDetails
+    localStorage.setItem('orateit-user', JSON.stringify(normalizedUser))
+    user.value = normalizedUser
     isLoggedIn.value = true
   }
 
@@ -77,11 +103,21 @@ export const useUserStore = defineStore('useUserStore', () => {
     if (userData.name) {
       // Try to make an authenticated request to verify the session
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/profile/${userData.name}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/users/me`, {
           credentials: 'include'
         })
-        isLoggedIn.value = response.ok
+        if (response.ok) {
+          isLoggedIn.value = true
+        } else {
+          // Session is invalid, clear local storage
+          localStorage.removeItem('orateit-user')
+          user.value = { ...defaultUserDetails }
+          isLoggedIn.value = false
+        }
       } catch (error) {
+        // Network error or server down, clear state
+        localStorage.removeItem('orateit-user')
+        user.value = { ...defaultUserDetails }
         isLoggedIn.value = false
       }
     } else {
@@ -94,9 +130,109 @@ export const useUserStore = defineStore('useUserStore', () => {
     return roles.includes(user.role)
   }
 
+  // Profile management methods
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/users/me`, {
+        credentials: 'include'
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        if (data.status === 'success' && data.data?.user) {
+          saveUser(data.data.user)
+          return data.data.user
+        }
+      }
+      throw new Error('Failed to fetch user data')
+    } catch (error) {
+      console.error('Error fetching current user:', error)
+      throw error
+    }
+  }
+
+  const updateProfile = async (profileData: Partial<typeof defaultUserDetails>) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/users/updateMe`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify(profileData)
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        if (data.status === 'success' && data.data?.user) {
+          saveUser(data.data.user)
+          return data.data.user
+        }
+      }
+      throw new Error('Failed to update profile')
+    } catch (error) {
+      console.error('Error updating profile:', error)
+      throw error
+    }
+  }
+
+  const changePassword = async (passwordData: {
+    passwordCurrent: string
+    password: string
+    passwordConfirm: string
+  }) => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/users/updateMyPassword`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include',
+        body: JSON.stringify(passwordData)
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        return data
+      }
+      
+      const errorData = await response.json()
+      throw new Error(errorData.message || 'Failed to change password')
+    } catch (error) {
+      console.error('Error changing password:', error)
+      throw error
+    }
+  }
+
+  const deleteAccount = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/users/deleteMe`, {
+        method: 'DELETE',
+        credentials: 'include'
+      })
+      
+      if (response.ok) {
+        // Clear local data after successful deletion
+        localStorage.removeItem('orateit-user')
+        user.value = { ...defaultUserDetails }
+        isLoggedIn.value = false
+        return true
+      }
+      throw new Error('Failed to delete account')
+    } catch (error) {
+      console.error('Error deleting account:', error)
+      throw error
+    }
+  }
+
+  // Computed properties for better API
+  const currentUser = user
+  const isAuthenticated = isLoggedIn
+
   checkIfLoggedIn()
 
   return {
+    // Original methods
     getUser,
     loginUser,
     logoutUser,
@@ -104,6 +240,16 @@ export const useUserStore = defineStore('useUserStore', () => {
     isLoggedIn,
     user,
     checkIfLoggedIn,
-    restrictTo
+    restrictTo,
+    
+    // New profile management methods
+    fetchCurrentUser,
+    updateProfile,
+    changePassword,
+    deleteAccount,
+    
+    // Computed properties
+    currentUser,
+    isAuthenticated
   }
 })

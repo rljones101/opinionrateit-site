@@ -72,7 +72,8 @@ const { goToSignup } = useNavRoutes()
 
 <style scoped>
 .definition-word {
-  @apply text-default-500 font-bold;
+  color: var(--color-default-500);
+  font-weight: bold;
 }
 .metric-definition {
   display: inline-block;
