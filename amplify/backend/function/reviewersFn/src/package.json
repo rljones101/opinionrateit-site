@@ -14,13 +14,19 @@
     "cross-env": "^7.0.3",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
+    "express-mongo-sanitize": "^2.1.0",
+    "express-rate-limit": "^7.4.1",
+    "express-validator": "^7.2.0",
     "helmet": "^8.1.0",
+    "hpp": "^0.2.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2",
     "node-cache": "^5.1.2",
+    "opinionrateit-site": "file:../../../../..",
     "slugify": "^1.6.6",
     "stripe": "^18.0.0",
-    "validator": "^13.15.0"
+    "validator": "^13.15.0",
+    "xss-clean": "^0.1.4"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.149"

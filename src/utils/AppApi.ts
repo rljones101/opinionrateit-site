@@ -1,23 +1,48 @@
 import axios from 'axios'
 import type { AxiosError, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
 import type { AppApiResponse, AppApiErrorResponse } from '@/types'
-import { useUserStore } from '@/stores/userStore'
 
 const appApi = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api/v1`
+  baseURL: `${import.meta.env.VITE_API_URL}/api/v1`,
+  withCredentials: true, // Include cookies in requests
+  timeout: 10000 // 10 second timeout
 })
 
 appApi.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const { getToken } = useUserStore()
-    const jwtToken = getToken()
-
-    if (jwtToken) {
-      config.headers.Authorization = `Bearer ${jwtToken}`
+    // Add CSRF token if available
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content')
+    if (csrfToken) {
+      config.headers['X-CSRF-Token'] = csrfToken
     }
     return config
   },
   function (error) {
+    return Promise.reject(error)
+  }
+)
+
+// Response interceptor to handle token refresh
+appApi.interceptors.response.use(
+  (response: AxiosResponse) => response,
+  async (error: AxiosError) => {
+    const originalRequest = error.config as any
+    
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true
+      
+      try {
+        // Try to refresh the token
+        await appApi.post('/users/refresh-token')
+        // Retry the original request
+        return appApi(originalRequest)
+      } catch (refreshError) {
+        // Refresh failed, redirect to login
+        window.location.href = '/login'
+        return Promise.reject(refreshError)
+      }
+    }
+    
     return Promise.reject(error)
   }
 )

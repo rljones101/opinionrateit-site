@@ -10,6 +10,8 @@ const config = {
 
 class ApiUtils {
   generateQueryParams(entity: any): string {
+    console.log(entity)
+    console.log(new URLSearchParams(entity).toString())
     if (!entity) {
       throw new Error('[entity] param is not defined')
     }
@@ -26,15 +28,16 @@ class ApiUtils {
       }
     }
     endpoint = endpoint.substring(0, endpoint.length - 1)
+    console.log('endpoint:', endpoint)
 
     return endpoint
   }
 
-  get(endpoint: string, params: any) {
+  get<T = any>(endpoint: string, params: any) {
     endpoint = config.baseUrl + endpoint + '?key=' + config.apiKey
     endpoint = params ? endpoint + '&' + this.generateQueryParams(params) : endpoint
 
-    return axios.get(endpoint).then((youTubeData) => {
+    return axios.get<T>(endpoint).then((youTubeData) => {
       return youTubeData
     })
   }

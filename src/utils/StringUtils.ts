@@ -42,4 +42,11 @@ const formatPercentageToRating = (percentage: number) => {
   return ((percentage / 100) * 10).toFixed(1)
 }
 
-export { urlify, replaceNewlines, nFormatter, formatPercentageToRating }
+const getInitials = (name: string) => {
+  const initialsArr: string[] = name.split(' ')
+  return initialsArr.length > 1
+    ? initialsArr[0].charAt(0) + initialsArr[1].charAt(0)
+    : initialsArr[0].charAt(0)
+}
+
+export { urlify, replaceNewlines, nFormatter, formatPercentageToRating, getInitials }

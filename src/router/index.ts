@@ -132,14 +132,23 @@ const router = createRouter({
   ]
 })
 
-const isAuthenticated = () => {
-  return localStorage.getItem('jwt') || ''
+const isAuthenticated = async () => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/users/me`, {
+      credentials: 'include'
+    })
+    return response.ok
+  } catch (error) {
+    return false
+  }
 }
 
-router.beforeEach((to, from, next) => {
-  if (!isAuthenticated() && to?.meta?.requiresAuth) {
+router.beforeEach(async (to, from, next) => {
+  const authenticated = await isAuthenticated()
+  
+  if (!authenticated && to?.meta?.requiresAuth) {
     next({ name: 'home' })
-  } else if (isAuthenticated() && to.name === 'home') {
+  } else if (authenticated && to.name === 'home') {
     next({ name: 'reviewers' })
   } else {
     next()

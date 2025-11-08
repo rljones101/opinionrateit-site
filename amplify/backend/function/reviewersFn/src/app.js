@@ -2,8 +2,12 @@ const express = require('express')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
 const mongoose = require('mongoose')
 const helmet = require('helmet')
-// const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser')
 const cors = require('cors')
+const rateLimit = require('express-rate-limit')
+const mongoSanitize = require('express-mongo-sanitize')
+const xss = require('xss-clean')
+const hpp = require('hpp')
 const AppError = require('./utils/appError.js')
 
 const globalErrorHandler = require('./controllers/errorController.js')
@@ -50,7 +54,41 @@ if (process.env.NODE_ENV !== 'development') {
 }
 
 // Set security HTTP Headers
-app.use(helmet())
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      scriptSrc: ["'self'"],
+      connectSrc: ["'self'", process.env.NODE_ENV === 'development' ? "http://localhost:5173" : "https://dev.opinionrateit.com"]
+    }
+  },
+  crossOriginEmbedderPolicy: false
+}))
+
+// Rate limiting
+const limiter = rateLimit({
+  max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false
+})
+app.use('/api/', limiter)
+
+// Specific rate limiting for auth endpoints
+const authLimiter = rateLimit({
+  max: 5, // limit each IP to 5 requests per windowMs
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  message: 'Too many authentication attempts, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false
+})
+
+// Make authLimiter available to routes
+app.locals.authLimiter = authLimiter
 
 // Stripe Webhook - This MUST be created before the Body parser middleware!
 app.post(
@@ -60,11 +98,22 @@ app.post(
 )
 
 // Body parser, reading data from the body into req.body
-app.use(express.json())
+app.use(express.json({ limit: '10kb' }))
+app.use(express.urlencoded({ extended: true, limit: '10kb' }))
+app.use(cookieParser())
 
-// Data sanitization against NoSQL query inject
+// Data sanitization against NoSQL query injection
+// Temporarily disabled due to compatibility issues
+// app.use(mongoSanitize())
 
 // Data sanitization against XSS
+// Temporarily disabled due to compatibility issues
+// app.use(xss())
+
+// Prevent parameter pollution
+app.use(hpp({
+  whitelist: ['sort', 'fields', 'page', 'limit']
+}))
 
 // Enable CORS for all methods
 // app.use(function (req, res, next) {

@@ -11,23 +11,18 @@ export const useUserStore = defineStore('useUserStore', () => {
     youTubeChannelId: ''
   }
 
-  const jwtToken = ref('')
   const isLoggedIn = ref(false)
   const user = ref(defaultUserDetails)
 
-  const saveUserAndToken = (user: any, token: string) => {
-    saveUser(user)
-    saveToken(token)
-    isLoggedIn.value = true
-  }
-
   const saveUser = (userDetails: any) => {
     const { name, email, role, avatar, youTubeChannelId } = userDetails
+    // Store non-sensitive user data in localStorage
     localStorage.setItem(
       'orateit-user',
       JSON.stringify({ name, email, role, avatar, youTubeChannelId })
     )
     user.value = userDetails
+    isLoggedIn.value = true
   }
 
   const getUser = () => {
@@ -40,24 +35,11 @@ export const useUserStore = defineStore('useUserStore', () => {
     return user.value
   }
 
-  const saveToken = (token: string) => {
-    localStorage.setItem('jwt', token)
-    jwtToken.value = token
-  }
-
-  const getToken = () => {
-    // 1) Check if the token is set
-    if (!jwtToken.value) {
-      jwtToken.value = localStorage.getItem('jwt') || ''
-    }
-    return jwtToken.value
-  }
-
   const loginUser = async (email: string, password: string) => {
     const res = await usersLogin(email, password)
     if (res.status === 'success') {
       if ('data' in res) {
-        saveUserAndToken(res.data.user, res.originalData.token)
+        saveUser(res.data.user)
       }
     }
     return res
@@ -67,24 +49,44 @@ export const useUserStore = defineStore('useUserStore', () => {
     const res = await usersSignup(data)
     if (res.status === 'success') {
       if ('data' in res) {
-        saveUserAndToken(res.data.user, res.originalData.token)
+        saveUser(res.data.user)
       }
+    }
+    return res
+  }
+
+  const logoutUser = async () => {
+    try {
+      // Call logout endpoint to clear httpOnly cookies
+      await fetch(`${import.meta.env.VITE_API_URL}/api/v1/users/logout`, {
+        method: 'POST',
+        credentials: 'include'
+      })
+    } catch (error) {
+      console.error('Logout error:', error)
+    } finally {
+      // Clear local storage and state
+      localStorage.removeItem('orateit-user')
+      user.value = { ...defaultUserDetails }
+      isLoggedIn.value = false
     }
   }
 
-  const logoutUser = () => {
-    localStorage.removeItem('jwt')
-    localStorage.removeItem('orateit-user')
-    user.value = { ...defaultUserDetails }
-    isLoggedIn.value = false
-  }
-
-  const checkIfLoggedIn = () => {
-    // 1) Get token
-    const token = getToken()
-    const user = getUser()
-    // 2) if the token has a value
-    isLoggedIn.value = !!(token && user.name)
+  const checkIfLoggedIn = async () => {
+    const userData = getUser()
+    if (userData.name) {
+      // Try to make an authenticated request to verify the session
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/profile/${userData.name}`, {
+          credentials: 'include'
+        })
+        isLoggedIn.value = response.ok
+      } catch (error) {
+        isLoggedIn.value = false
+      }
+    } else {
+      isLoggedIn.value = false
+    }
   }
 
   const restrictTo = (...roles: string[]) => {
@@ -95,9 +97,6 @@ export const useUserStore = defineStore('useUserStore', () => {
   checkIfLoggedIn()
 
   return {
-    jwtToken,
-    saveToken,
-    getToken,
     getUser,
     loginUser,
     logoutUser,

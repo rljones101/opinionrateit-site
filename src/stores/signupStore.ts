@@ -5,6 +5,7 @@ import { type AccountDetails, SIGNUP_STEPS, type SignupPlan } from '@/types'
 import signupViewController from '@/controllers/signupViewController'
 import { createCustomer } from '@/services/stripeService'
 import reviewerController from '@/controllers/reviewerController'
+import GoogleAPIService from '@/services/GoogleAPIService'
 
 export const useSignupStore = defineStore('useSignupStore', () => {
   const defaultBillingData = {
@@ -127,10 +128,11 @@ export const useSignupStore = defineStore('useSignupStore', () => {
     try {
       const channelId = accountFormData.value.youTubeChannelId
       //loadedYouTubeData.value = false
-      const res = await reviewerController.getChannelDetails(channelId)
+      const googleApiChannel = await GoogleAPIService.getChannelDetails(channelId)
+      if (!googleApiChannel) throw new Error('Failed to get channel details.')
       //loadedYouTubeData.value = true
       // TODO lookup the channel in the existing reviewer data. Do not allow duplicates
-      const snippet = res.snippet
+      const snippet = googleApiChannel.snippet
       accountFormData.value.title = snippet.title
       accountFormData.value.avatar = snippet.thumbnails.default.url
       accountFormData.value.description = snippet.description

@@ -13,10 +13,8 @@ const fields = [
   'provided_resources'
 ]
 
-const googleAPI = new GoogleAPIService()
-
 const getVideo = (videoId: string) => {
-  return googleAPI.getVideoDataById(videoId)
+  return GoogleAPIService.getVideoDataById(videoId)
 }
 
 const getReviewsByVideo = (videoId: string) => {

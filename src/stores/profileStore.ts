@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
 import { computed, ref, type Ref, watchEffect } from 'vue'
 import type { Profile } from '@/types'
-import reviewerController from '@/controllers/reviewerController'
 import * as userService from '@/services/UserService'
 import { useUserStore } from '@/stores/userStore'
 import { useVideosStore } from '@/stores/videosStore'
 import { useMetricsStore } from '@/stores/metricsStore'
+import { getInitials as initials } from '@/utils/StringUtils'
 
 const RolesConfig = [
   {
@@ -44,7 +44,7 @@ export const useProfileStore = defineStore('useProfileStore', () => {
 
   // Computed
   const getInitials = computed(() => {
-    return reviewerController.getInitials(profile.value.name)
+    return initials(profile.value.name)
   })
 
   const getRole = computed(() => {

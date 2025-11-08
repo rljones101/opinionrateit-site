@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Security Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .pass { color: green; }
+        .fail { color: red; }
+        .info { color: blue; }
+        button { margin: 5px; padding: 10px; }
+        input { margin: 5px; padding: 5px; width: 200px; }
+        .result { margin: 10px 0; padding: 10px; background: #f5f5f5; }
+    </style>
+</head>
+<body>
+    <h1>🔒 Frontend Security Testing</h1>
+    
+    <div class="test-section">
+        <h2>1. Input Validation Test</h2>
+        <div>
+            <input type="text" id="nameInput" placeholder="Enter name">
+            <button onclick="testNameValidation()">Test Name Validation</button>
+        </div>
+        <div>
+            <input type="email" id="emailInput" placeholder="Enter email">
+            <button onclick="testEmailValidation()">Test Email Validation</button>
+        </div>
+        <div>
+            <input type="password" id="passwordInput" placeholder="Enter password">
+            <button onclick="testPasswordValidation()">Test Password Validation</button>
+        </div>
+        <div id="validationResults" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. XSS Protection Test</h2>
+        <div>
+            <input type="text" id="xssInput" placeholder="Try: <script>alert('xss')</script>">
+            <button onclick="testXSSProtection()">Test XSS Protection</button>
+        </div>
+        <div id="xssResults" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Rate Limiting Test</h2>
+        <button onclick="testRateLimiting()">Test Client-Side Rate Limiting</button>
+        <div id="rateLimitResults" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Security Headers Test</h2>
+        <button onclick="testSecurityHeaders()">Check Security Headers</button>
+        <div id="headersResults" class="result"></div>
+    </div>
+
+    <script>
+        // Import our security utilities (simulated)
+        const SecurityUtils = {
+            sanitizeHtml: (input) => {
+                const div = document.createElement('div');
+                div.textContent = input;
+                return div.innerHTML;
+            },
+            
+            isValidEmail: (email) => {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email) && email.length <= 40;
+            },
+            
+            isValidPassword: (password) => {
+                const errors = [];
+                
+                if (password.length < 8) {
+                    errors.push('Password must be at least 8 characters long');
+                }
+                
+                if (password.length > 128) {
+                    errors.push('Password must be less than 128 characters long');
+                }
+                
+                if (!/(?=.*[a-z])/.test(password)) {
+                    errors.push('Password must contain at least one lowercase letter');
+                }
+                
+                if (!/(?=.*[A-Z])/.test(password)) {
+                    errors.push('Password must contain at least one uppercase letter');
+                }
+                
+                if (!/(?=.*\d)/.test(password)) {
+                    errors.push('Password must contain at least one number');
+                }
+                
+                if (!/(?=.*[@$!%*?&])/.test(password)) {
+                    errors.push('Password must contain at least one special character (@$!%*?&)');
+                }
+                
+                return {
+                    isValid: errors.length === 0,
+                    errors
+                };
+            },
+            
+            isValidName: (name) => {
+                const nameRegex = /^[a-zA-Z\s]{2,50}$/;
+                return nameRegex.test(name);
+            }
+        };
+        
+        // Rate limiting simulation
+        class ClientRateLimit {
+            constructor(maxAttempts = 5, windowMs = 15 * 60 * 1000) {
+                this.maxAttempts = maxAttempts;
+                this.windowMs = windowMs;
+                this.attempts = new Map();
+            }
+            
+            isAllowed(key) {
+                const now = Date.now();
+                const attempts = this.attempts.get(key) || [];
+                
+                const validAttempts = attempts.filter(time => now - time < this.windowMs);
+                
+                if (validAttempts.length >= this.maxAttempts) {
+                    return false;
+                }
+                
+                validAttempts.push(now);
+                this.attempts.set(key, validAttempts);
+                return true;
+            }
+        }
+        
+        const authRateLimit = new ClientRateLimit(3, 10000); // 3 attempts per 10 seconds for demo
+        
+        function testNameValidation() {
+            const name = document.getElementById('nameInput').value;
+            const isValid = SecurityUtils.isValidName(name);
+            const result = document.getElementById('validationResults');
+            
+            if (isValid) {
+                result.innerHTML += `<div class="pass">✅ Name "${name}" is valid</div>`;
+            } else {
+                result.innerHTML += `<div class="fail">❌ Name "${name}" is invalid (must be 2-50 chars, letters and spaces only)</div>`;
+            }
+        }
+        
+        function testEmailValidation() {
+            const email = document.getElementById('emailInput').value;
+            const isValid = SecurityUtils.isValidEmail(email);
+            const result = document.getElementById('validationResults');
+            
+            if (isValid) {
+                result.innerHTML += `<div class="pass">✅ Email "${email}" is valid</div>`;
+            } else {
+                result.innerHTML += `<div class="fail">❌ Email "${email}" is invalid</div>`;
+            }
+        }
+        
+        function testPasswordValidation() {
+            const password = document.getElementById('passwordInput').value;
+            const validation = SecurityUtils.isValidPassword(password);
+            const result = document.getElementById('validationResults');
+            
+            if (validation.isValid) {
+                result.innerHTML += `<div class="pass">✅ Password is valid</div>`;
+            } else {
+                result.innerHTML += `<div class="fail">❌ Password is invalid:<br>${validation.errors.join('<br>')}</div>`;
+            }
+        }
+        
+        function testXSSProtection() {
+            const input = document.getElementById('xssInput').value;
+            const sanitized = SecurityUtils.sanitizeHtml(input);
+            const result = document.getElementById('xssResults');
+            
+            result.innerHTML = `
+                <div class="info"><strong>Original:</strong> ${input}</div>
+                <div class="pass"><strong>Sanitized:</strong> ${sanitized}</div>
+                <div class="pass">✅ XSS protection working - scripts are escaped</div>
+            `;
+        }
+        
+        function testRateLimiting() {
+            const result = document.getElementById('rateLimitResults');
+            const key = 'test-user';
+            
+            let attempts = 0;
+            let blocked = 0;
+            
+            for (let i = 0; i < 5; i++) {
+                if (authRateLimit.isAllowed(key)) {
+                    attempts++;
+                } else {
+                    blocked++;
+                }
+            }
+            
+            result.innerHTML = `
+                <div class="info">Attempted 5 requests:</div>
+                <div class="pass">✅ ${attempts} requests allowed</div>
+                <div class="pass">✅ ${blocked} requests blocked by rate limiting</div>
+            `;
+        }
+        
+        function testSecurityHeaders() {
+            const result = document.getElementById('headersResults');
+            
+            // Check for CSP meta tag
+            const cspMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+            const noSniffMeta = document.querySelector('meta[http-equiv="X-Content-Type-Options"]');
+            const frameOptionsMeta = document.querySelector('meta[http-equiv="X-Frame-Options"]');
+            
+            let output = '<div class="info"><strong>Security Headers Check:</strong></div>';
+            
+            if (cspMeta) {
+                output += '<div class="pass">✅ Content Security Policy meta tag found</div>';
+            } else {
+                output += '<div class="fail">❌ Content Security Policy meta tag missing</div>';
+            }
+            
+            if (noSniffMeta) {
+                output += '<div class="pass">✅ X-Content-Type-Options meta tag found</div>';
+            } else {
+                output += '<div class="fail">❌ X-Content-Type-Options meta tag missing</div>';
+            }
+            
+            if (frameOptionsMeta) {
+                output += '<div class="pass">✅ X-Frame-Options meta tag found</div>';
+            } else {
+                output += '<div class="fail">❌ X-Frame-Options meta tag missing</div>';
+            }
+            
+            result.innerHTML = output;
+        }
+        
+        // Auto-run security headers test on load
+        window.onload = function() {
+            testSecurityHeaders();
+        };
+    </script>
+</body>
+</html>

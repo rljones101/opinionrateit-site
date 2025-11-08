@@ -6,6 +6,11 @@ exports.signToken = (id) =>
     expiresIn: process.env.JWT_EXPIRES_IN
   })
 
+exports.signRefreshToken = (id) =>
+  jwt.sign({ id }, process.env.JWT_REFRESH_SECRET, {
+    expiresIn: process.env.JWT_REFRESH_EXPIRES_IN
+  })
+
 exports.createResetToken = () => {
   return crypto.randomBytes(32).toString('hex')
 }

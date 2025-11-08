@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import reviewerController from '@/controllers/reviewerController'
+import { getInitials } from '@/utils/StringUtils'
 import { computed, ref } from 'vue'
 
 const props = defineProps<{
@@ -10,7 +10,7 @@ const props = defineProps<{
 }>()
 
 const avatarImage = ref<string | null>(null)
-const initials = computed(() => reviewerController.getInitials(props.user.name))
+const initials = computed(() => getInitials(props.user.name))
 </script>
 
 <template>

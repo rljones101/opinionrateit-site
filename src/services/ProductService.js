@@ -38,12 +38,11 @@ class ProductService {
   }
 
   async getProductList() {
-    let googleAPIService = new GoogleAPIService()
     const response = await axios.get('videoData.json')
     const products = response.data
     products.map((product) => _productDataInterface(product))
     await this.asyncForEach(products, async (product) => {
-      const videoData = await googleAPIService.getVideoDataById(product.youTubeId)
+      const videoData = await GoogleAPIService.getVideoDataById(product.youTubeId)
       product.thumbnail = _getDefaultProductImage(videoData, 'high')
     })
     this.cachedProducts = products
