@@ -66,6 +66,42 @@ const userSchema = new mongoose.Schema({
   youTubeChannelId: {
     type: String
   },
+  // Extended profile fields
+  bio: {
+    type: String,
+    maxlength: [500, 'Bio must be less than 500 characters'],
+    trim: true
+  },
+  location: {
+    type: String,
+    maxlength: [100, 'Location must be less than 100 characters'],
+    trim: true
+  },
+  website: {
+    type: String,
+    maxlength: [200, 'Website URL must be less than 200 characters'],
+    validate: {
+      validator: function(v) {
+        return !v || /^https?:\/\/.+/.test(v)
+      },
+      message: 'Website must be a valid URL starting with http:// or https://'
+    }
+  },
+  twitter: {
+    type: String,
+    maxlength: [50, 'Twitter handle must be less than 50 characters'],
+    trim: true
+  },
+  linkedin: {
+    type: String,
+    maxlength: [200, 'LinkedIn URL must be less than 200 characters'],
+    validate: {
+      validator: function(v) {
+        return !v || /^https?:\/\/(www\.)?linkedin\.com\/.+/.test(v)
+      },
+      message: 'LinkedIn must be a valid LinkedIn URL'
+    }
+  },
   createdAt: {
     type: Date,
     default: Date.now()
