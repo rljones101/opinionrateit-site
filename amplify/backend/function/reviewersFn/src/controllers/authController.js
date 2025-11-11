@@ -6,8 +6,9 @@ const AppError = require('../utils/appError.js')
 const tokenUtils = require('../utils/tokenUtils.js')
 const User = require('../models/userModel.js')
 const Reviewer = require('../models/reviewerModel.js')
+const UserSession = require('../models/userSessionModel.js')
 
-const createSendToken = (user, statusCode, res) => {
+const createSendToken = async (user, statusCode, res, req) => {
   const token = tokenUtils.signToken(user._id)
   const refreshToken = tokenUtils.signRefreshToken(user._id)
 
@@ -29,6 +30,16 @@ const createSendToken = (user, statusCode, res) => {
 
   res.cookie('jwt', token, cookieOptions)
   res.cookie('refreshToken', refreshToken, refreshCookieOptions)
+
+  // Create session record
+  try {
+    const userAgent = req.headers['user-agent'] || 'Unknown'
+    const ipAddress = req.ip || req.connection.remoteAddress || 'Unknown'
+    await UserSession.createSession(user._id, token, userAgent, ipAddress)
+  } catch (error) {
+    console.error('Failed to create session:', error)
+    // Don't block login if session creation fails
+  }
 
   // remove the password from the output
   user.password = undefined
@@ -82,7 +93,7 @@ exports.signup = catchAsync(async (req, res) => {
     { ipAddress: req.ip || req.connection.remoteAddress }
   ).catch(err => console.error('Failed to log signup activity:', err))
 
-  createSendToken(user, 201, res)
+  await createSendToken(user, 201, res, req)
 })
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -151,7 +162,7 @@ exports.login = catchAsync(async (req, res, next) => {
     ).catch(err => console.error('Failed to log login activity:', err))
 
     // 3) If everything is ok, send token to client
-    createSendToken(user, 200, res)
+    await createSendToken(user, 200, res, req)
 
   } catch (error) {
     return next(new AppError(`Could not find user with email: ${email}, Error: ${error}`, 401))
@@ -223,7 +234,7 @@ exports.refreshToken = catchAsync(async (req, res, next) => {
       return next(new AppError('User recently changed password! Please login again', 401))
     }
 
-    createSendToken(currentUser, 200, res)
+    await createSendToken(currentUser, 200, res, req)
   } catch (error) {
     return next(new AppError('Invalid refresh token', 401))
   }
@@ -254,7 +265,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   // User.findByIdAndUpdate will NOT work as intended!
 
   // 4) Log user in, send JWT
-  createSendToken(user, 200, res)
+  await createSendToken(user, 200, res, req)
 })
 
 exports.protect = catchAsync(async (req, res, next) => {
@@ -284,6 +295,19 @@ exports.protect = catchAsync(async (req, res, next) => {
     if (currentUser.changedPasswordAfter(decoded.iat)) {
       return next(new AppError('User recently changed password! Please login again', 401))
     }
+
+    // 5) Check if session exists and is valid
+    const session = await UserSession.findByToken(token)
+    if (session) {
+      // Check if session is expired
+      if (session.isExpired()) {
+        return next(new AppError('Your session has expired. Please log in again.', 401))
+      }
+      
+      // Update session activity (async, don't wait)
+      session.updateActivity().catch(err => console.error('Failed to update session activity:', err))
+    }
+    // Note: If session doesn't exist, still allow (for backward compatibility with existing tokens)
 
     req.user = currentUser
     next()

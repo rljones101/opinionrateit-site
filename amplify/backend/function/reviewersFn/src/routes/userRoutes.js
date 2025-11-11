@@ -4,6 +4,7 @@ const authController = require('../controllers/authController.js')
 const userController = require('../controllers/userController.js')
 const preferencesController = require('../controllers/preferencesController.js')
 const activityController = require('../controllers/activityController.js')
+const sessionController = require('../controllers/sessionController.js')
 const { validateSignup, validateLogin, validatePasswordReset } = require('../middleware/validation.js')
 const { uploadAvatar, handleMulterError } = require('../middleware/upload.js')
 const { resizeAvatar } = require('../middleware/imageProcessor.js')
@@ -49,6 +50,13 @@ router.route('/me/preferences')
 
 // User activity route
 router.get('/me/activity', activityController.getActivity)
+
+// User session routes
+router.route('/me/sessions')
+  .get(sessionController.getSessions)
+  .delete(sessionController.revokeAllSessions)
+
+router.delete('/me/sessions/:sessionId', sessionController.revokeSession)
 
 // Admin only routes
 router.use(authController.restrictTo('admin'))
