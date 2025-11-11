@@ -1,4 +1,4 @@
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export interface ReviewReply {
@@ -37,7 +37,7 @@ export const useReviewInteractionsStore = defineStore('reviewInteractions', () =
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v1/reviews/${reviewId}/like`,
+        `${import.meta.env.VITE_API_URL}/api/v1/review-interactions/${reviewId}/like`,
         {
           method: 'POST',
           credentials: 'include'
@@ -75,7 +75,7 @@ export const useReviewInteractionsStore = defineStore('reviewInteractions', () =
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v1/reviews/${reviewId}/like`,
+        `${import.meta.env.VITE_API_URL}/api/v1/review-interactions/${reviewId}/like`,
         {
           method: 'DELETE',
           credentials: 'include'
@@ -133,7 +133,7 @@ export const useReviewInteractionsStore = defineStore('reviewInteractions', () =
       })
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v1/reviews/${reviewId}/replies?${params}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/review-interactions/${reviewId}/replies?${params}`,
         {
           credentials: 'include'
         }
@@ -165,7 +165,7 @@ export const useReviewInteractionsStore = defineStore('reviewInteractions', () =
       error.value = null
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v1/reviews/${reviewId}/replies`,
+        `${import.meta.env.VITE_API_URL}/api/v1/review-interactions/${reviewId}/replies`,
         {
           method: 'POST',
           headers: {
@@ -211,7 +211,7 @@ export const useReviewInteractionsStore = defineStore('reviewInteractions', () =
       error.value = null
 
       const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v1/reviews/replies/${replyId}`,
+        `${import.meta.env.VITE_API_URL}/api/v1/review-interactions/${reviewId}/replies/${replyId}`,
         {
           method: 'DELETE',
           credentials: 'include'

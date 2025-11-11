@@ -145,56 +145,28 @@ export const useWatchHistoryStore = defineStore('watchHistory', () => {
     }
   }
 
+  // Note: updateProgress is not needed as trackWatch handles upserts
+  // Keeping this for backward compatibility but it just calls trackWatch
   const updateProgress = async (
     historyId: string,
     watchDuration: number,
     lastPosition: number,
     completed: boolean
   ) => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/v1/watch-history/${historyId}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          credentials: 'include',
-          body: JSON.stringify({
-            watchDuration,
-            lastPosition,
-            completed
-          })
-        }
-      )
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.message || 'Failed to update progress')
-      }
-
-      const data = await response.json()
-
-      if (data.status === 'success') {
-        // Update local state
-        const index = history.value.findIndex(h => h.id === historyId)
-        if (index !== -1) {
-          history.value[index] = {
-            ...history.value[index],
-            watchDuration,
-            lastPosition,
-            completed,
-            progressPercentage: Math.round((watchDuration / history.value[index].videoDuration) * 100)
-          }
-        }
-        return data.data.history
-      } else {
-        throw new Error(data.message || 'Failed to update progress')
-      }
-    } catch (err: any) {
-      console.error('Error updating progress:', err)
-      throw err
+    // Find the video ID from the history item
+    const historyItem = history.value.find(h => h.id === historyId)
+    if (!historyItem) {
+      throw new Error('History item not found')
     }
+    
+    // Use trackWatch which handles upserts
+    return await trackWatch(
+      historyItem.videoId,
+      watchDuration,
+      historyItem.videoDuration,
+      lastPosition,
+      completed
+    )
   }
 
   const removeHistoryItem = async (historyId: string) => {
