@@ -3,7 +3,7 @@ const AppError = require('./appError')
 
 // Initialize S3 client
 const s3Client = new S3Client({
-  region: process.env.AWS_REGION || 'us-east-1',
+  region: process.env.AWS_REGION || 'us-east-2',
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
@@ -12,6 +12,17 @@ const s3Client = new S3Client({
 
 const BUCKET_NAME = process.env.S3_AVATAR_BUCKET || 'opinionrateit-avatars'
 const CLOUDFRONT_URL = process.env.CLOUDFRONT_URL || `https://${BUCKET_NAME}.s3.amazonaws.com`
+
+// Log S3 configuration on startup (only in development)
+if (process.env.NODE_ENV === 'development') {
+  console.log('S3 Configuration:', {
+    bucket: BUCKET_NAME,
+    region: process.env.AWS_REGION || 'us-east-1',
+    hasAccessKey: !!process.env.AWS_ACCESS_KEY_ID,
+    hasSecretKey: !!process.env.AWS_SECRET_ACCESS_KEY,
+    cloudfront: CLOUDFRONT_URL
+  })
+}
 
 /**
  * Upload file to S3
@@ -27,7 +38,7 @@ exports.uploadToS3 = async (fileBuffer, filename, mimetype) => {
       Key: `avatars/${filename}`,
       Body: fileBuffer,
       ContentType: mimetype,
-      ACL: 'public-read',
+      // ACL removed - bucket uses bucket policy for public access instead
       CacheControl: 'max-age=31536000' // Cache for 1 year
     }
 
@@ -37,8 +48,17 @@ exports.uploadToS3 = async (fileBuffer, filename, mimetype) => {
     // Return CloudFront URL if configured, otherwise S3 URL
     return `${CLOUDFRONT_URL}/avatars/${filename}`
   } catch (error) {
-    console.error('S3 Upload Error:', error)
-    throw new AppError('Failed to upload image to storage', 500)
+    console.error('S3 Upload Error Details:', {
+      message: error.message,
+      code: error.code,
+      statusCode: error.$metadata?.httpStatusCode,
+      bucket: BUCKET_NAME,
+      region: process.env.AWS_REGION,
+      hasAccessKey: !!process.env.AWS_ACCESS_KEY_ID,
+      hasSecretKey: !!process.env.AWS_SECRET_ACCESS_KEY
+    })
+    console.error('Full error:', error)
+    throw new AppError(`Failed to upload image to storage: ${error.message}`, 500)
   }
 }
 
