@@ -12,7 +12,13 @@ export const useUserStore = defineStore('useUserStore', () => {
     photo: '',
     youTubeChannelId: '',
     createdAt: '',
-    lastLoginAt: ''
+    lastLoginAt: '',
+    // Extended profile fields
+    bio: '',
+    location: '',
+    website: '',
+    twitter: '',
+    linkedin: ''
   }
 
   const isLoggedIn = ref(false)
@@ -29,7 +35,12 @@ export const useUserStore = defineStore('useUserStore', () => {
       photo, 
       youTubeChannelId, 
       createdAt,
-      lastLoginAt 
+      lastLoginAt,
+      bio,
+      location,
+      website,
+      twitter,
+      linkedin
     } = userDetails
     
     // Normalize user data
@@ -42,7 +53,12 @@ export const useUserStore = defineStore('useUserStore', () => {
       photo: photo || avatar || '',
       youTubeChannelId: youTubeChannelId || '',
       createdAt: createdAt || new Date().toISOString(),
-      lastLoginAt: lastLoginAt || new Date().toISOString()
+      lastLoginAt: lastLoginAt || new Date().toISOString(),
+      bio: bio || '',
+      location: location || '',
+      website: website || '',
+      twitter: twitter || '',
+      linkedin: linkedin || ''
     }
     
     // Store non-sensitive user data in localStorage
@@ -225,6 +241,36 @@ export const useUserStore = defineStore('useUserStore', () => {
     }
   }
 
+  const uploadAvatar = async (file: File) => {
+    try {
+      const formData = new FormData()
+      formData.append('avatar', file)
+      
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/users/me/avatar`, {
+        method: 'POST',
+        credentials: 'include',
+        body: formData
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        if (data.status === 'success' && data.data?.avatarUrl) {
+          // Update user with new avatar URL
+          user.value.avatar = data.data.avatarUrl
+          user.value.photo = data.data.avatarUrl
+          localStorage.setItem('orateit-user', JSON.stringify(user.value))
+          return data.data.avatarUrl
+        }
+      }
+      
+      const errorData = await response.json()
+      throw new Error(errorData.message || 'Failed to upload avatar')
+    } catch (error) {
+      console.error('Error uploading avatar:', error)
+      throw error
+    }
+  }
+
   // Computed properties for better API
   const currentUser = user
   const isAuthenticated = isLoggedIn
@@ -247,6 +293,7 @@ export const useUserStore = defineStore('useUserStore', () => {
     updateProfile,
     changePassword,
     deleteAccount,
+    uploadAvatar,
     
     // Computed properties
     currentUser,
