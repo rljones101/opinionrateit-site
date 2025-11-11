@@ -2,6 +2,7 @@ const factory = require('./handlerFactory.js')
 const User = require('../models/userModel.js')
 const catchAsync = require('../utils/catchAsync.js')
 const AppError = require('../utils/appError.js')
+const { uploadToS3, deleteFromS3 } = require('../utils/s3Upload.js')
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {}
@@ -59,5 +60,40 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   res.status(204).json({
     status: 'success',
     data: null
+  })
+})
+
+exports.uploadAvatar = catchAsync(async (req, res, next) => {
+  if (!req.file) {
+    return next(new AppError('Please provide an image file', 400))
+  }
+
+  // Get current user to check for existing avatar
+  const currentUser = await User.findById(req.user.id)
+
+  // Upload new avatar to S3
+  const avatarUrl = await uploadToS3(
+    req.file.buffer,
+    req.file.filename,
+    req.file.mimetype
+  )
+
+  // Update user with new avatar URL
+  const updatedUser = await User.findByIdAndUpdate(
+    req.user.id,
+    { photo: avatarUrl },
+    { new: true, runValidators: true }
+  )
+
+  // Delete old avatar from S3 (if exists and not default)
+  if (currentUser.photo && currentUser.photo !== avatarUrl) {
+    await deleteFromS3(currentUser.photo)
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      avatarUrl: updatedUser.photo
+    }
   })
 })

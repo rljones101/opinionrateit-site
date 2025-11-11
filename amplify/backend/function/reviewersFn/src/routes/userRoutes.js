@@ -2,7 +2,10 @@ const express = require('express')
 const rateLimit = require('express-rate-limit')
 const authController = require('../controllers/authController.js')
 const userController = require('../controllers/userController.js')
+const preferencesController = require('../controllers/preferencesController.js')
 const { validateSignup, validateLogin, validatePasswordReset } = require('../middleware/validation.js')
+const { uploadAvatar, handleMulterError } = require('../middleware/upload.js')
+const { resizeAvatar } = require('../middleware/imageProcessor.js')
 
 const router = express.Router()
 
@@ -28,6 +31,20 @@ router.use(authController.protect)
 router.patch('/updateMe', userController.updateMe)
 router.patch('/updateMyPassword', authController.updatePassword)
 router.delete('/deleteMe', userController.deleteMe)
+
+// Avatar upload route
+router.post(
+  '/me/avatar',
+  uploadAvatar,
+  handleMulterError,
+  resizeAvatar,
+  userController.uploadAvatar
+)
+
+// User preferences routes
+router.route('/me/preferences')
+  .get(preferencesController.getPreferences)
+  .patch(preferencesController.updatePreferences)
 
 // Admin only routes
 router.use(authController.restrictTo('admin'))
