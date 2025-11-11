@@ -3,6 +3,7 @@ const rateLimit = require('express-rate-limit')
 const authController = require('../controllers/authController.js')
 const userController = require('../controllers/userController.js')
 const preferencesController = require('../controllers/preferencesController.js')
+const activityController = require('../controllers/activityController.js')
 const { validateSignup, validateLogin, validatePasswordReset } = require('../middleware/validation.js')
 const { uploadAvatar, handleMulterError } = require('../middleware/upload.js')
 const { resizeAvatar } = require('../middleware/imageProcessor.js')
@@ -45,6 +46,9 @@ router.post(
 router.route('/me/preferences')
   .get(preferencesController.getPreferences)
   .patch(preferencesController.updatePreferences)
+
+// User activity route
+router.get('/me/activity', activityController.getActivity)
 
 // Admin only routes
 router.use(authController.restrictTo('admin'))

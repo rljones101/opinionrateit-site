@@ -72,6 +72,16 @@ exports.signup = catchAsync(async (req, res) => {
     user = { ...user.toObject(), avatar: reviewer.avatar }
   }
 
+  // Log signup activity
+  const UserActivity = require('../models/userActivityModel')
+  UserActivity.logActivity(
+    user._id,
+    'signup',
+    'Account created',
+    'Welcome to OpinionRateIt!',
+    { ipAddress: req.ip || req.connection.remoteAddress }
+  ).catch(err => console.error('Failed to log signup activity:', err))
+
   createSendToken(user, 201, res)
 })
 
@@ -125,6 +135,20 @@ exports.login = catchAsync(async (req, res, next) => {
         user = { ...user.toObject(), avatar: reviewer.avatar }
       }
     }
+
+    // Log login activity
+    const UserActivity = require('../models/userActivityModel')
+    const userAgent = req.headers['user-agent'] || 'Unknown device'
+    UserActivity.logActivity(
+      user._id,
+      'login',
+      'Logged in',
+      `Login from ${userAgent.substring(0, 50)}`,
+      {
+        ipAddress: req.ip || req.connection.remoteAddress,
+        userAgent: req.headers['user-agent']
+      }
+    ).catch(err => console.error('Failed to log login activity:', err))
 
     // 3) If everything is ok, send token to client
     createSendToken(user, 200, res)

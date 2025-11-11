@@ -46,6 +46,17 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     runValidators: true
   })
 
+  // Log profile update activity
+  const UserActivity = require('../models/userActivityModel')
+  const updatedFields = Object.keys(filteredBody)
+  UserActivity.logActivity(
+    req.user.id,
+    'profile_update',
+    'Updated profile',
+    `Updated: ${updatedFields.join(', ')}`,
+    { updatedFields }
+  ).catch(err => console.error('Failed to log profile update activity:', err))
+
   res.status(200).json({
     status: 'success',
     data: {
@@ -89,6 +100,16 @@ exports.uploadAvatar = catchAsync(async (req, res, next) => {
   if (currentUser.photo && currentUser.photo !== avatarUrl) {
     await deleteFromS3(currentUser.photo)
   }
+
+  // Log avatar upload activity
+  const UserActivity = require('../models/userActivityModel')
+  UserActivity.logActivity(
+    req.user.id,
+    'profile_update',
+    'Updated profile picture',
+    'Uploaded new avatar',
+    { action: 'avatar_upload' }
+  ).catch(err => console.error('Failed to log avatar upload activity:', err))
 
   res.status(200).json({
     status: 'success',
