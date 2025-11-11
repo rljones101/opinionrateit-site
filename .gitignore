@@ -37,6 +37,7 @@ test.js
 *.njsproj
 *.sln
 *.sw?
+.kiro
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
