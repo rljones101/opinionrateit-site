@@ -23,6 +23,9 @@ const publishedVideoRouter = require('./routes/publishedVideoRoutes.js')
 const reviewsRouter = require('./routes/reviewRoutes.js')
 const youTubeRouter = require('./routes/youTubeRoutes.js')
 const stripeRouter = require('./routes/stripeRoutes.js')
+const bookmarkRouter = require('./routes/bookmarkRoutes.js')
+const watchHistoryRouter = require('./routes/watchHistoryRoutes.js')
+const reviewInteractionRouter = require('./routes/reviewInteractionRoutes.js')
 
 loadEnvConfig(process.env.NODE_ENV)
 
@@ -193,6 +196,9 @@ app.use('/api/v1/publishedVideos', publishedVideoRouter)
 app.use('/api/v1/reviews', reviewsRouter)
 app.use('/api/v1/youtube', youTubeRouter)
 app.use('/api/v1/stripe', stripeRouter)
+app.use('/api/v1/bookmarks', bookmarkRouter)
+app.use('/api/v1/watch-history', watchHistoryRouter)
+app.use('/api/v1/review-interactions', reviewInteractionRouter)
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404))
