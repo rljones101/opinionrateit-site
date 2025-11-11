@@ -2,7 +2,9 @@
 import { ref, computed } from 'vue'
 import UserAvatar from '@/components/UserAvatar.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
+import LoadingState from '@/components/ui/LoadingState.vue'
 import { formatDate } from '@/utils/DateUtils'
+import { useUserStore } from '@/stores/userStore'
 
 interface User {
   id: string
@@ -21,8 +23,13 @@ interface Props {
 
 const props = defineProps<Props>()
 
+const userStore = useUserStore()
+
 const isEditingAvatar = ref(false)
+const isUploadingAvatar = ref(false)
+const uploadError = ref('')
 const avatarUploadRef = ref<HTMLInputElement | null>(null)
+const previewUrl = ref<string | null>(null)
 
 const roleDisplayName = computed(() => {
   const roleMap: Record<string, string> = {
@@ -61,13 +68,55 @@ const handleAvatarUpload = async (event: Event) => {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
   
-  if (file) {
-    // TODO: Implement avatar upload functionality
-    console.log('Avatar upload:', file)
-    // This would typically upload to S3 or similar service
+  if (!file) {
+    isEditingAvatar.value = false
+    return
   }
   
-  isEditingAvatar.value = false
+  // Validate file type
+  if (!file.type.startsWith('image/')) {
+    uploadError.value = 'Please select an image file'
+    isEditingAvatar.value = false
+    return
+  }
+  
+  // Validate file size (5MB max)
+  if (file.size > 5 * 1024 * 1024) {
+    uploadError.value = 'Image size must be less than 5MB'
+    isEditingAvatar.value = false
+    return
+  }
+  
+  try {
+    isUploadingAvatar.value = true
+    uploadError.value = ''
+    
+    // Create preview
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      previewUrl.value = e.target?.result as string
+    }
+    reader.readAsDataURL(file)
+    
+    // Upload avatar
+    await userStore.uploadAvatar(file)
+    
+    // Clear preview after successful upload
+    setTimeout(() => {
+      previewUrl.value = null
+    }, 2000)
+    
+  } catch (error: any) {
+    uploadError.value = error.message || 'Failed to upload avatar'
+    previewUrl.value = null
+  } finally {
+    isUploadingAvatar.value = false
+    isEditingAvatar.value = false
+    // Reset file input
+    if (target) {
+      target.value = ''
+    }
+  }
 }
 
 const handleEditProfile = () => {
@@ -89,12 +138,13 @@ const handleEditProfile = () => {
       <div class="avatar-section">
         <div class="avatar-container" @click="handleAvatarClick">
           <UserAvatar 
-            :user="{ name: user.name, avatarUrl: user.photo || user.avatar || '' }" 
+            :user="{ name: user.name, avatarUrl: previewUrl || user.photo || user.avatar || '' }" 
             size="xl" 
             class="avatar-image"
           />
-          <div class="avatar-overlay">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div class="avatar-overlay" :class="{ 'uploading': isUploadingAvatar }">
+            <LoadingState v-if="isUploadingAvatar" size="sm" />
+            <svg v-else class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
@@ -104,10 +154,16 @@ const handleEditProfile = () => {
         <input 
           ref="avatarUploadRef"
           type="file" 
-          accept="image/*" 
+          accept="image/jpeg,image/png,image/webp" 
           class="hidden" 
           @change="handleAvatarUpload"
+          :disabled="isUploadingAvatar"
         />
+        
+        <!-- Upload Error -->
+        <div v-if="uploadError" class="upload-error">
+          {{ uploadError }}
+        </div>
       </div>
       
       <!-- User Info -->
@@ -185,6 +241,15 @@ const handleEditProfile = () => {
 
 .avatar-container:hover .avatar-overlay {
   opacity: 1;
+}
+
+.avatar-overlay.uploading {
+  opacity: 1;
+  @apply bg-black/70;
+}
+
+.upload-error {
+  @apply mt-2 text-sm text-red-300 bg-red-900/50 px-3 py-1 rounded;
 }
 
 .user-info {

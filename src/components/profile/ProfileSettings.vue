@@ -34,16 +34,21 @@ const saveError = ref('')
 const formData = reactive({
   name: props.user.name,
   email: props.user.email,
-  bio: '',
-  location: '',
-  website: '',
-  twitter: '',
-  linkedin: ''
+  bio: (props.user as any).bio || '',
+  location: (props.user as any).location || '',
+  website: (props.user as any).website || '',
+  twitter: (props.user as any).twitter || '',
+  linkedin: (props.user as any).linkedin || ''
 })
 
 const hasChanges = computed(() => {
   return formData.name !== props.user.name || 
-         formData.email !== props.user.email
+         formData.email !== props.user.email ||
+         formData.bio !== ((props.user as any).bio || '') ||
+         formData.location !== ((props.user as any).location || '') ||
+         formData.website !== ((props.user as any).website || '') ||
+         formData.twitter !== ((props.user as any).twitter || '') ||
+         formData.linkedin !== ((props.user as any).linkedin || '')
 })
 
 const handleEdit = () => {
@@ -56,14 +61,24 @@ const handleCancel = () => {
   // Reset form data
   formData.name = props.user.name
   formData.email = props.user.email
-  formData.bio = ''
-  formData.location = ''
-  formData.website = ''
-  formData.twitter = ''
-  formData.linkedin = ''
+  formData.bio = (props.user as any).bio || ''
+  formData.location = (props.user as any).location || ''
+  formData.website = (props.user as any).website || ''
+  formData.twitter = (props.user as any).twitter || ''
+  formData.linkedin = (props.user as any).linkedin || ''
   
   isEditing.value = false
   saveError.value = ''
+}
+
+const validateUrl = (url: string): boolean => {
+  if (!url) return true // Empty is valid
+  try {
+    new URL(url.startsWith('http') ? url : `https://${url}`)
+    return true
+  } catch {
+    return false
+  }
 }
 
 const handleSave = async () => {
@@ -71,10 +86,26 @@ const handleSave = async () => {
     isSaving.value = true
     saveError.value = ''
     
+    // Validate URLs
+    if (formData.website && !validateUrl(formData.website)) {
+      saveError.value = 'Please enter a valid website URL'
+      return
+    }
+    
+    if (formData.linkedin && !formData.linkedin.includes('linkedin.com')) {
+      saveError.value = 'Please enter a valid LinkedIn URL'
+      return
+    }
+    
     // Update user profile via API
     await userStore.updateProfile({
       name: formData.name,
-      email: formData.email
+      email: formData.email,
+      bio: formData.bio,
+      location: formData.location,
+      website: formData.website,
+      twitter: formData.twitter,
+      linkedin: formData.linkedin
     })
     
     saveMessage.value = 'Profile updated successfully!'
