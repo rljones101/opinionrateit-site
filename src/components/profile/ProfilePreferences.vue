@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, watch, computed } from 'vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
+import { usePreferencesStore } from '@/stores/preferencesStore'
 
 interface User {
   id: string
@@ -20,10 +21,18 @@ interface Props {
 
 defineProps<Props>()
 
-const isLoading = ref(true)
-const isSaving = ref(false)
+const preferencesStore = usePreferencesStore()
+
 const saveMessage = ref('')
-const saveError = ref('')
+let saveTimeout: number | null = null
+let debounceTimeout: number | null = null
+
+// Use store's loading state
+const isLoading = computed(() => preferencesStore.loading)
+const isSaving = computed(() => preferencesStore.loading)
+
+// Use store's error state
+const saveError = computed(() => preferencesStore.error)
 
 const preferences = reactive({
   // Notification preferences
@@ -34,13 +43,13 @@ const preferences = reactive({
   weeklyDigest: false,
   
   // Display preferences
-  theme: 'light',
+  theme: 'light' as 'light' | 'dark' | 'auto',
   language: 'en',
   timezone: 'UTC',
   dateFormat: 'MM/DD/YYYY',
   
   // Privacy preferences
-  profileVisibility: 'public',
+  profileVisibility: 'public' as 'public' | 'members' | 'private',
   showEmail: false,
   showActivity: true,
   allowMessages: true,
@@ -93,40 +102,94 @@ const videoQualityOptions = [
 
 const loadPreferences = async () => {
   try {
-    isLoading.value = true
+    preferencesStore.clearError()
     
-    // TODO: Load user preferences from API
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    await preferencesStore.fetchPreferences()
     
-    // Mock loading preferences - in real app, this would come from API
+    // Populate form with loaded preferences
+    if (preferencesStore.preferences) {
+      const prefs = preferencesStore.preferences
+      Object.assign(preferences, {
+        emailNotifications: prefs.notifications.email,
+        pushNotifications: prefs.notifications.push,
+        reviewNotifications: prefs.notifications.reviews,
+        videoUpdateNotifications: prefs.notifications.videoUpdates,
+        weeklyDigest: prefs.notifications.weeklyDigest,
+        theme: prefs.display.theme,
+        language: prefs.display.language,
+        timezone: prefs.display.timezone,
+        dateFormat: prefs.display.dateFormat,
+        profileVisibility: prefs.privacy.profileVisibility,
+        showEmail: prefs.privacy.showEmail,
+        showActivity: prefs.privacy.showActivity,
+        allowMessages: prefs.privacy.allowMessages,
+        autoplayVideos: prefs.content.autoplayVideos,
+        showMatureContent: prefs.content.showMatureContent,
+        defaultVideoQuality: prefs.content.defaultVideoQuality,
+        subtitlesEnabled: prefs.content.subtitlesEnabled
+      })
+    }
     
   } catch (error: any) {
-    saveError.value = error.message || 'Failed to load preferences'
-  } finally {
-    isLoading.value = false
+    console.error('Failed to load preferences:', error)
   }
 }
 
 const handleSave = async () => {
   try {
-    isSaving.value = true
-    saveError.value = ''
+    preferencesStore.clearError()
     
-    // TODO: Save preferences to API
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    // Build update object
+    const updates = {
+      notifications: {
+        email: preferences.emailNotifications,
+        push: preferences.pushNotifications,
+        reviews: preferences.reviewNotifications,
+        videoUpdates: preferences.videoUpdateNotifications,
+        weeklyDigest: preferences.weeklyDigest
+      },
+      display: {
+        theme: preferences.theme,
+        language: preferences.language,
+        timezone: preferences.timezone,
+        dateFormat: preferences.dateFormat
+      },
+      privacy: {
+        profileVisibility: preferences.profileVisibility,
+        showEmail: preferences.showEmail,
+        showActivity: preferences.showActivity,
+        allowMessages: preferences.allowMessages
+      },
+      content: {
+        autoplayVideos: preferences.autoplayVideos,
+        showMatureContent: preferences.showMatureContent,
+        defaultVideoQuality: preferences.defaultVideoQuality,
+        subtitlesEnabled: preferences.subtitlesEnabled
+      }
+    }
+    
+    await preferencesStore.updatePreferences(updates)
     
     saveMessage.value = 'Preferences saved successfully!'
     
     // Clear success message after 3 seconds
-    setTimeout(() => {
+    if (saveTimeout) clearTimeout(saveTimeout)
+    saveTimeout = window.setTimeout(() => {
       saveMessage.value = ''
     }, 3000)
     
   } catch (error: any) {
-    saveError.value = error.message || 'Failed to save preferences'
-  } finally {
-    isSaving.value = false
+    console.error('Failed to save preferences:', error)
   }
+}
+
+// Debounced auto-save function
+const debouncedSave = () => {
+  if (debounceTimeout) clearTimeout(debounceTimeout)
+  
+  debounceTimeout = window.setTimeout(() => {
+    handleSave()
+  }, 1000) // Wait 1 second after last change before saving
 }
 
 const handleReset = () => {
@@ -153,6 +216,14 @@ const handleReset = () => {
     })
   }
 }
+
+// Watch for preference changes and auto-save with debouncing
+watch(preferences, () => {
+  // Only auto-save if preferences have been loaded
+  if (preferencesStore.preferences) {
+    debouncedSave()
+  }
+}, { deep: true })
 
 onMounted(() => {
   loadPreferences()
@@ -182,9 +253,15 @@ onMounted(() => {
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
       {{ saveError }}
+      <button @click="preferencesStore.clearError()" class="ml-auto text-red-600 hover:text-red-800">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
     </div>
     
-    <LoadingState v-if="isLoading" message="Loading your preferences..." />
+    <!-- Loading State -->
+    <LoadingState v-if="isLoading && !preferencesStore.preferences" message="Loading your preferences..." />
     
     <div v-else class="preferences-content">
       <!-- Notification Preferences -->
@@ -446,17 +523,26 @@ onMounted(() => {
       
       <!-- Actions -->
       <div class="preferences-actions">
+        <div class="action-info">
+          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span class="text-sm text-gray-600">Changes are saved automatically</span>
+        </div>
+        
         <div class="action-group">
           <BaseButton 
             variant="primary" 
             :disabled="isSaving"
             @click="handleSave"
           >
-            <LoadingState v-if="isSaving" size="sm" class="mr-2" />
+            <svg v-if="isSaving" class="w-4 h-4 mr-2 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
             <svg v-else class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
-            {{ isSaving ? 'Saving...' : 'Save Preferences' }}
+            {{ isSaving ? 'Saving...' : 'Save Now' }}
           </BaseButton>
           
           <BaseButton variant="secondary" @click="handleReset" :disabled="isSaving">
@@ -596,6 +682,10 @@ onMounted(() => {
 
 .preferences-actions {
   @apply pt-6 border-t border-gray-200;
+}
+
+.action-info {
+  @apply flex items-center gap-2 mb-4 text-sm;
 }
 
 .action-group {
