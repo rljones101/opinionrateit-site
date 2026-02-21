@@ -1532,11 +1532,6 @@
   dependencies:
     tslib "^2.6.2"
 
-"@types/aws-lambda@^8.10.149":
-  version "8.10.149"
-  resolved "https://registry.npmjs.org/@types/aws-lambda/-/aws-lambda-8.10.149.tgz"
-  integrity sha512-NXSZIhfJjnXqJgtS7IwutqIF/SOy1Wz5Px4gUY1RWITp3AYTyuJS4xaXr/bIJY1v15XMzrJ5soGnPM+7uigZjA==
-
 "@types/node@>=8.1.0":
   version "20.2.5"
   resolved "https://registry.npmjs.org/@types/node/-/node-20.2.5.tgz"
