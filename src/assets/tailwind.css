@@ -93,6 +93,17 @@
   .text-brand-800 { color: var(--color-brand-800); }
   .text-brand-900 { color: var(--color-brand-900); }
 
+  .border-brand-50 { border-color: var(--color-brand-50); }
+  .border-brand-100 { border-color: var(--color-brand-100); }
+  .border-brand-200 { border-color: var(--color-brand-200); }
+  .border-brand-300 { border-color: var(--color-brand-300); }
+  .border-brand-400 { border-color: var(--color-brand-400); }
+  .border-brand-500 { border-color: var(--color-brand-500); }
+  .border-brand-600 { border-color: var(--color-brand-600); }
+  .border-brand-700 { border-color: var(--color-brand-700); }
+  .border-brand-800 { border-color: var(--color-brand-800); }
+  .border-brand-900 { border-color: var(--color-brand-900); }
+
   .bg-default-50 { background-color: var(--color-default-50); }
   .bg-default-100 { background-color: var(--color-default-100); }
   .bg-default-200 { background-color: var(--color-default-200); }
@@ -114,6 +125,17 @@
   .text-default-700 { color: var(--color-default-700); }
   .text-default-800 { color: var(--color-default-800); }
   .text-default-900 { color: var(--color-default-900); }
+
+  .border-default-50 { border-color: var(--color-default-50); }
+  .border-default-100 { border-color: var(--color-default-100); }
+  .border-default-200 { border-color: var(--color-default-200); }
+  .border-default-300 { border-color: var(--color-default-300); }
+  .border-default-400 { border-color: var(--color-default-400); }
+  .border-default-500 { border-color: var(--color-default-500); }
+  .border-default-600 { border-color: var(--color-default-600); }
+  .border-default-700 { border-color: var(--color-default-700); }
+  .border-default-800 { border-color: var(--color-default-800); }
+  .border-default-900 { border-color: var(--color-default-900); }
 
   .bg-secondary-50 { background-color: var(--color-secondary-50); }
   .bg-secondary-100 { background-color: var(--color-secondary-100); }
