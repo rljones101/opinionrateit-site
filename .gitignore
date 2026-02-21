@@ -15,9 +15,20 @@ coverage
 *.local
 
 *.env
+.env
+.env.*
+.env.development
+.env.local
+.env.production
+
+# DynamoDB Local files (large binaries)
+amplify/backend/function/reviewersFn/src/dynamodb-local/*.zip
+amplify/backend/function/reviewersFn/src/dynamodb-local/*.jar
+amplify/backend/function/reviewersFn/src/dynamodb-local/DynamoDBLocal_lib/
 
 # TODO and development notes
 /todo
+/docs
 
 /src/backend/node_modules/
 
