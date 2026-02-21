@@ -36,17 +36,27 @@ const selectedHandler = (index: number) => {
 </template>
 
 <style scoped>
-@import "tailwindcss" reference;
-
 .tab {
-  @apply text-default-200 inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-default-400;
+  display: inline-block;
+  padding: 1rem;
+  border-bottom: 2px solid transparent;
+  border-radius: 0.5rem 0.5rem 0 0;
+  color: var(--color-default-200);
+}
+
+.tab:hover {
+  color: var(--color-default-400);
 }
 
 .tab:disabled {
-  @apply inline-block p-4 text-gray-400 rounded-t-lg cursor-not-allowed;
+  display: inline-block;
+  padding: 1rem;
+  color: #9ca3af;
+  border-radius: 0.5rem 0.5rem 0 0;
+  cursor: not-allowed;
 }
 
 .tab-active {
-  @apply text-brand-500;
+  color: var(--color-brand-500);
 }
 </style>
