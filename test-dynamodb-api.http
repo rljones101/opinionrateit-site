@@ -1,0 +1,43 @@
+### Test DynamoDB API Endpoints
+
+### 1. Check database status
+GET http://localhost:3000/api/v1/test/database-status
+
+### 2. Test DynamoDB user creation (via test endpoint)
+POST http://localhost:3000/api/v1/test/dynamo/test-user
+Content-Type: application/json
+
+### 3. Test DynamoDB signup
+POST http://localhost:3000/api/v1/test/dynamo/signup
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john.doe@example.com",
+  "password": "testpassword123",
+  "passwordConfirm": "testpassword123"
+}
+
+### 4. Test DynamoDB login
+POST http://localhost:3000/api/v1/test/dynamo/login
+Content-Type: application/json
+
+{
+  "email": "john.doe@example.com",
+  "password": "testpassword123"
+}
+
+### 5. Test protected route (use token from login response)
+GET http://localhost:3000/api/v1/test/protected
+Cookie: jwt=your-jwt-token-here
+
+### 6. Compare with MongoDB signup (if MongoDB is running)
+POST http://localhost:3000/api/v1/test/mongo/signup
+Content-Type: application/json
+
+{
+  "name": "Jane Doe",
+  "email": "jane.doe@example.com",
+  "password": "testpassword123",
+  "passwordConfirm": "testpassword123"
+}

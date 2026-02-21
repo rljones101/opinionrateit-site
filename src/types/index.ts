@@ -150,10 +150,11 @@ export enum SIGNUP_STEPS {
 export interface SignupPlan {
   name: string
   role: string
-  lookupKey: string
-  productKey: string
+  lookupKey: string | null
   cost: number
   yearlyDiscount: number
+  requiresBilling: boolean
+  requiresYouTube: boolean
   allowedReviewerAccess: boolean
   giveReviewerFeedback: boolean
   bookmarkReviewer: boolean

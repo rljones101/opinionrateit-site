@@ -20,6 +20,7 @@ const props = defineProps<{
     passwordConfirm: string
     role: string
   }
+  errorField?: string
 }>()
 
 const emit = defineEmits(['submit'])

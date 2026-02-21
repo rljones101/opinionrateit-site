@@ -1,5 +1,6 @@
 import signupViewController from '@/controllers/signupViewController'
 import type { BillingDetails } from '@/types'
+import { stripeElementsStyle } from '@/config/stripe'
 
 /* @ts-ignore */
 const stripe = Stripe(import.meta.env.VITE_STRIPE_KEY)
@@ -24,7 +25,7 @@ async function confirmCardPayment(secret: string, paymentMethodId: string) {
 
 function createElement(elementType: string) {
   return !getCardElement()
-    ? elements.create(elementType, signupViewController.style)
+    ? elements.create(elementType, { style: stripeElementsStyle })
     : getCardElement()
 }
 

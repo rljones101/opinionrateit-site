@@ -26,30 +26,62 @@ const stripeRouter = require('./routes/stripeRoutes.js')
 const bookmarkRouter = require('./routes/bookmarkRoutes.js')
 const watchHistoryRouter = require('./routes/watchHistoryRoutes.js')
 const reviewInteractionRouter = require('./routes/reviewInteractionRoutes.js')
+const testRouter = require('./routes/testRoutes.js')
 
 loadEnvConfig(process.env.NODE_ENV)
 
+// Initialize database connections based on environment
+async function initializeDatabases() {
+  const databaseManager = require('./config/database')
+  
+  try {
+    await databaseManager.connect()
+    console.log('✅ Database initialization complete')
+  } catch (error) {
+    console.error('❌ Database initialization failed:', error)
+    // Don't exit in development, allow the app to start for testing
+    if (process.env.NODE_ENV !== 'development') {
+      process.exit(1)
+    }
+  }
+}
+
+// Legacy MongoDB connection (kept for backward compatibility)
 async function DatabaseConnect() {
+  if (process.env.USE_MONGODB !== 'true') {
+    console.log('⏭️  Skipping MongoDB connection (USE_MONGODB not set to true)')
+    return
+  }
+
   const DATABASE_USER = process.env.DATABASE_USER
   const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD
   const DATABASE_HOST = process.env.DATABASE_HOST
   const DATABASE_PORT = process.env.DATABASE_PORT
   const DATABASE_NAME = process.env.DATABASE_NAME
 
-  //const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD)
   await mongoose.connect(
     `mongodb://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}`,
     { dbName: DATABASE_NAME }
   )
 }
 
+// Initialize databases
+initializeDatabases()
+
+// Keep legacy MongoDB connection for backward compatibility
 DatabaseConnect()
   .then(() => {
-    console.log('Database connection successful!')
-    console.log('Connected to database:', mongoose.connection.db.databaseName)
-    console.log('Connection string used:', `mongodb://${process.env.DATABASE_USER}:***@${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}`)
+    if (mongoose.connection.db) {
+      console.log('Database connection successful!')
+      console.log('Connected to database:', mongoose.connection.db.databaseName)
+      console.log('Connection string used:', `mongodb://${process.env.DATABASE_USER}:***@${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}`)
+    }
   })
-  .catch((error) => console.log(error))
+  .catch((error) => {
+    if (process.env.USE_MONGODB === 'true') {
+      console.log('MongoDB connection error:', error)
+    }
+  })
 
 // declare a new express app
 const app = express()
@@ -66,8 +98,13 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
-      scriptSrc: ["'self'"],
-      connectSrc: ["'self'", process.env.NODE_ENV === 'development' ? "http://localhost:5173" : "https://dev.opinionrateit.com"]
+      scriptSrc: ["'self'", "https://js.stripe.com"],
+      frameSrc: ["'self'", "https://js.stripe.com", "https://hooks.stripe.com", "https://www.youtube.com"],
+      connectSrc: [
+        "'self'", 
+        "https://api.stripe.com",
+        process.env.NODE_ENV === 'development' ? "http://localhost:5173" : "https://dev.opinionrateit.com"
+      ]
     }
   },
   crossOriginEmbedderPolicy: false
@@ -159,23 +196,6 @@ const corsOptions = {
 app.use(cors(corsOptions))
 app.options('*', cors(corsOptions)) // Enable preflight for all routes
 
-// Additional CORS headers for development
-if (process.env.NODE_ENV === 'development') {
-  app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', req.headers.origin)
-    res.header('Access-Control-Allow-Credentials', 'true')
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS')
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization, Cache-Control, Pragma')
-    
-    // Handle preflight requests
-    if (req.method === 'OPTIONS') {
-      res.sendStatus(200)
-    } else {
-      next()
-    }
-  })
-}
-
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString()
   // if(process.env.NODE_ENV === 'development') {
@@ -198,6 +218,12 @@ app.use('/api/v1/youtube', youTubeRouter)
 app.use('/api/v1/stripe', stripeRouter)
 app.use('/api/v1/bookmarks', bookmarkRouter)
 app.use('/api/v1/watch-history', watchHistoryRouter)
+app.use('/api/v1/review-interactions', reviewInteractionRouter)
+
+// Test routes for DynamoDB migration (development only)
+if (process.env.NODE_ENV === 'development') {
+  app.use('/api/v1/test', testRouter)
+}
 app.use('/api/v1/review-interactions', reviewInteractionRouter)
 
 app.all('*', (req, res, next) => {

@@ -175,31 +175,46 @@ const isAuthenticated = async () => {
 }
 
 router.beforeEach(async (to, from, next) => {
-  const authenticated = await isAuthenticated()
+  // Skip authentication check for public routes
+  const publicRoutes = ['home', 'login', 'signup', 'signup-success', 'signup-cancelled']
+  const isPublicRoute = publicRoutes.includes(to.name as string)
+  
+  // Only check authentication if the route requires it or if we're not on a public route
+  if (to?.meta?.requiresAuth || !isPublicRoute) {
+    const authenticated = await isAuthenticated()
 
-  if (!authenticated && to?.meta?.requiresAuth) {
-    // Clear user store when session is invalid
-    const { useUserStore } = await import('@/stores/userStore')
-    const userStore = useUserStore()
-    if (userStore.isLoggedIn) {
-      localStorage.removeItem('orateit-user')
-      userStore.isLoggedIn = false
-      userStore.user = {
-        id: '',
-        name: '',
-        email: '',
-        role: '',
-        avatar: '',
-        photo: '',
-        youTubeChannelId: '',
-        createdAt: '',
-        lastLoginAt: ''
+    if (!authenticated && to?.meta?.requiresAuth) {
+      // Clear user store when session is invalid
+      const { useUserStore } = await import('@/stores/userStore')
+      const userStore = useUserStore()
+      if (userStore.isLoggedIn) {
+        localStorage.removeItem('orateit-user')
+        userStore.isLoggedIn = false
+        userStore.user = {
+          id: '',
+          name: '',
+          email: '',
+          role: '',
+          avatar: '',
+          photo: '',
+          youTubeChannelId: '',
+          createdAt: '',
+          lastLoginAt: '',
+          bio: '',
+          location: '',
+          website: '',
+          twitter: '',
+          linkedin: ''
+        }
       }
+      next({ name: 'home' })
+    } else if (authenticated && to.name === 'home') {
+      next({ name: 'reviewers' })
+    } else {
+      next()
     }
-    next({ name: 'home' })
-  } else if (authenticated && to.name === 'home') {
-    next({ name: 'reviewers' })
   } else {
+    // Public route, no authentication check needed
     next()
   }
 })

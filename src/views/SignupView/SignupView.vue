@@ -46,9 +46,9 @@ signupStore.reset()
         name="fade"
         tag="div"
       >
-        <YoutubeStep :key="1" />
+        <YoutubeStep v-if="signupStore.selectedPlan.requiresYouTube" :key="1" />
         <AccountStep :key="2" />
-        <BillingStep :key="3" />
+        <BillingStep v-if="signupStore.selectedPlan.requiresBilling" :key="3" />
       </TransitionGroup>
     </div>
   </MainContentWrapper>

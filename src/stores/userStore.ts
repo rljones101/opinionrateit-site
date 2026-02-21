@@ -124,20 +124,23 @@ export const useUserStore = defineStore('useUserStore', () => {
         })
         if (response.ok) {
           isLoggedIn.value = true
+          return true
         } else {
           // Session is invalid, clear local storage
           localStorage.removeItem('orateit-user')
           user.value = { ...defaultUserDetails }
           isLoggedIn.value = false
+          return false
         }
       } catch (error) {
-        // Network error or server down, clear state
-        localStorage.removeItem('orateit-user')
-        user.value = { ...defaultUserDetails }
+        // Network error or server down, don't clear state on signup/login pages
+        // Just mark as not logged in
         isLoggedIn.value = false
+        return false
       }
     } else {
       isLoggedIn.value = false
+      return false
     }
   }
 
@@ -275,7 +278,12 @@ export const useUserStore = defineStore('useUserStore', () => {
   const currentUser = user
   const isAuthenticated = isLoggedIn
 
-  checkIfLoggedIn()
+  // Only check if logged in if there's user data in localStorage
+  // This prevents unnecessary API calls on signup/login pages
+  const userData = localStorage.getItem('orateit-user')
+  if (userData) {
+    checkIfLoggedIn()
+  }
 
   return {
     // Original methods

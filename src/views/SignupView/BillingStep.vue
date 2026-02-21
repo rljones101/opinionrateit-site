@@ -33,7 +33,7 @@ const onPaymentComplete = async (billingDetails: BillingDetails) => {
           <h2 class="text-xl mb-8">Order Summary</h2>
           <div class="flex items-start gap-8">
             <div class="flex flex-col">
-              <span class="text-app-orange">Reviewer Plan</span><span>Monthly</span>
+              <span class="text-app-orange">{{ signupStore.selectedPlan.name }} Plan</span><span>Monthly</span>
             </div>
             <div>${{ signupStore.selectedPlan.cost }}</div>
           </div>
