@@ -9,7 +9,7 @@
       "UnauthRoleName": "amplify-opinionrateitbackend-dev-0dc57-unauthRole",
       "StackName": "amplify-opinionrateitbackend-dev-0dc57",
       "StackId": "arn:aws:cloudformation:us-east-2:399951027632:stack/amplify-opinionrateitbackend-dev-0dc57/d875d760-0f5e-11f1-af4a-0601e512a0e3",
-      "AmplifyAppId": "dv7mu08oygggr"
+      "AmplifyAppId": "dyrvis20ihsc"
     },
     "categories": {
       "function": {

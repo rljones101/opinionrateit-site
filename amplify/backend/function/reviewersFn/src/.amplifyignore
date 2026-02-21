@@ -1,0 +1,29 @@
+# Exclude DynamoDB Local files (development only)
+dynamodb-local/
+
+# Exclude development scripts
+scripts/
+
+# Exclude documentation
+*.md
+ADD_DYNAMODB_PERMISSIONS.md
+AWS_CREDENTIALS_SETUP.md
+DYNAMODB_SETUP.md
+WINDOWS_SETUP.md
+
+# Exclude environment files
+.env.development
+.env.development.example
+.env.local
+config.env
+
+# Exclude development server
+dev-server.js
+
+# Exclude test files
+*.test.js
+*.spec.js
+__tests__/
+
+# Exclude event test files
+event.json

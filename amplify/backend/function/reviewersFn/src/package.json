@@ -38,7 +38,6 @@
     "mongoose": "^8.13.2",
     "multer": "^2.0.2",
     "node-cache": "^5.1.2",
-    "opinionrateit-site": "file:../../../../..",
     "sharp": "^0.34.5",
     "slugify": "^1.6.6",
     "stripe": "^18.0.0",
