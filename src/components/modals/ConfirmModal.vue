@@ -57,10 +57,10 @@ const confirm = () => {
         </div>
         <!-- Modal footer -->
         <div class="flex items-center justify-end p-6 space-x-2 rounded-b">
-          <BaseButton type="primary" @click="confirm">
+          <BaseButton variant="primary" @click="confirm">
             {{ yesLabel ? yesLabel : 'Yes' }}
           </BaseButton>
-          <BaseButton type="secondary" @click="close">
+          <BaseButton variant="secondary" @click="close">
             {{ noLabel ? noLabel : 'No' }}
           </BaseButton>
         </div>

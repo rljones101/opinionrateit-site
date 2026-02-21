@@ -51,11 +51,16 @@ export interface ChannelDetailsInterface {
 
 export interface Video {
   _id?: string
+  id?: string
   videoId: string
   channelId: string
   title: string
   thumbnail: string
   selected?: boolean
+  duration?: string
+  publishedAt?: string
+  viewCount?: number
+  channelTitle?: string
 }
 
 export interface PublishedVideo extends Video {

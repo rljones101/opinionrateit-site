@@ -39,7 +39,7 @@ const signupStore = useSignupStore()
       />
       <div class="flex gap-4">
         <!--                <BaseButton @click="cancel">Cancel</BaseButton>-->
-        <BaseButton class="w-full" type="primary" @click="signupStore.getChannelDetails"
+        <BaseButton class="w-full" variant="primary" @click="signupStore.getChannelDetails"
           >Get My YouTube Profile</BaseButton
         >
       </div>

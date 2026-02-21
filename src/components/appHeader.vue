@@ -122,7 +122,7 @@ onUnmounted(() => {
         <div class="auth-actions">
           <BaseButton 
             v-if="!userStore.isLoggedIn" 
-            type="secondary" 
+            variant="secondary" 
             @click="showLogin"
             class="login-button"
           >
@@ -181,7 +181,7 @@ onUnmounted(() => {
         <div class="mobile-auth-actions">
           <BaseButton 
             v-if="!userStore.isLoggedIn" 
-            type="secondary" 
+            variant="secondary" 
             @click="showLogin"
             class="mobile-login-button"
           >

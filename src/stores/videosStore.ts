@@ -82,7 +82,7 @@ export const useVideosStore = defineStore('useVideosStore', () => {
   const updatePublishedVideos = async () => {
     if (!profile.value?.youTubeChannelId) throw new Error('YouTubeChannelId is required')
     status.value = 'loading'
-    const publishedVids = await VideoService.getPublishedVideos(profile.value?.youTubeChannelId)
+    const publishedVids = await VideoService.getPublishedVideosByChannelId(profile.value?.youTubeChannelId)
 
     publishedVideos.value = [...publishedVids]
     status.value = 'idle'

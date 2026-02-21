@@ -130,7 +130,7 @@ testImage(props.reviewer.thumbnailMedium)
         <!--            />-->
         <!--          </svg>-->
         <!--        </BaseButton>-->
-        <BaseButton type="primary" @click="showVideoReviews">View</BaseButton>
+        <BaseButton variant="primary" @click="showVideoReviews">View</BaseButton>
       </div>
     </div>
   </div>

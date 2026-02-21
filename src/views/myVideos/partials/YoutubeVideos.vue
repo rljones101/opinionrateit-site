@@ -3,7 +3,7 @@
     <p class="mb-8">Here you can search and select what videos you would like to have reviewed.</p>
     <div class="flex w-full gap-8 mb-8 bg-app-blue-soft p-4 rounded-lg">
       <BaseButton
-        type="primary"
+        variant="primary"
         class="relative"
         v-if="profileStore.getIsReviewer"
         :disabled="videosStore.getSelectedVideos.length === 0"

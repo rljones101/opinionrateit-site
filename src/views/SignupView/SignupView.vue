@@ -36,7 +36,7 @@ signupStore.reset()
     >
       <div class="min-w-max w-[254px] step-wrapper pr-8 border-r border-slate-700">
         <div class="flex justify-center">
-          <BaseButton @click="signupStore.goToPreviousStep" type="primary">Go Back</BaseButton>
+          <BaseButton @click="signupStore.goToPreviousStep" variant="primary">Go Back</BaseButton>
         </div>
 
         <ChoosePlans />

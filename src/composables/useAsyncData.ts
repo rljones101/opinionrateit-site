@@ -1,4 +1,4 @@
-import { ref, computed, readonly } from 'vue'
+import { ref, computed, readonly, type UnwrapRef } from 'vue'
 
 export interface AsyncDataState<T> {
   data: T | null
@@ -90,7 +90,7 @@ export function useAsyncState<T>(initialValue: T) {
   }
 
   const setData = (data: T) => {
-    state.value.data = data
+    state.value.data = data as UnwrapRef<T> | null
     state.value.error = null
   }
 

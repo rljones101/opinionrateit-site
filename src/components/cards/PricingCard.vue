@@ -42,7 +42,7 @@ const emit = defineEmits(['selected'])
         'bg-orange-500 shadow-none border-none disabled:bg-app-blue hover:transition-none hover:translate-y-0 text-orange-500':
           active
       }"
-      type="primary"
+      variant="primary"
       @click="emit('selected')"
       :disabled="active || isDisabled"
       >{{ active ? 'Selected' : isDisabled ? 'Comming Soon' : 'Choose Plan' }}</BaseButton

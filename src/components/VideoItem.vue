@@ -78,8 +78,8 @@ const formatViews = (viewCount: number): string => {
       </div>
       
       <!-- Bookmark Button -->
-      <div class="bookmark-button-container">
-        <BookmarkButton :video-id="video.id" size="sm" />
+      <div v-if="video.id || video.videoId" class="bookmark-button-container">
+        <BookmarkButton :video-id="video.id || video.videoId" size="sm" />
       </div>
     </div>
     

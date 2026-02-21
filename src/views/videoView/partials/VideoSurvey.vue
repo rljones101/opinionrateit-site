@@ -54,9 +54,9 @@ const {
     </div>
     <!-- controls -->
     <div class="button-controls flex gap-4">
-      <BaseButton v-if="!showReviewForm" type="primary" @click="showSurvey">Add Review</BaseButton>
-      <BaseButton v-if="showReviewForm" type="primary" @click="showSurvey">Cancel</BaseButton>
-      <BaseButton v-if="allSurveyQuestionsAnswered" type="primary" @click="addReview"
+      <BaseButton v-if="!showReviewForm" variant="primary" @click="showSurvey">Add Review</BaseButton>
+      <BaseButton v-if="showReviewForm" variant="primary" @click="showSurvey">Cancel</BaseButton>
+      <BaseButton v-if="allSurveyQuestionsAnswered" variant="primary" @click="addReview"
         >Submit Review</BaseButton
       >
     </div>

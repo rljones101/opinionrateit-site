@@ -59,7 +59,7 @@ const searchHandler = async (value: string) => {
                 />
               </div>
               <div class="hidden md:flex items-center">
-                <BaseButton type="primary" @click="logout">Logout</BaseButton>
+                <BaseButton variant="primary" @click="logout">Logout</BaseButton>
               </div>
             </div>
           </div>

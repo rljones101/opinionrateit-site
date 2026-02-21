@@ -87,7 +87,7 @@ const closeDialog = () => {
       <!--        </div>-->
       <!--      </div>-->
       <div v-if="showError" class="text-red-500">{{ errorMessage }}</div>
-      <BaseButton type="primary" class="w-full" @click="login">Login to your account</BaseButton>
+      <BaseButton variant="primary" class="w-full" @click="login">Login to your account</BaseButton>
       <div class="flex text-sm font-medium items-center gap-2">
         Not registered?
         <AppLink to="/signup">Create Account</AppLink> |

@@ -27,7 +27,7 @@ const { channelDetails } = useReviewer(channelId)
         <p class="text-sm">Joined</p>
         <p class="text-lg">
           <span class="font-semibold text-brand-500">
-            {{ formatDate(channelDetails.createdAt, 'short_no_time') }}
+            {{ formatDate(channelDetails.createdAt, { year: 'numeric', month: 'short', day: 'numeric' }) }}
           </span>
         </p>
       </div>
