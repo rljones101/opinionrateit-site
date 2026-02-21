@@ -44,7 +44,7 @@ const getFeatureList = (plan: SignupPlan) => {
 </script>
 
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full items-stretch">
     <PricingCard
       v-for="plan in signupPlans"
       :key="plan.role"
@@ -52,6 +52,7 @@ const getFeatureList = (plan: SignupPlan) => {
       :pricing="plan.cost > 0 ? plan.cost.toString() : undefined"
       :active="signupStore.selectedPlan.role === plan.role"
       @selected="signupStore.selectPlan(plan.role)"
+      class="h-full"
     >
       <template #list>
         <CheckListItem

@@ -15,7 +15,7 @@ const emit = defineEmits(['selected'])
 <template>
   <div
     :class="{ 'border border-orange-500': active }"
-    class="w-full flex flex-col max-w-sm p-4 bg-secondary-50 rounded-lg shadow sm:p-8"
+    class="w-full flex flex-col max-w-sm p-4 bg-secondary-50 rounded-lg shadow sm:p-8 h-full"
   >
     <h5 class="mb-4 text-xl font-medium">{{ planName }}</h5>
     <div class="flex items-baseline" v-if="!isDisabled">
@@ -34,7 +34,7 @@ const emit = defineEmits(['selected'])
     </div>
 
     <!-- List -->
-    <ul role="list" class="space-y-5 my-7">
+    <ul role="list" class="space-y-5 my-7 flex-grow">
       <slot name="list"></slot>
     </ul>
     <BaseButton
@@ -43,6 +43,7 @@ const emit = defineEmits(['selected'])
           active
       }"
       variant="primary"
+      class="mt-auto"
       @click="emit('selected')"
       :disabled="active || isDisabled"
       >{{ active ? 'Selected' : isDisabled ? 'Comming Soon' : 'Choose Plan' }}</BaseButton
