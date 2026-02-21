@@ -36,6 +36,8 @@ const selectedHandler = (index: number) => {
 </template>
 
 <style scoped>
+@import "tailwindcss" reference;
+
 .tab {
   @apply text-default-200 inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-default-400;
 }
