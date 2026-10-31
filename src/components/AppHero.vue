@@ -1,14 +1,7 @@
 <script setup lang="ts">
 import { useNavRoutes } from '@/composables/useNavRoutes'
 
-const { goToSignup } = useNavRoutes()
-
-// "Browse Reviews" scrolls down to the How It Works / content sections.
-// The in-app video browser is behind auth, so a logged-out visitor can't be
-// routed straight there. Scrolling keeps them engaged on the landing page.
-const scrollToLearnMore = () => {
-  document.getElementById('learn-more')?.scrollIntoView({ behavior: 'smooth' })
-}
+const { goToSignup, goToVideos } = useNavRoutes()
 </script>
 
 <template>
@@ -33,7 +26,7 @@ const scrollToLearnMore = () => {
         <button
           type="button"
           class="inline-flex items-center justify-center rounded-lg border border-brand-500 bg-white px-6 py-3 text-base font-medium text-brand-800 transition-colors duration-200 hover:bg-secondary-200 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
-          @click="scrollToLearnMore"
+          @click="goToVideos"
         >
           Browse Reviews
         </button>

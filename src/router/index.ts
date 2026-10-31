@@ -53,9 +53,6 @@ const router = createRouter({
     {
       path: '/access',
       component: UserHomeView,
-      meta: {
-        requiresAuth: true
-      },
       children: [
         {
           path: '',
@@ -63,19 +60,21 @@ const router = createRouter({
           redirect: { name: 'videos' }
         },
         {
+          // Public: anyone can browse videos without an account.
           path: 'videos',
           name: 'videos',
           component: VideoListView,
           meta: {
-            requiresAuth: true
+            requiresAuth: false
           }
         },
         {
+          // Public: search is part of browsing.
           path: 'search',
           name: 'search',
           component: SearchView,
           meta: {
-            requiresAuth: true
+            requiresAuth: false
           }
         },
         {
@@ -103,11 +102,12 @@ const router = createRouter({
           }
         },
         {
+          // Public: browsing reviewers is part of discovering videos.
           path: 'reviewers',
           name: 'reviewers',
           component: ReviewersView,
           meta: {
-            requiresAuth: true
+            requiresAuth: false
           }
         },
         {
@@ -175,48 +175,47 @@ const isAuthenticated = async () => {
 }
 
 router.beforeEach(async (to, from, next) => {
-  // Skip authentication check for public routes
-  const publicRoutes = ['home', 'login', 'signup', 'signup-success', 'signup-cancelled']
-  const isPublicRoute = publicRoutes.includes(to.name as string)
-  
-  // Only check authentication if the route requires it or if we're not on a public route
-  if (to?.meta?.requiresAuth || !isPublicRoute) {
-    const authenticated = await isAuthenticated()
-
-    if (!authenticated && to?.meta?.requiresAuth) {
-      // Clear user store when session is invalid
-      const { useUserStore } = await import('@/stores/userStore')
-      const userStore = useUserStore()
-      if (userStore.isLoggedIn) {
-        localStorage.removeItem('orateit-user')
-        userStore.isLoggedIn = false
-        userStore.user = {
-          id: '',
-          name: '',
-          email: '',
-          role: '',
-          avatar: '',
-          photo: '',
-          youTubeChannelId: '',
-          createdAt: '',
-          lastLoginAt: '',
-          bio: '',
-          location: '',
-          website: '',
-          twitter: '',
-          linkedin: ''
-        }
-      }
-      next({ name: 'home' })
-    } else if (authenticated && to.name === 'home') {
-      next({ name: 'reviewers' })
-    } else {
-      next()
-    }
-  } else {
-    // Public route, no authentication check needed
+  // Only routes that explicitly opt in with meta.requiresAuth are gated.
+  // Everything else — the landing page and the public video browser — is open.
+  if (!to?.meta?.requiresAuth) {
     next()
+    return
   }
+
+  const authenticated = await isAuthenticated()
+
+  if (authenticated) {
+    next()
+    return
+  }
+
+  // Session is invalid/absent: clear any stale user state...
+  const { useUserStore } = await import('@/stores/userStore')
+  const userStore = useUserStore()
+  if (userStore.isLoggedIn) {
+    localStorage.removeItem('orateit-user')
+    userStore.isLoggedIn = false
+    userStore.user = {
+      id: '',
+      name: '',
+      email: '',
+      role: '',
+      avatar: '',
+      photo: '',
+      youTubeChannelId: '',
+      createdAt: '',
+      lastLoginAt: '',
+      bio: '',
+      location: '',
+      website: '',
+      twitter: '',
+      linkedin: ''
+    }
+  }
+
+  // ...and send them to login, remembering where they wanted to go so we can
+  // return them there after a successful sign-in.
+  next({ name: 'login', query: { redirect: to.fullPath } })
 })
 
 export default router

@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import type { AppApiResponse, AppApiErrorResponse } from '@/types'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import FormInput from '@/components/inputs/FormInput.vue'
 import FormContainer from '@/components/containers/FormContainer.vue'
 import ComponentSpinner from '@/components/spinners/ComponentSpinner.vue'
@@ -11,6 +11,7 @@ import ButtonClose from '@/components/buttons/ButtonClose.vue'
 import AppLink from '@/components/AppLink.vue'
 
 const router = useRouter()
+const route = useRoute()
 
 const { loginUser } = useUserStore()
 
@@ -34,12 +35,15 @@ const login = async () => {
         showError.value = false
         email.value = ''
         password.value = ''
+        // Return the user to where they were headed before being asked to log
+        // in (set by the router guard), otherwise land on the video browser.
+        const redirect = route.query.redirect as string | undefined
         try {
-          await router.push({ name: 'videos' })
+          await router.push(redirect || { name: 'videos' })
         } catch (routerError) {
           console.error('Router navigation error:', routerError)
           // Fallback to a known route
-          await router.push({ name: 'reviewers' })
+          await router.push({ name: 'videos' })
         }
       } else {
         showError.value = true

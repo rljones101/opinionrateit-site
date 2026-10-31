@@ -3,8 +3,19 @@ import BaseButton from '@/components/buttons/BaseButton.vue'
 import MetricInput from '@/components/MetricInput.vue'
 import { useSurvey } from '@/views/videoView/composables/useSurvey'
 import { useUserStore } from '@/stores/userStore'
+import { useRouter, useRoute } from 'vue-router'
 
 const userStore = useUserStore()
+const router = useRouter()
+const route = useRoute()
+
+// Posting a review requires an account. Logged-out visitors can read
+// everything but are prompted to sign in to contribute.
+const canReview = userStore.restrictTo('user')
+
+const goToLogin = () => {
+  router.push({ name: 'login', query: { redirect: route.fullPath } })
+}
 const {
   reviewForm,
   showReviewForm,
@@ -20,7 +31,19 @@ const {
 </script>
 
 <template>
-  <div class="bg-secondary-50 p-4 mt-8 rounded shadow" v-if="userStore.restrictTo('user')">
+  <!-- Sign-in prompt for logged-out visitors -->
+  <div
+    v-if="!canReview"
+    class="bg-secondary-50 border border-app-light-blue p-4 mt-8 rounded shadow flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
+  >
+    <p class="text-default-300">
+      <span class="text-default-50 font-semibold">Want to share your opinion?</span>
+      Sign in to rate and review this video.
+    </p>
+    <BaseButton variant="primary" @click="goToLogin">Sign in to review</BaseButton>
+  </div>
+
+  <div class="bg-secondary-50 p-4 mt-8 rounded shadow" v-else>
     <!-- review form -->
     <div class="form-wrapper" :class="[{ open: showReviewForm }]">
       <div
