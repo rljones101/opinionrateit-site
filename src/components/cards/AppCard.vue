@@ -2,7 +2,7 @@
 
 <template>
   <div
-    class="relative bg-secondary-50 shadow shadow-default-200 rounded flex flex-col items-center overflow-hidden"
+    class="relative bg-secondary-50 shadow rounded flex flex-col items-center overflow-hidden"
   >
     <slot></slot>
   </div>

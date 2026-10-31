@@ -5,6 +5,7 @@ import SearchInput from '@/components/inputs/SearchInput.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/stores/userStore'
+import { useLoginDialogStore } from '@/stores/loginDialogStore'
 import SiteLogo from '@/components/siteLogo.vue'
 import { ref } from 'vue'
 import UserAvatar from '@/components/UserAvatar.vue'
@@ -13,6 +14,7 @@ import AppFooter from '@/components/AppFooter.vue'
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
+const loginDialog = useLoginDialogStore()
 const searchValue = ref(route.query.value || '')
 
 const logout = () => {
@@ -21,7 +23,7 @@ const logout = () => {
 }
 
 const goToLogin = () => {
-  router.push({ name: 'login' })
+  loginDialog.open()
 }
 
 const searchHandler = async (value: string) => {

@@ -4,6 +4,13 @@ const authController = require('../controllers/authController.js')
 
 const reviewRoutes = express.Router()
 
+// Public reads — logged-out visitors can see reviews/comments on a video.
+// Being able to read them (and see the "sign in to review" prompt) is what
+// encourages sign-up.
+reviewRoutes.route('/:videoId/byVideo').get(reviewController.getReviewsByVideo)
+reviewRoutes.route('/:channelId/numReviews').get(reviewController.getNumReviews)
+
+// Everything below requires authentication.
 reviewRoutes.use(authController.protect)
 
 reviewRoutes
@@ -14,10 +21,6 @@ reviewRoutes
     reviewController.setReviewUserId,
     reviewController.createReview
   )
-
-reviewRoutes.route('/:videoId/byVideo').get(reviewController.getReviewsByVideo)
-
-reviewRoutes.route('/:channelId/numReviews').get(reviewController.getNumReviews)
 
 reviewRoutes
   .route('/:id')

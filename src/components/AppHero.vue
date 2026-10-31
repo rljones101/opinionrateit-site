@@ -25,7 +25,7 @@ const { goToSignup, goToVideos } = useNavRoutes()
         </button>
         <button
           type="button"
-          class="inline-flex items-center justify-center rounded-lg border border-brand-500 bg-white px-6 py-3 text-base font-medium text-brand-800 transition-colors duration-200 hover:bg-secondary-200 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+          class="inline-flex items-center justify-center rounded-lg border border-brand-500 bg-white px-6 py-3 text-base font-medium text-brand-800 transition-colors duration-200 hover:bg-brand-500 hover:text-white hover:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
           @click="goToVideos"
         >
           Browse Reviews

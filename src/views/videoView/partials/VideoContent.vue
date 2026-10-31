@@ -146,7 +146,7 @@ onMounted(async () => {
 @reference "#main.css";
 
 .resume-notification {
-  @apply bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-center justify-between;
+  @apply bg-secondary-200 border border-app-light-blue rounded-lg p-4 flex items-center justify-between;
   animation: slide-down 0.3s ease-out;
 }
 
@@ -155,7 +155,7 @@ onMounted(async () => {
 }
 
 .resume-icon {
-  @apply w-6 h-6 text-blue-600 flex-shrink-0;
+  @apply w-6 h-6 text-brand-500 flex-shrink-0;
 }
 
 .resume-text {
@@ -163,17 +163,17 @@ onMounted(async () => {
 }
 
 .resume-title {
-  @apply font-medium text-blue-900;
+  @apply font-medium text-default-50;
 }
 
 .resume-subtitle {
-  @apply text-sm text-blue-700;
+  @apply text-sm text-default-300;
 }
 
 .resume-dismiss {
-  @apply p-1 text-blue-400 hover:text-blue-600 hover:bg-blue-100 rounded;
+  @apply p-1 text-default-400 hover:text-default-50 hover:bg-secondary-50 rounded;
   @apply transition-colors duration-200;
-  @apply focus:outline-none focus:ring-2 focus:ring-blue-500;
+  @apply focus:outline-none focus:ring-2 focus:ring-brand-500;
 }
 
 @keyframes slide-down {

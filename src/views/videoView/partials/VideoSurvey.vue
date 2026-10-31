@@ -3,18 +3,18 @@ import BaseButton from '@/components/buttons/BaseButton.vue'
 import MetricInput from '@/components/MetricInput.vue'
 import { useSurvey } from '@/views/videoView/composables/useSurvey'
 import { useUserStore } from '@/stores/userStore'
-import { useRouter, useRoute } from 'vue-router'
+import { useLoginDialogStore } from '@/stores/loginDialogStore'
 
 const userStore = useUserStore()
-const router = useRouter()
-const route = useRoute()
+const loginDialog = useLoginDialogStore()
 
 // Posting a review requires an account. Logged-out visitors can read
 // everything but are prompted to sign in to contribute.
 const canReview = userStore.restrictTo('user')
 
 const goToLogin = () => {
-  router.push({ name: 'login', query: { redirect: route.fullPath } })
+  // Open the login dialog in place; the user stays on this video page.
+  loginDialog.open()
 }
 const {
   reviewForm,

@@ -21,7 +21,7 @@ const { channelDetails, publishedVideos } = useReviewer(channelId)
 <template>
   <div>
     <div>
-      <router-link to="/reviewers" class="text-brand-500 hover:underline">Reviewers</router-link>
+      <router-link :to="{ name: 'reviewers' }" class="text-brand-500 hover:underline">Reviewers</router-link>
       / {{ channelDetails.name }}
     </div>
 

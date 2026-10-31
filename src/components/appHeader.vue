@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 import ButtonNav from './buttons/buttonNav.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import { useUserStore } from '@/stores/userStore'
+import { useLoginDialogStore } from '@/stores/loginDialogStore'
 import SiteLogo from '@/components/siteLogo.vue'
 
 interface linkItem {
@@ -15,6 +16,7 @@ interface linkItem {
 
 const router = useRouter()
 const userStore = useUserStore()
+const loginDialog = useLoginDialogStore()
 const showMenu = ref(false)
 const showUserMenu = ref(false)
 
@@ -36,7 +38,7 @@ const navLinks: Ref<linkItem[]> = ref([
 
 
 const showLogin = () => {
-  router.push({ name: 'login' })
+  loginDialog.open()
   closeMenu()
 }
 

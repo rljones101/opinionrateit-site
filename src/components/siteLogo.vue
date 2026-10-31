@@ -1,7 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { RouterLink } from 'vue-router'
+</script>
 
 <template>
-  <div class="site-logo-wrapper">
+  <RouterLink :to="{ name: 'home' }" class="site-logo-wrapper" aria-label="OpinionRateIt home">
     <svg
       width="100%"
       height="39"
@@ -34,7 +36,7 @@
         class="fill-default-50"
       />
     </svg>
-  </div>
+  </RouterLink>
 </template>
 
 <style scoped>
@@ -45,5 +47,6 @@
   align-items: center;
   justify-content: center;
   height: 40px;
+  cursor: pointer;
 }
 </style>

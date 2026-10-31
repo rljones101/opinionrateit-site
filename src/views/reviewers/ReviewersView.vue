@@ -21,9 +21,9 @@ reviewersState.getReviewers()
 </script>
 
 <template>
-  <div class="w-full">
+  <div class="reviewers-container w-full">
     <AppTitle>Reviewers</AppTitle>
-    <div class="grid-layout" v-show="reviewersState.reviewers.length">
+    <div class="reviewers-grid" v-show="reviewersState.reviewers.length">
       <ReviewerItem
         v-for="reviewer in reviewersState.reviewers"
         :key="reviewer._id"
@@ -33,4 +33,20 @@ reviewersState.getReviewers()
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@reference "#main.css";
+
+.reviewers-container {
+  @apply p-4;
+}
+
+.reviewers-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4;
+}
+
+@media (max-width: 640px) {
+  .reviewers-grid {
+    @apply grid-cols-1 gap-4 p-2;
+  }
+}
+</style>

@@ -18,6 +18,19 @@
   --color-accent-green: #22c55e;
   --color-accent-purple: #a855f7;
 
+  /* Dark-theme shadows. Tailwind's default shadows are low-opacity black tuned
+     for light backgrounds; on our dark slate they read as a pale halo. Override
+     the shadow scale with deeper, higher-opacity black so shadow-* utilities
+     convey real depth app-wide. */
+  --shadow-2xs: 0 1px 1px rgb(0 0 0 / 0.4);
+  --shadow-xs: 0 1px 2px rgb(0 0 0 / 0.45);
+  --shadow-sm: 0 1px 3px rgb(0 0 0 / 0.5), 0 1px 2px -1px rgb(0 0 0 / 0.5);
+  --shadow: 0 2px 6px -1px rgb(0 0 0 / 0.5), 0 1px 3px -1px rgb(0 0 0 / 0.5);
+  --shadow-md: 0 4px 10px -2px rgb(0 0 0 / 0.55), 0 2px 6px -2px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 10px 20px -4px rgb(0 0 0 / 0.6), 0 4px 10px -4px rgb(0 0 0 / 0.5);
+  --shadow-xl: 0 20px 32px -8px rgb(0 0 0 / 0.65), 0 8px 16px -8px rgb(0 0 0 / 0.55);
+  --shadow-2xl: 0 28px 56px -12px rgb(0 0 0 / 0.75);
+
   /* Standard color palette */
   --color-red-50: #fef2f2;
   --color-red-100: #fee2e2;
