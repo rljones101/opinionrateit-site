@@ -30,7 +30,7 @@ const isActive = computed(() => {
     <span
       v-if="link.icon"
       class="group-hover:text-secondary-50"
-      :class="[{ 'text-brand-500': isActive }, { 'text-brand-800': !isActive }]"
+      :class="[{ 'text-brand-500': isActive }, { 'text-brand-300': !isActive }]"
       ><component :is="link.icon" class="w-6 h-6"
     /></span>
     <span class="hidden lg:flex uppercase font-bold">{{ link.label }}</span>

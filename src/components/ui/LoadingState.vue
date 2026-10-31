@@ -90,7 +90,7 @@ const skeletonClass = computed(() => {
 }
 
 .skeleton-line {
-  @apply bg-gray-200 rounded animate-pulse;
+  @apply bg-secondary-200 rounded animate-pulse;
 }
 
 .skeleton-line:nth-child(1) { @apply w-full; }
@@ -102,11 +102,11 @@ const skeletonClass = computed(() => {
 }
 
 .card-skeleton {
-  @apply bg-white rounded-lg shadow-md overflow-hidden;
+  @apply bg-secondary-50 border border-app-light-blue rounded-lg shadow-md overflow-hidden;
 }
 
 .card-image-skeleton {
-  @apply w-full h-48 bg-gray-200 animate-pulse;
+  @apply w-full h-48 bg-secondary-200 animate-pulse;
 }
 
 .card-content-skeleton {

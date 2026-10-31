@@ -39,7 +39,7 @@ const signupStore = useSignupStore()
           <svg
             v-if="!signupStore.isCurrentStepDone(step)"
             aria-hidden="true"
-            class="w-3 h-3 text-gray-800 dark:text-gray-300"
+            class="w-3 h-3 text-default-300"
             fill="currentColor"
             viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"

@@ -8,7 +8,7 @@ getReviews()
 
 <template>
   <div class="comments w-full space-y-4">
-    <h3 v-if="reviews.length > 0" class="text-lg font-semibold text-gray-900 mb-4">
+    <h3 v-if="reviews.length > 0" class="text-lg font-semibold text-default-50 mb-4">
       Reviews ({{ reviews.length }})
     </h3>
     
@@ -19,7 +19,7 @@ getReviews()
     />
     
     <div v-if="reviews.length === 0" class="empty-state">
-      <p class="text-gray-500">No reviews yet. Be the first to review!</p>
+      <p class="text-default-300">No reviews yet. Be the first to review!</p>
     </div>
   </div>
 </template>

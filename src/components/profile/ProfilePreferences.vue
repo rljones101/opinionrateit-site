@@ -524,10 +524,10 @@ onMounted(() => {
       <!-- Actions -->
       <div class="preferences-actions">
         <div class="action-info">
-          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 text-default-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          <span class="text-sm text-gray-600">Changes are saved automatically</span>
+          <span class="text-sm text-default-300">Changes are saved automatically</span>
         </div>
         
         <div class="action-group">
@@ -561,7 +561,7 @@ onMounted(() => {
 @reference "#main.css";
 
 .profile-preferences {
-  @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+  @apply bg-secondary-50 rounded-lg shadow-sm border border-app-light-blue p-6;
 }
 
 .preferences-header {
@@ -569,11 +569,11 @@ onMounted(() => {
 }
 
 .preferences-title {
-  @apply text-xl font-semibold text-gray-900 mb-2;
+  @apply text-xl font-semibold text-default-50 mb-2;
 }
 
 .preferences-description {
-  @apply text-gray-600;
+  @apply text-default-300;
 }
 
 .alert {
@@ -597,15 +597,15 @@ onMounted(() => {
 }
 
 .preference-section {
-  @apply border-b border-gray-200 pb-8 last:border-b-0 last:pb-0;
+  @apply border-b border-app-light-blue pb-8 last:border-b-0 last:pb-0;
 }
 
 .section-title {
-  @apply text-lg font-medium text-gray-900 mb-2;
+  @apply text-lg font-medium text-default-50 mb-2;
 }
 
 .section-description {
-  @apply text-gray-600 mb-6;
+  @apply text-default-300 mb-6;
 }
 
 .preference-grid {
@@ -621,7 +621,7 @@ onMounted(() => {
 }
 
 .preference-checkbox {
-  @apply mt-1 h-4 w-4 text-brand-600 focus:ring-brand-500 border-gray-300 rounded;
+  @apply mt-1 h-4 w-4 text-brand-600 focus:ring-brand-500 border-app-light-blue rounded;
 }
 
 .preference-text {
@@ -629,11 +629,11 @@ onMounted(() => {
 }
 
 .preference-name {
-  @apply font-medium text-gray-900;
+  @apply font-medium text-default-50;
 }
 
 .preference-desc {
-  @apply text-sm text-gray-500;
+  @apply text-sm text-default-300;
 }
 
 .form-grid {
@@ -645,11 +645,11 @@ onMounted(() => {
 }
 
 .form-label {
-  @apply block text-sm font-medium text-gray-700;
+  @apply block text-sm font-medium text-default-200;
 }
 
 .form-select {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500;
+  @apply w-full px-3 py-2 border border-app-light-blue rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500;
 }
 
 .privacy-options {
@@ -661,11 +661,11 @@ onMounted(() => {
 }
 
 .radio-option {
-  @apply flex items-start gap-3 p-4 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors;
+  @apply flex items-start gap-3 p-4 border border-app-light-blue rounded-lg cursor-pointer hover:bg-secondary-200 transition-colors;
 }
 
 .radio-input {
-  @apply mt-1 h-4 w-4 text-brand-600 focus:ring-brand-500 border-gray-300;
+  @apply mt-1 h-4 w-4 text-brand-600 focus:ring-brand-500 border-app-light-blue;
 }
 
 .radio-content {
@@ -673,15 +673,15 @@ onMounted(() => {
 }
 
 .radio-title {
-  @apply font-medium text-gray-900;
+  @apply font-medium text-default-50;
 }
 
 .radio-description {
-  @apply text-sm text-gray-500;
+  @apply text-sm text-default-300;
 }
 
 .preferences-actions {
-  @apply pt-6 border-t border-gray-200;
+  @apply pt-6 border-t border-app-light-blue;
 }
 
 .action-info {

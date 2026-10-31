@@ -193,7 +193,7 @@ onMounted(() => {
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
           </svg>
           <p>No activity yet</p>
-          <p class="text-sm text-gray-500">Start exploring to see your activity here!</p>
+          <p class="text-sm text-default-300">Start exploring to see your activity here!</p>
         </div>
         
         <div v-else class="timeline-list">
@@ -245,7 +245,7 @@ onMounted(() => {
 @reference "#main.css";
 
 .profile-activity {
-  @apply bg-white rounded-lg shadow-sm border border-gray-200;
+  @apply bg-secondary-50 rounded-lg shadow-sm border border-app-light-blue;
 }
 
 .profile-activity.compact {
@@ -261,15 +261,15 @@ onMounted(() => {
 }
 
 .activity-title {
-  @apply text-xl font-semibold text-gray-900 mb-2;
+  @apply text-xl font-semibold text-default-50 mb-2;
 }
 
 .activity-description {
-  @apply text-gray-600;
+  @apply text-default-300;
 }
 
 .error-state {
-  @apply flex flex-col items-center justify-center py-8 text-gray-500;
+  @apply flex flex-col items-center justify-center py-8 text-default-300;
 }
 
 .error-icon {
@@ -285,15 +285,15 @@ onMounted(() => {
 }
 
 .stat-card {
-  @apply bg-gray-50 rounded-lg p-4 text-center;
+  @apply bg-secondary-200 rounded-lg p-4 text-center;
 }
 
 .stat-value {
-  @apply text-2xl font-bold text-gray-900 mb-1;
+  @apply text-2xl font-bold text-default-50 mb-1;
 }
 
 .stat-label {
-  @apply text-sm text-gray-600;
+  @apply text-sm text-default-300;
 }
 
 .activity-timeline {
@@ -301,7 +301,7 @@ onMounted(() => {
 }
 
 .empty-state {
-  @apply flex flex-col items-center justify-center py-12 text-gray-500;
+  @apply flex flex-col items-center justify-center py-12 text-default-300;
 }
 
 .empty-icon {
@@ -318,7 +318,7 @@ onMounted(() => {
 
 .timeline-item:not(.timeline-item-last)::after {
   content: '';
-  @apply absolute left-6 top-12 w-0.5 h-full bg-gray-200;
+  @apply absolute left-6 top-12 w-0.5 h-full bg-secondary-200;
 }
 
 .timeline-marker {
@@ -334,7 +334,7 @@ onMounted(() => {
 }
 
 .activity-item {
-  @apply bg-gray-50 rounded-lg p-4;
+  @apply bg-secondary-200 rounded-lg p-4;
 }
 
 .activity-main {
@@ -342,15 +342,15 @@ onMounted(() => {
 }
 
 .activity-title-item {
-  @apply font-medium text-gray-900 mb-1;
+  @apply font-medium text-default-50 mb-1;
 }
 
 .activity-description {
-  @apply text-gray-600 text-sm;
+  @apply text-default-300 text-sm;
 }
 
 .activity-meta {
-  @apply flex items-center gap-3 text-xs text-gray-500;
+  @apply flex items-center gap-3 text-xs text-default-300;
 }
 
 .activity-time {
@@ -362,7 +362,7 @@ onMounted(() => {
 }
 
 .show-more {
-  @apply pt-4 border-t border-gray-200 text-center;
+  @apply pt-4 border-t border-app-light-blue text-center;
 }
 
 .show-more-link {

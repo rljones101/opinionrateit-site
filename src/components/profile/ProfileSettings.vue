@@ -325,7 +325,7 @@ const handleDeleteAccount = async () => {
 @reference "#main.css";
 
 .profile-settings {
-  @apply bg-white rounded-lg shadow-sm border border-gray-200;
+  @apply bg-secondary-50 rounded-lg shadow-sm border border-app-light-blue;
 }
 
 .profile-settings.compact {
@@ -341,11 +341,11 @@ const handleDeleteAccount = async () => {
 }
 
 .settings-title {
-  @apply text-xl font-semibold text-gray-900 mb-2;
+  @apply text-xl font-semibold text-default-50 mb-2;
 }
 
 .settings-description {
-  @apply text-gray-600;
+  @apply text-default-300;
 }
 
 .alert {
@@ -369,15 +369,15 @@ const handleDeleteAccount = async () => {
 }
 
 .settings-section {
-  @apply border-b border-gray-200 pb-8 last:border-b-0 last:pb-0;
+  @apply border-b border-app-light-blue pb-8 last:border-b-0 last:pb-0;
 }
 
 .section-title {
-  @apply text-lg font-medium text-gray-900 mb-4;
+  @apply text-lg font-medium text-default-50 mb-4;
 }
 
 .section-description {
-  @apply text-sm text-gray-600 mb-4;
+  @apply text-sm text-default-300 mb-4;
 }
 
 .form-grid {
@@ -393,19 +393,19 @@ const handleDeleteAccount = async () => {
 }
 
 .form-label {
-  @apply block text-sm font-medium text-gray-700;
+  @apply block text-sm font-medium text-default-200;
 }
 
 .form-input {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors;
+  @apply w-full px-3 py-2 border border-app-light-blue rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-colors;
 }
 
 .input-disabled {
-  @apply bg-gray-50 text-gray-500 cursor-not-allowed;
+  @apply bg-secondary-200 text-default-300 cursor-not-allowed;
 }
 
 .settings-actions {
-  @apply pt-6 border-t border-gray-200;
+  @apply pt-6 border-t border-app-light-blue;
 }
 
 .action-group {

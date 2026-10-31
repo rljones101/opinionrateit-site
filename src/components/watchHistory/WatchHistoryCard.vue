@@ -147,7 +147,7 @@ const handleRemove = (event: Event) => {
 @reference "#main.css";
 
 .watch-history-card {
-  @apply bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden;
+  @apply bg-secondary-50 rounded-lg shadow-sm border border-app-light-blue overflow-hidden;
   @apply hover:shadow-md transition-shadow duration-200;
   @apply flex items-start gap-4 p-4;
 }
@@ -157,7 +157,7 @@ const handleRemove = (event: Event) => {
 }
 
 .thumbnail-container {
-  @apply relative flex-shrink-0 w-48 h-28 bg-gray-200 rounded overflow-hidden;
+  @apply relative flex-shrink-0 w-48 h-28 bg-secondary-200 rounded overflow-hidden;
 }
 
 .thumbnail {
@@ -181,15 +181,15 @@ const handleRemove = (event: Event) => {
 }
 
 .video-title {
-  @apply text-base font-semibold text-gray-900 line-clamp-2;
+  @apply text-base font-semibold text-default-50 line-clamp-2;
 }
 
 .channel-name {
-  @apply text-sm text-gray-600;
+  @apply text-sm text-default-300;
 }
 
 .metadata {
-  @apply flex flex-wrap gap-2 text-xs text-gray-500;
+  @apply flex flex-wrap gap-2 text-xs text-default-300;
 }
 
 .metadata-item:not(:last-child)::after {
@@ -202,7 +202,7 @@ const handleRemove = (event: Event) => {
 }
 
 .watch-info {
-  @apply flex items-center gap-2 text-xs text-gray-500;
+  @apply flex items-center gap-2 text-xs text-default-300;
 }
 
 .watch-icon {

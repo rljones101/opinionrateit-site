@@ -59,7 +59,7 @@ const { channelDetails } = useReviewer(channelId)
         class="w-16 h-16"
       />
       <div class="flex-1">
-        <h2 class="text-lg font-bold text-brand-800">{{ channelDetails.name }}</h2>
+        <h2 class="text-lg font-bold text-brand-300">{{ channelDetails.name }}</h2>
         <ContentReadMore>
           {{ channelDetails.description }}
         </ContentReadMore>

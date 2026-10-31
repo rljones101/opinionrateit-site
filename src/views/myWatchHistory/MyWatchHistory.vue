@@ -135,11 +135,11 @@ const handleClearHistory = async () => {
 }
 
 .page-title {
-  @apply text-3xl font-bold text-gray-900;
+  @apply text-3xl font-bold text-default-50;
 }
 
 .history-count {
-  @apply text-gray-600;
+  @apply text-default-300;
 }
 
 .header-controls {
@@ -153,14 +153,14 @@ const handleClearHistory = async () => {
 
 .filter-label,
 .sort-label {
-  @apply text-sm font-medium text-gray-700 whitespace-nowrap;
+  @apply text-sm font-medium text-default-200 whitespace-nowrap;
 }
 
 .filter-select,
 .sort-select {
-  @apply px-4 py-2 border border-gray-300 rounded-lg;
+  @apply px-4 py-2 border border-app-light-blue rounded-lg text-default-50;
   @apply focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500;
-  @apply bg-white cursor-pointer;
+  @apply bg-secondary-50 cursor-pointer;
 }
 
 .clear-button {

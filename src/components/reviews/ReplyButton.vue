@@ -35,7 +35,7 @@ const emit = defineEmits<{
 
 .reply-button {
   @apply inline-flex items-center gap-1 px-3 py-1.5 rounded-lg;
-  @apply text-gray-600 hover:text-green-600 hover:bg-green-50;
+  @apply text-default-300 hover:text-green-400 hover:bg-green-500/10;
   @apply transition-colors duration-200;
   @apply focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1;
 }

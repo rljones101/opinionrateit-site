@@ -77,7 +77,7 @@ const colorClass = computed(() => {
 }
 
 .progress-label {
-  @apply text-xs font-medium text-gray-600 whitespace-nowrap;
+  @apply text-xs font-medium text-default-300 whitespace-nowrap;
 }
 
 @keyframes progress-pulse {

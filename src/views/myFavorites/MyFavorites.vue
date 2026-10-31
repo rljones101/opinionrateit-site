@@ -96,11 +96,11 @@ const handleSortChange = (newSort: 'newest' | 'oldest' | 'title') => {
 }
 
 .page-title {
-  @apply text-3xl font-bold text-gray-900;
+  @apply text-3xl font-bold text-default-50;
 }
 
 .bookmark-count {
-  @apply text-gray-600;
+  @apply text-default-300;
 }
 
 .header-controls {
@@ -112,11 +112,11 @@ const handleSortChange = (newSort: 'newest' | 'oldest' | 'title') => {
 }
 
 .search-icon {
-  @apply absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400;
+  @apply absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-default-400;
 }
 
 .search-input {
-  @apply w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg;
+  @apply w-full pl-10 pr-4 py-2 border border-app-light-blue rounded-lg bg-secondary-50 text-default-50;
   @apply focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500;
 }
 
@@ -125,13 +125,13 @@ const handleSortChange = (newSort: 'newest' | 'oldest' | 'title') => {
 }
 
 .sort-label {
-  @apply text-sm font-medium text-gray-700 whitespace-nowrap;
+  @apply text-sm font-medium text-default-200 whitespace-nowrap;
 }
 
 .sort-select {
-  @apply px-4 py-2 border border-gray-300 rounded-lg;
+  @apply px-4 py-2 border border-app-light-blue rounded-lg text-default-50;
   @apply focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500;
-  @apply bg-white cursor-pointer;
+  @apply bg-secondary-50 cursor-pointer;
 }
 
 .favorites-content {

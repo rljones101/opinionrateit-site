@@ -509,7 +509,7 @@ onMounted(() => {
 @reference "#main.css";
 
 .profile-security {
-  @apply bg-white rounded-lg shadow-sm border border-gray-200 p-6;
+  @apply bg-secondary-50 rounded-lg shadow-sm border border-app-light-blue p-6;
 }
 
 .security-header {
@@ -517,11 +517,11 @@ onMounted(() => {
 }
 
 .security-title {
-  @apply text-xl font-semibold text-gray-900 mb-2;
+  @apply text-xl font-semibold text-default-50 mb-2;
 }
 
 .security-description {
-  @apply text-gray-600;
+  @apply text-default-300;
 }
 
 .alert {
@@ -545,7 +545,7 @@ onMounted(() => {
 }
 
 .security-section {
-  @apply border-b border-gray-200 pb-8 last:border-b-0 last:pb-0;
+  @apply border-b border-app-light-blue pb-8 last:border-b-0 last:pb-0;
 }
 
 .section-header {
@@ -553,11 +553,11 @@ onMounted(() => {
 }
 
 .section-title {
-  @apply text-lg font-medium text-gray-900 mb-2;
+  @apply text-lg font-medium text-default-50 mb-2;
 }
 
 .section-description {
-  @apply text-gray-600;
+  @apply text-default-300;
 }
 
 .password-form {
@@ -573,19 +573,19 @@ onMounted(() => {
 }
 
 .form-label {
-  @apply block text-sm font-medium text-gray-700;
+  @apply block text-sm font-medium text-default-200;
 }
 
 .form-input {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500;
+  @apply w-full px-3 py-2 border border-app-light-blue rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500;
 }
 
 .form-select {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500;
+  @apply w-full px-3 py-2 border border-app-light-blue rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500;
 }
 
 .form-hint {
-  @apply text-xs text-gray-500;
+  @apply text-xs text-default-300;
 }
 
 .form-actions {
@@ -593,7 +593,7 @@ onMounted(() => {
 }
 
 .two-factor-status {
-  @apply flex items-center justify-between p-4 bg-gray-50 rounded-lg;
+  @apply flex items-center justify-between p-4 bg-secondary-200 rounded-lg;
 }
 
 .status-indicator {
@@ -617,11 +617,11 @@ onMounted(() => {
 }
 
 .status-title {
-  @apply font-medium text-gray-900;
+  @apply font-medium text-default-50;
 }
 
 .status-description {
-  @apply text-sm text-gray-500;
+  @apply text-sm text-default-300;
 }
 
 .sessions-list {
@@ -629,7 +629,7 @@ onMounted(() => {
 }
 
 .session-item {
-  @apply flex items-start gap-4 p-4 border border-gray-200 rounded-lg;
+  @apply flex items-start gap-4 p-4 border border-app-light-blue rounded-lg;
 }
 
 .session-current {
@@ -637,7 +637,7 @@ onMounted(() => {
 }
 
 .session-icon {
-  @apply flex-shrink-0 text-gray-400;
+  @apply flex-shrink-0 text-default-400;
 }
 
 .session-info {
@@ -649,7 +649,7 @@ onMounted(() => {
 }
 
 .session-device {
-  @apply font-medium text-gray-900;
+  @apply font-medium text-default-50;
 }
 
 .current-badge {
@@ -661,16 +661,16 @@ onMounted(() => {
 }
 
 .session-detail {
-  @apply text-sm text-gray-500;
+  @apply text-sm text-default-300;
 }
 
 .session-detail:not(:last-child)::after {
   content: '•';
-  @apply ml-2 text-gray-300;
+  @apply ml-2 text-default-400;
 }
 
 .session-meta {
-  @apply text-xs text-gray-400;
+  @apply text-xs text-default-400;
 }
 
 .session-actions {
@@ -690,7 +690,7 @@ onMounted(() => {
 }
 
 .setting-checkbox {
-  @apply mt-1 h-4 w-4 text-brand-600 focus:ring-brand-500 border-gray-300 rounded;
+  @apply mt-1 h-4 w-4 text-brand-600 focus:ring-brand-500 border-app-light-blue rounded;
 }
 
 .setting-text {
@@ -698,10 +698,10 @@ onMounted(() => {
 }
 
 .setting-name {
-  @apply font-medium text-gray-900;
+  @apply font-medium text-default-50;
 }
 
 .setting-desc {
-  @apply text-sm text-gray-500;
+  @apply text-sm text-default-300;
 }
 </style>

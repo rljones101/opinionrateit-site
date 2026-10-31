@@ -22,7 +22,7 @@ const emit = defineEmits(['selected'])
       <span class="text-3xl font-semibold" v-if="pricing">$</span>
       <span class="text-5xl font-extrabold tracking-tight" v-if="pricing">{{ pricing }}</span>
       <span class="text-5xl font-extrabold tracking-tight" v-if="!pricing">Free</span>
-      <span class="ml-1 text-xl font-normal text-gray-500 dark:text-gray-400">/month</span>
+      <span class="ml-1 text-xl font-normal text-default-300">/month</span>
     </div>
     <div v-else>
       <span class="text-5xl font-extrabold tracking-tight">TBD</span>
@@ -39,14 +39,14 @@ const emit = defineEmits(['selected'])
     </ul>
     <BaseButton
       :class="{
-        'bg-orange-500 shadow-none border-none disabled:bg-app-blue hover:transition-none hover:translate-y-0 text-orange-500':
+        'bg-orange-500 shadow-none border-none hover:transition-none hover:translate-y-0 text-white':
           active
       }"
       variant="primary"
       class="mt-auto"
       @click="emit('selected')"
-      :disabled="active || isDisabled"
-      >{{ active ? 'Selected' : isDisabled ? 'Comming Soon' : 'Choose Plan' }}</BaseButton
+      :disabled="isDisabled"
+      >{{ active ? 'Continue' : isDisabled ? 'Comming Soon' : 'Choose Plan' }}</BaseButton
     >
     <!--    <p class="text-sm mt-8 text-center">( 30 day trial run )</p>-->
   </div>

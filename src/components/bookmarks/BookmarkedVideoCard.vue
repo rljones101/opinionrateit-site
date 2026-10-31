@@ -98,7 +98,7 @@ const handleRemoved = () => {
 @reference "#main.css";
 
 .bookmarked-video-card {
-  @apply bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden;
+  @apply bg-secondary-50 rounded-lg shadow-sm border border-app-light-blue overflow-hidden;
   @apply hover:shadow-md transition-shadow duration-200;
   @apply flex items-start gap-4 p-4;
 }
@@ -108,7 +108,7 @@ const handleRemoved = () => {
 }
 
 .thumbnail-container {
-  @apply relative flex-shrink-0 w-48 h-28 bg-gray-200 rounded overflow-hidden;
+  @apply relative flex-shrink-0 w-48 h-28 bg-secondary-200 rounded overflow-hidden;
 }
 
 .thumbnail {
@@ -124,15 +124,15 @@ const handleRemoved = () => {
 }
 
 .video-title {
-  @apply text-base font-semibold text-gray-900 mb-2 line-clamp-2;
+  @apply text-base font-semibold text-default-50 mb-2 line-clamp-2;
 }
 
 .channel-name {
-  @apply text-sm text-gray-600 mb-2;
+  @apply text-sm text-default-300 mb-2;
 }
 
 .metadata {
-  @apply flex flex-wrap gap-2 text-xs text-gray-500 mb-3;
+  @apply flex flex-wrap gap-2 text-xs text-default-300 mb-3;
 }
 
 .metadata-item:not(:last-child)::after {

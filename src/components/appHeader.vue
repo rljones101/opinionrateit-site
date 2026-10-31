@@ -272,7 +272,7 @@ onUnmounted(() => {
 
 .mobile-menu-button {
   padding: 0.5rem;
-  color: #374151;
+  color: var(--color-app-text-color);
   border-radius: 0.375rem;
   transition: color 0.2s;
 }
@@ -333,7 +333,7 @@ onUnmounted(() => {
   padding-bottom: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--color-app-text-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -384,7 +384,7 @@ onUnmounted(() => {
   padding-bottom: 0.5rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--color-app-text-color);
   border-radius: 0.375rem;
   transition: color 0.2s;
 }
@@ -410,13 +410,13 @@ onUnmounted(() => {
   right: 0;
   margin-top: 0.5rem;
   width: 12rem;
-  background-color: white;
+  background-color: var(--color-secondary-50);
   border-radius: 0.375rem;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
   z-index: 50;
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-app-light-blue);
 }
 
 .dropdown-item {
@@ -426,23 +426,23 @@ onUnmounted(() => {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   font-size: 0.875rem;
-  color: #374151;
+  color: var(--color-app-text-color);
   width: 100%;
   text-align: left;
   transition: background-color 0.2s;
 }
 
 .dropdown-item:hover {
-  background-color: #f3f4f6;
+  background-color: var(--color-app-light-blue);
 }
 
 .logout-item {
-  border-top: 1px solid #e5e7eb;
-  color: #dc2626;
+  border-top: 1px solid var(--color-app-light-blue);
+  color: #f87171;
 }
 
 .logout-item:hover {
-  background-color: #fef2f2;
+  background-color: rgba(248, 113, 113, 0.12);
 }
 
 /* Mobile Navigation */
@@ -451,8 +451,8 @@ onUnmounted(() => {
   left: 0;
   right: 0;
   top: 4rem;
-  background-color: white;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  background-color: var(--color-secondary-200);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
   transform: translateY(-100%);
   transition: transform 0.3s ease-in-out;
   z-index: 30;
@@ -489,7 +489,7 @@ onUnmounted(() => {
   padding-bottom: 0.5rem;
   font-size: 1rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--color-app-text-color);
   border-radius: 0.375rem;
   text-align: center;
   transition: color 0.2s, background-color 0.2s;
@@ -497,11 +497,11 @@ onUnmounted(() => {
 
 .mobile-nav-link:hover {
   color: var(--color-brand-500);
-  background-color: #f9fafb;
+  background-color: var(--color-app-light-blue);
 }
 
 .mobile-auth-actions {
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--color-app-light-blue);
   padding-top: 1rem;
 }
 
@@ -524,14 +524,14 @@ onUnmounted(() => {
   padding-bottom: 0.5rem;
   font-size: 1rem;
   font-weight: 500;
-  color: #374151;
+  color: var(--color-app-text-color);
   border-radius: 0.375rem;
   transition: color 0.2s, background-color 0.2s;
 }
 
 .mobile-user-link:hover {
   color: var(--color-brand-500);
-  background-color: #f9fafb;
+  background-color: var(--color-app-light-blue);
 }
 
 .mobile-logout-button {
@@ -543,14 +543,14 @@ onUnmounted(() => {
   padding-bottom: 0.5rem;
   font-size: 1rem;
   font-weight: 500;
-  color: #dc2626;
+  color: #f87171;
   border-radius: 0.375rem;
   text-align: left;
   transition: background-color 0.2s;
 }
 
 .mobile-logout-button:hover {
-  background-color: #fef2f2;
+  background-color: rgba(248, 113, 113, 0.12);
 }
 
 .mobile-backdrop {

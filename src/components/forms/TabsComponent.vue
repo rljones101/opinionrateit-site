@@ -51,7 +51,7 @@ const selectedHandler = (index: number) => {
 .tab:disabled {
   display: inline-block;
   padding: 1rem;
-  color: #9ca3af;
+  color: var(--color-default-400);
   border-radius: 0.5rem 0.5rem 0 0;
   cursor: not-allowed;
 }
