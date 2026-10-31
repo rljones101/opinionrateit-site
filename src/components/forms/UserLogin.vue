@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
+import { useLoginDialogStore } from '@/stores/loginDialogStore'
 import type { AppApiResponse, AppApiErrorResponse } from '@/types'
 import { useRouter, useRoute } from 'vue-router'
 import FormInput from '@/components/inputs/FormInput.vue'
@@ -10,9 +11,15 @@ import BaseButton from '@/components/buttons/BaseButton.vue'
 import ButtonClose from '@/components/buttons/ButtonClose.vue'
 import AppLink from '@/components/AppLink.vue'
 
+// When rendered inside the login dialog this component emits events instead of
+// assuming a full-page context. `dialog` toggles that behaviour.
+const props = defineProps<{ dialog?: boolean }>()
+const emit = defineEmits<{ (e: 'success'): void; (e: 'close'): void }>()
+
 const router = useRouter()
 const route = useRoute()
 
+const loginDialog = useLoginDialogStore()
 const { loginUser } = useUserStore()
 
 const email = ref('')
@@ -35,9 +42,26 @@ const login = async () => {
         showError.value = false
         email.value = ''
         password.value = ''
-        // Return the user to where they were headed before being asked to log
-        // in (set by the router guard), otherwise land on the video browser.
-        const redirect = route.query.redirect as string | undefined
+
+        // Resolve where to go next: the dialog store's redirect (when opened
+        // from a guard/prompt), the route's ?redirect (full-page /login), or
+        // the video browser as a sensible default.
+        const redirect =
+          loginDialog.redirect || (route.query.redirect as string | undefined) || null
+
+        if (props.dialog) {
+          // In the dialog, stay on the current page unless a redirect was set.
+          emit('success')
+          if (redirect) {
+            try {
+              await router.push(redirect)
+            } catch (routerError) {
+              console.error('Router navigation error:', routerError)
+            }
+          }
+          return
+        }
+
         try {
           await router.push(redirect || { name: 'videos' })
         } catch (routerError) {
@@ -62,6 +86,10 @@ const login = async () => {
 const closeDialog = () => {
   // clear any error messages
   showError.value = false
+  if (props.dialog) {
+    emit('close')
+    return
+  }
   router.push({ name: 'home' })
 }
 </script>

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useUserStore } from '@/stores/userStore'
+import { useLoginDialogStore } from '@/stores/loginDialogStore'
 import { useRouter } from 'vue-router'
 import AppTitle from '@/components/AppTitle.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
@@ -13,6 +14,7 @@ import ProfilePreferences from '@/components/profile/ProfilePreferences.vue'
 import ProfileSecurity from '@/components/profile/ProfileSecurity.vue'
 
 const userStore = useUserStore()
+const loginDialog = useLoginDialogStore()
 const router = useRouter()
 
 const isLoading = ref(true)
@@ -34,7 +36,8 @@ const loadProfile = async () => {
 
     // Check if user is authenticated
     if (!userStore.isAuthenticated) {
-      router.push({ name: 'login' })
+      loginDialog.open(router.currentRoute.value.fullPath)
+      router.push({ name: 'videos' })
       return
     }
 

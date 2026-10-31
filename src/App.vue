@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
+import LoginDialog from '@/components/modals/LoginDialog.vue'
 </script>
 
 <template>
@@ -9,6 +10,9 @@ import { RouterView } from 'vue-router'
         <component :is="Component" />
       </Transition>
     </router-view>
+
+    <!-- Global login dialog: opened from anywhere via the loginDialog store. -->
+    <LoginDialog />
   </div>
 </template>
 

@@ -213,9 +213,19 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  // ...and send them to login, remembering where they wanted to go so we can
-  // return them there after a successful sign-in.
-  next({ name: 'login', query: { redirect: to.fullPath } })
+  // ...open the login dialog, remembering where they wanted to go so we can
+  // return them there after a successful sign-in. If there's nowhere to come
+  // back from (e.g. a direct deep-link into a protected page), send them to
+  // the public video browser first so they aren't left on a blank page.
+  const { useLoginDialogStore } = await import('@/stores/loginDialogStore')
+  const loginDialog = useLoginDialogStore()
+  loginDialog.open(to.fullPath)
+
+  if (from && from.name) {
+    next(false) // cancel navigation; stay where they are with the dialog open
+  } else {
+    next({ name: 'videos' })
+  }
 })
 
 export default router
