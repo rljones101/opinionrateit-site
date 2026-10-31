@@ -1,117 +1,93 @@
-const UserSession = require('../models/userSessionModel')
 const catchAsync = require('../utils/catchAsync')
 const AppError = require('../utils/appError')
+const SessionService = require('../services/dynamodb/SessionService')
 
-// Get all user sessions
-exports.getSessions = catchAsync(async (req, res, next) => {
-  const sessions = await UserSession.find({ userId: req.user.id })
-    .sort({ lastActive: -1 })
-    .lean()
-  
-  // Get current token to mark current session
-  let currentToken
+const sessionService = new SessionService()
+
+// Resolve the raw JWT from the request (Authorization header or cookie).
+function getRequestToken(req) {
   if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    currentToken = req.headers.authorization.split(' ')[1]
-  } else if (req.cookies.jwt) {
-    currentToken = req.cookies.jwt
+    return req.headers.authorization.split(' ')[1]
   }
-  
-  // Format sessions and mark current one
-  const formattedSessions = sessions.map(session => ({
-    id: session._id,
-    device: session.device,
-    browser: session.browser,
-    os: session.os,
-    location: session.location,
-    ipAddress: session.ipAddress,
-    lastActive: session.lastActive,
-    createdAt: session.createdAt,
-    current: false // Will be set below if it matches
+  return req.cookies.jwt
+}
+
+function userId(req) {
+  return req.user.userId || req.user.id
+}
+
+// GET /api/v1/users/me/sessions
+exports.getSessions = catchAsync(async (req, res) => {
+  const sessions = await sessionService.listForUser(userId(req))
+
+  // Identify the current session by the request token's hash.
+  const token = getRequestToken(req)
+  const currentHash = token ? SessionService.hashToken(token) : null
+
+  const formatted = sessions.map((s) => ({
+    id: s.sessionId,
+    device: s.device,
+    browser: s.browser,
+    os: s.os,
+    location: s.location,
+    ipAddress: s.ipAddress,
+    lastActive: s.lastActive,
+    createdAt: s.createdAt,
+    current: false
   }))
-  
-  // Mark current session if we have a token
-  if (currentToken) {
-    const currentSession = await UserSession.findByToken(currentToken)
-    if (currentSession) {
-      const sessionIndex = formattedSessions.findIndex(
-        s => s.id.toString() === currentSession._id.toString()
-      )
-      if (sessionIndex !== -1) {
-        formattedSessions[sessionIndex].current = true
-      }
+
+  // listForUser's format() strips tokenHash, so re-fetch raw to match current.
+  if (currentHash) {
+    const current = await sessionService.findByToken(token)
+    if (current) {
+      const idx = formatted.findIndex((f) => f.id === current.sessionId)
+      if (idx !== -1) formatted[idx].current = true
     }
   }
-  
+
   res.status(200).json({
     status: 'success',
-    data: {
-      sessions: formattedSessions
-    }
+    data: { sessions: formatted }
   })
 })
 
-// Revoke a specific session
+// DELETE /api/v1/users/me/sessions/:sessionId
 exports.revokeSession = catchAsync(async (req, res, next) => {
-  const session = await UserSession.findOne({
-    _id: req.params.sessionId,
-    userId: req.user.id
-  })
-  
+  const uid = userId(req)
+  const session = await sessionService.getById(uid, req.params.sessionId)
+
   if (!session) {
     return next(new AppError('Session not found', 404))
   }
-  
-  // Don't allow revoking current session
-  let currentToken
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    currentToken = req.headers.authorization.split(' ')[1]
-  } else if (req.cookies.jwt) {
-    currentToken = req.cookies.jwt
+
+  // Don't allow revoking the current session (use logout instead).
+  const token = getRequestToken(req)
+  if (token && SessionService.hashToken(token) === session.tokenHash) {
+    return next(new AppError('Cannot revoke your current session. Use logout instead.', 400))
   }
-  
-  if (currentToken) {
-    const currentSession = await UserSession.findByToken(currentToken)
-    if (currentSession && currentSession._id.toString() === session._id.toString()) {
-      return next(new AppError('Cannot revoke your current session. Use logout instead.', 400))
-    }
-  }
-  
-  await UserSession.findByIdAndDelete(req.params.sessionId)
-  
+
+  await sessionService.revoke(uid, req.params.sessionId)
+
   res.status(200).json({
     status: 'success',
     message: 'Session revoked successfully'
   })
 })
 
-// Revoke all sessions except current
+// DELETE /api/v1/users/me/sessions  (revoke all except current)
 exports.revokeAllSessions = catchAsync(async (req, res, next) => {
-  // Get current token
-  let currentToken
-  if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-    currentToken = req.headers.authorization.split(' ')[1]
-  } else if (req.cookies.jwt) {
-    currentToken = req.cookies.jwt
-  }
-  
-  if (!currentToken) {
+  const token = getRequestToken(req)
+  if (!token) {
     return next(new AppError('No active session found', 400))
   }
-  
-  // Find current session
-  const currentSession = await UserSession.findByToken(currentToken)
-  if (!currentSession) {
-    return next(new AppError('Current session not found', 404))
-  }
-  
-  // Delete all sessions except current
-  await UserSession.deleteMany({
-    userId: req.user.id,
-    _id: { $ne: currentSession._id }
-  })
-  
+
+  const revoked = await sessionService.revokeAllExcept(
+    userId(req),
+    SessionService.hashToken(token)
+  )
+
   res.status(200).json({
     status: 'success',
-    message: 'All other sessions revoked successfully'
+    message: `${revoked} other session(s) revoked successfully`
   })
 })

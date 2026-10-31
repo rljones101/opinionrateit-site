@@ -1,6 +1,6 @@
 const express = require('express')
 const publishedVideoController = require('../controllers/publishedVideoController.js')
-const authController = require('../controllers/authController.js')
+const authController = require('../controllers/authController.dynamo.js')
 
 const router = express.Router()
 

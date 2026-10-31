@@ -4,6 +4,11 @@ const catchAsync = require('../utils/catchAsync.js')
 const AppError = require('../utils/appError.js')
 const tokenUtils = require('../utils/tokenUtils.js')
 const serviceFactory = require('../services/ServiceFactory')
+const SessionService = require('../services/dynamodb/SessionService.js')
+const ReviewerService = require('../services/dynamodb/ReviewerService.js')
+
+const sessionService = new SessionService()
+const reviewerService = new ReviewerService()
 
 const createSendToken = async (user, statusCode, res, req) => {
   const token = tokenUtils.signToken(user.userId)
@@ -32,10 +37,7 @@ const createSendToken = async (user, statusCode, res, req) => {
   try {
     const userAgent = req.headers['user-agent'] || 'Unknown'
     const ipAddress = req.ip || req.connection.remoteAddress || 'Unknown'
-    
-    // TODO: Implement session service
-    // await sessionService.createSession(user.userId, token, userAgent, ipAddress)
-    console.log('Session creation not yet implemented for DynamoDB')
+    await sessionService.createSession(user.userId, token, userAgent, ipAddress)
   } catch (error) {
     console.error('Failed to create session:', error)
     // Don't block login if session creation fails
@@ -84,14 +86,22 @@ exports.signup = catchAsync(async (req, res) => {
 
   console.log('User created successfully:', user.email)
 
-  // Create reviewer profile for Creator tier
-  if (role === 'creator') {
-    // TODO: Implement reviewer service for DynamoDB
-    console.log('Reviewer creation not yet implemented for DynamoDB')
+  // Create reviewer profile for Creator tier (and legacy reviewer roles)
+  if (['creator', 'reviewer-basic', 'reviewer-plus'].includes(role) && req.body.youTubeChannelId) {
+    try {
+      const reviewer = await reviewerService.createReviewer({
+        user: user.userId,
+        channelId: req.body.youTubeChannelId,
+        name: req.body.title || user.name,
+        avatar: req.body.avatar,
+        description: req.body.description
+      })
+      user = { ...user, avatar: reviewer.avatar }
+    } catch (err) {
+      console.error('Failed to create reviewer profile:', err.message)
+      // Don't block signup if reviewer creation fails
+    }
   }
-
-  // TODO: Log signup activity
-  console.log('Activity logging not yet implemented for DynamoDB')
 
   await createSendToken(user, 201, res, req)
 })
@@ -127,15 +137,15 @@ exports.login = catchAsync(async (req, res, next) => {
       return next(new AppError('Incorrect email or password', 401))
     }
 
-    console.log('Login successful, creating token...')
-
-    // TODO: Handle reviewer data for DynamoDB
-    if (['reviewer-basic', 'reviewer-plus'].includes(user.role)) {
-      console.log('Reviewer data loading not yet implemented for DynamoDB')
+    // Attach the reviewer avatar for reviewer/creator roles.
+    if (['reviewer-basic', 'reviewer-plus', 'creator'].includes(user.role) && user.youTubeChannelId) {
+      try {
+        const reviewer = await reviewerService.getByChannelId(user.youTubeChannelId)
+        if (reviewer) user.avatar = reviewer.avatar
+      } catch (err) {
+        console.error('Failed to load reviewer data:', err.message)
+      }
     }
-
-    // TODO: Log login activity
-    console.log('Login activity logging not yet implemented for DynamoDB')
 
     await createSendToken(user, 200, res, req)
   } catch (error) {
@@ -144,7 +154,20 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 })
 
-exports.logout = (req, res) => {
+exports.logout = catchAsync(async (req, res) => {
+  // Revoke the current session so the token can't be reused.
+  const token = req.cookies.jwt
+  if (token && token !== 'loggedout') {
+    try {
+      const session = await sessionService.findByToken(token)
+      if (session) {
+        await sessionService.revoke(session.userId, session.sessionId)
+      }
+    } catch (err) {
+      console.error('Failed to revoke session on logout:', err.message)
+    }
+  }
+
   res.cookie('jwt', 'loggedout', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true
@@ -155,7 +178,7 @@ exports.logout = (req, res) => {
     path: '/api/v1/users/refresh-token'
   })
   res.status(200).json({ status: 'success' })
-}
+})
 
 exports.protect = catchAsync(async (req, res, next) => {
   // 1) Getting token and check if it's there
@@ -170,25 +193,75 @@ exports.protect = catchAsync(async (req, res, next) => {
     return next(new AppError('You are not logged in! Please log in to get access.', 401))
   }
 
-  // 2) Verification token
-  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
+  try {
+    // 2) Verify the token (invalid/expired/loggedout tokens land in catch → 401)
+    const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET)
 
-  // 3) Check if user still exists
-  const userService = serviceFactory.getUserService()
-  const currentUser = await userService.getUserById(decoded.id)
-  
-  if (!currentUser) {
-    return next(new AppError('The user belonging to this token does no longer exist.', 401))
+    // 3) Check if the user still exists
+    const userService = serviceFactory.getUserService()
+    const currentUser = await userService.getUserById(decoded.id)
+
+    if (!currentUser) {
+      return next(new AppError('The user belonging to this token does no longer exist.', 401))
+    }
+
+    // 4) Check if the user changed password after the token was issued
+    if (userService.changedPasswordAfter(currentUser, decoded.iat)) {
+      return next(new AppError('User recently changed password! Please log in again.', 401))
+    }
+
+    // 5) The session must still exist and not be expired. A token whose session
+    //    was revoked (logout / revoke) or has expired must be rejected —
+    //    otherwise a still-valid JWT would outlive its session.
+    const session = await sessionService.findByToken(token)
+    if (!session) {
+      return next(new AppError('Your session is no longer valid. Please log in again.', 401))
+    }
+    if (sessionService.isExpired(session)) {
+      return next(new AppError('Your session has expired. Please log in again.', 401))
+    }
+    // Best-effort activity bump (don't await).
+    sessionService.touch(session)
+
+    // Grant access to protected route
+    req.user = currentUser
+    next()
+  } catch (error) {
+    return next(new AppError('Invalid token. Please log in again!', 401))
+  }
+})
+
+exports.getMe = (req, res) => {
+  res.status(200).json({
+    status: 'success',
+    data: { user: req.user }
+  })
+}
+
+exports.refreshToken = catchAsync(async (req, res, next) => {
+  const { refreshToken } = req.cookies
+
+  if (!refreshToken) {
+    return next(new AppError('No refresh token provided', 401))
   }
 
-  // 4) Check if user changed password after the token was issued
-  if (userService.changedPasswordAfter(currentUser, decoded.iat)) {
-    return next(new AppError('User recently changed password! Please log in again.', 401))
-  }
+  try {
+    const decoded = await promisify(jwt.verify)(refreshToken, process.env.JWT_REFRESH_SECRET)
+    const userService = serviceFactory.getUserService()
+    const currentUser = await userService.getUserById(decoded.id)
 
-  // Grant access to protected route
-  req.user = currentUser
-  next()
+    if (!currentUser) {
+      return next(new AppError('The user belonging to this token no longer exists.', 401))
+    }
+
+    if (userService.changedPasswordAfter(currentUser, decoded.iat)) {
+      return next(new AppError('User recently changed password! Please login again', 401))
+    }
+
+    await createSendToken(currentUser, 200, res, req)
+  } catch (error) {
+    return next(new AppError('Invalid refresh token', 401))
+  }
 })
 
 exports.restrictTo = (...roles) => {

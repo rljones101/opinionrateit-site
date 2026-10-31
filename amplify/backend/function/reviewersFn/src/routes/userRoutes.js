@@ -1,6 +1,7 @@
 const express = require('express')
 const rateLimit = require('express-rate-limit')
-const authController = require('../controllers/authController.js')
+// DynamoDB-backed auth controller (replaces the Mongoose authController).
+const authController = require('../controllers/authController.dynamo.js')
 const userController = require('../controllers/userController.js')
 const preferencesController = require('../controllers/preferencesController.js')
 const activityController = require('../controllers/activityController.js')
