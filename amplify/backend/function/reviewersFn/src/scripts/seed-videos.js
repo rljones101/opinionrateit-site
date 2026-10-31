@@ -21,6 +21,7 @@ loadEnvConfig(process.env.NODE_ENV || 'development')
 const axios = require('axios')
 const ReviewerService = require('../services/dynamodb/ReviewerService.js')
 const PublishedVideoService = require('../services/dynamodb/PublishedVideoService.js')
+const ReviewService = require('../services/dynamodb/ReviewService.js')
 
 const DEFAULT_CHANNEL_ID = 'UC3XdYJjWliOdKuZMNaTiP8Q'
 const YT_BASE = process.env.YOUTUBE_API_URL || 'https://www.googleapis.com/youtube/v3/'
@@ -104,6 +105,61 @@ function staticFallback(channelId) {
   return { reviewer, videos }
 }
 
+/**
+ * Sample reviews (comments) to attach to seeded videos, so logged-out
+ * visitors land on a page with real-looking discussion. Each reviewer here is
+ * a denormalised demo "user" (no real account) — just enough for the UI to
+ * render an author name and a rating.
+ */
+const SAMPLE_REVIEWS = [
+  {
+    user: { userId: 'seed-user-1', name: 'Alex T.' },
+    comment: 'Honestly one of the clearest breakdowns I have seen. The audio section sold me.',
+    clarity: 92, product_view: 85, product_detail_explanation: 88, non_bias: 80,
+    average_review_time: 75, product_focus: 90, provided_resources: 70, overall_presentation: 88
+  },
+  {
+    user: { userId: 'seed-user-2', name: 'Priya K.' },
+    comment: 'Good review but I wish there was more on battery life. Still, very helpful before I buy.',
+    clarity: 78, product_view: 82, product_detail_explanation: 70, non_bias: 85,
+    average_review_time: 68, product_focus: 72, provided_resources: 60, overall_presentation: 75
+  },
+  {
+    user: { userId: 'seed-user-3', name: 'Marcus W.' },
+    comment: 'Agree with the rating. Bought it based on this and have zero regrets.',
+    clarity: 88, product_view: 90, product_detail_explanation: 84, non_bias: 78,
+    average_review_time: 80, product_focus: 86, provided_resources: 75, overall_presentation: 90
+  },
+  {
+    user: { userId: 'seed-user-4', name: 'Dana R.' },
+    comment: 'Solid, unbiased take. The comparison footage really helped me decide.',
+    clarity: 84, product_view: 80, product_detail_explanation: 82, non_bias: 92,
+    average_review_time: 72, product_focus: 79, provided_resources: 68, overall_presentation: 83
+  }
+]
+
+/**
+ * Attach a couple of sample reviews to the first few videos.
+ */
+async function seedReviews(reviewService, channelId, videos) {
+  const videosToReview = videos.slice(0, 3) // first 3 videos get comments
+  let total = 0
+  for (const video of videosToReview) {
+    // Give each video 1–3 reviews from the sample pool.
+    const count = 1 + (total % 3)
+    for (let i = 0; i < count && i < SAMPLE_REVIEWS.length; i++) {
+      const sample = SAMPLE_REVIEWS[(total + i) % SAMPLE_REVIEWS.length]
+      await reviewService.createReview({
+        videoId: video.videoId,
+        channelId,
+        ...sample
+      })
+      total++
+    }
+  }
+  return total
+}
+
 async function resolveSeedData(channelId) {
   try {
     console.log('📡 Fetching channel + videos from the YouTube Data API...')
@@ -126,6 +182,7 @@ async function seed() {
 
   const reviewerService = new ReviewerService()
   const videoService = new PublishedVideoService()
+  const reviewService = new ReviewService()
 
   const { reviewer, videos } = await resolveSeedData(channelId)
 
@@ -140,6 +197,11 @@ async function seed() {
   // 3) Keep the denormalised video count in sync.
   await reviewerService.setVideoCount(channelId, savedVideos.length)
   console.log(`✅ Updated numPublishedVideos = ${savedVideos.length}`)
+
+  // 4) Seed sample reviews (comments) on the first few videos so logged-out
+  //    visitors see discussion and are nudged to sign in to contribute.
+  const reviewCount = await seedReviews(reviewService, channelId, savedVideos)
+  console.log(`✅ ${reviewCount} sample reviews saved across ${Math.min(3, savedVideos.length)} videos`)
 
   console.log('🎉 Seed complete!')
 }
