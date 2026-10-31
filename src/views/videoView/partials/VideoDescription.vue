@@ -7,7 +7,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="rounded bg-default-50 p-4">
+  <div class="rounded bg-secondary-200 p-4">
     <AppSimpleCollapsibile>
       <template #header> Description </template>
       <template #content>

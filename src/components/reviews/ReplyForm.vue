@@ -77,8 +77,8 @@ const handleCancel = () => {
 }
 
 .reply-textarea {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-lg;
-  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+  @apply w-full px-3 py-2 bg-secondary-50 text-default-50 border border-app-light-blue rounded-lg;
+  @apply focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500;
   @apply resize-none;
 }
 
@@ -87,7 +87,7 @@ const handleCancel = () => {
 }
 
 .character-count {
-  @apply text-xs text-gray-500;
+  @apply text-xs text-default-300;
 }
 
 .reply-form-actions {

@@ -6,7 +6,7 @@ const { channelId, itemDetail } = useVideoDetails()
 
 <template>
   <div class="mb-2 w-full sm:max-w-7xl mx-auto">
-    <router-link to="/reviewers" class="text-brand-500 hover:text-brand-600">Reviewers</router-link>
+    <router-link :to="{ name: 'reviewers' }" class="text-brand-500 hover:text-brand-600">Reviewers</router-link>
     /
     <router-link
       :to="{ name: 'reviewers-channelId-reviews', params: { channelId } }"

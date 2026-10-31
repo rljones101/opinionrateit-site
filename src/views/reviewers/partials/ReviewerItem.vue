@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '@/stores/userStore'
 import type { Reviewer } from '@/types'
 import UserAvatar from '@/components/UserAvatar.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
@@ -9,7 +8,6 @@ import { formatDateShort, pastNumOfDays } from '@/utils/DateUtils'
 import BadgeSmall from '@/components/badges/BadgeSmall.vue'
 import { formatPercentageToRating, nFormatter } from '@/utils/StringUtils'
 
-const userStore = useUserStore()
 const router = useRouter()
 
 // Define Props
@@ -51,7 +49,11 @@ testImage(props.reviewer.thumbnailMedium)
 
 <template>
   <div
-    class="text-default-500 text-sm app-card flex flex-col transition-all duration-300 group hover:font-bold hover:scale-105 hover:shadow-lg hover:shadow-black"
+    class="text-default-500 text-sm app-card flex flex-col transition-all duration-300 group hover:font-bold hover:scale-105 hover:shadow-lg hover:shadow-black cursor-pointer"
+    role="link"
+    tabindex="0"
+    @click="showVideoReviews"
+    @keydown.enter="showVideoReviews"
   >
     <BadgeSmall
       v-if="pastNumOfDays(props.reviewer.createdAt) >= -7"
@@ -112,7 +114,7 @@ testImage(props.reviewer.thumbnailMedium)
           </p>
         </div>
       </div>
-      <div class="flex justify-between items-end w-full p-4" v-if="userStore.isLoggedIn">
+      <div class="flex justify-between items-end w-full p-4">
         <!--        <BaseButton type="secondary">-->
         <!--          <svg-->
         <!--            class="w-6 h-6 text-brand-500"-->
@@ -130,7 +132,7 @@ testImage(props.reviewer.thumbnailMedium)
         <!--            />-->
         <!--          </svg>-->
         <!--        </BaseButton>-->
-        <BaseButton variant="primary" @click="showVideoReviews">View</BaseButton>
+        <BaseButton variant="primary" @click.stop="showVideoReviews">View</BaseButton>
       </div>
     </div>
   </div>

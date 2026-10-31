@@ -3,7 +3,7 @@
 <template>
   <button
     type="button"
-    class="absolute top-2.5 right-3 ml-auto -mx-1.5 -my-1.5 bg-transparent text-default-400 hover:text-default-50 rounded-lg focus:ring-2 focus:ring-brand-500 p-1.5 hover:bg-secondary-200 inline-flex h-8 w-8"
+    class="absolute top-8 right-3 ml-auto -mx-1.5 -my-1.5 bg-transparent text-default-400 hover:text-default-50 rounded-lg focus:ring-2 focus:ring-brand-500 p-1.5 hover:bg-secondary-200 inline-flex h-8 w-8"
     aria-label="Close"
   >
     <span class="sr-only">Close</span>

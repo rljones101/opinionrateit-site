@@ -2,6 +2,8 @@
 import { ref, computed, onMounted } from 'vue'
 import type { Review } from '@/types'
 import { useReviewInteractionsStore } from '@/stores/reviewInteractionsStore'
+import { useUserStore } from '@/stores/userStore'
+import { useLoginDialogStore } from '@/stores/loginDialogStore'
 import { formatPercentageToRating } from '@/utils/StringUtils'
 import { reviewDate } from '@/utils/DateUtils'
 import videoViewController from '@/controllers/videoViewController'
@@ -16,6 +18,13 @@ interface Props {
 const props = defineProps<Props>()
 
 const interactionsStore = useReviewInteractionsStore()
+const userStore = useUserStore()
+const loginDialog = useLoginDialogStore()
+
+// Liking and replying require an account. Logged-out visitors can read
+// everything; attempting to interact nudges them to sign in.
+const canInteract = computed(() => userStore.isLoggedIn)
+
 const showReplyForm = ref(false)
 const showReplies = ref(false)
 const isSubmittingReply = ref(false)
@@ -25,10 +34,19 @@ const reviewColor = computed(() => videoViewController.getColor(reviewMetric.val
 const replyCount = computed(() => interactionsStore.getReplyCount(props.review._id || ''))
 
 const handleReplyClick = () => {
+  if (!canInteract.value) {
+    loginDialog.open()
+    return
+  }
   showReplyForm.value = !showReplyForm.value
   if (showReplyForm.value) {
     showReplies.value = true
   }
+}
+
+const handleLikeClick = () => {
+  // For logged-out users, intercept and prompt sign-in instead of liking.
+  loginDialog.open()
 }
 
 const handleReplySubmit = async (content: string) => {
@@ -80,13 +98,26 @@ onMounted(() => {
     <p v-if="review.comment" class="review-comment">{{ review.comment }}</p>
     
     <div class="review-actions">
+      <!-- Logged in: real like button. Logged out: a look-alike that prompts sign-in. -->
       <LikeButton
-        v-if="review._id"
+        v-if="canInteract && review._id"
         :review-id="review._id"
         :initial-liked="(review as any).isLikedByCurrentUser"
         :initial-count="(review as any).likesCount || 0"
       />
-      
+      <button
+        v-else-if="review._id"
+        class="like-button-prompt"
+        type="button"
+        @click.stop="handleLikeClick"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+        </svg>
+        <span v-if="(review as any).likesCount > 0" class="text-sm font-medium">{{ (review as any).likesCount }}</span>
+      </button>
+
       <ReplyButton
         :reply-count="replyCount"
         @click="handleReplyClick"
@@ -100,9 +131,9 @@ onMounted(() => {
         {{ showReplies ? 'Hide' : 'View' }} replies
       </button>
     </div>
-    
-    <!-- Reply Form -->
-    <div v-if="showReplyForm" class="reply-form-container">
+
+    <!-- Reply Form (only ever shown to signed-in users) -->
+    <div v-if="canInteract && showReplyForm" class="reply-form-container">
       <ReplyForm
         v-if="review._id"
         :review-id="review._id"
@@ -151,6 +182,14 @@ onMounted(() => {
 
 .review-actions {
   @apply flex items-center gap-2 pt-2 border-t border-secondary-200;
+}
+
+/* Matches LikeButton styling, but prompts sign-in instead of liking. */
+.like-button-prompt {
+  @apply inline-flex items-center gap-1 px-3 py-1.5 rounded-lg;
+  @apply text-default-300 hover:text-blue-400 hover:bg-blue-500/10;
+  @apply transition-colors duration-200;
+  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1;
 }
 
 .view-replies-button {

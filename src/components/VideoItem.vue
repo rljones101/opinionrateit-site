@@ -115,6 +115,11 @@ const formatViews = (viewCount: number): string => {
   @apply flex flex-col h-full bg-secondary-50 border border-app-light-blue rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer;
 }
 
+/* Brand-coloured edge on hover reads better than a shadow swell alone on dark. */
+.video-item-card:hover {
+  border-color: var(--color-brand-500);
+}
+
 .thumbnail-container {
   @apply relative w-full aspect-video bg-secondary-200;
 }

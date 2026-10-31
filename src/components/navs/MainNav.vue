@@ -8,7 +8,7 @@ import ReviewerLinks from '@/components/navs/ReviewerLinks.vue'
 const navLinks: NavLink[] = [
   {
     id: 0,
-    label: 'Home',
+    label: 'Videos',
     name: 'videos',
     icon: HomeIcon
   },
