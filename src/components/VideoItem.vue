@@ -1,11 +1,35 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { Video } from '@/types'
 import AppCard from '@/components/cards/AppCard.vue'
 import BookmarkButton from '@/components/bookmarks/BookmarkButton.vue'
 
-defineProps<{
+const props = defineProps<{
   video: Video
 }>()
+
+const scores = computed(() => props.video.scores ?? null)
+const hasScores = computed(() => !!scores.value && scores.value.reviewCount > 0)
+
+// Color the overall score ring by value: green (good) → amber (mid) → red (poor).
+const scoreColor = computed(() => {
+  const m = scores.value?.metric ?? 0
+  if (m >= 75) return 'var(--color-accent-green)'
+  if (m >= 50) return '#f59e0b'
+  return 'var(--color-red-500)'
+})
+
+// SVG ring geometry (circumference for r=18).
+const RING_CIRCUMFERENCE = 2 * Math.PI * 18
+const ringOffset = computed(() => {
+  const pct = Math.max(0, Math.min(100, scores.value?.metric ?? 0)) / 100
+  return RING_CIRCUMFERENCE * (1 - pct)
+})
+
+const reviewCountLabel = computed(() => {
+  const n = scores.value?.reviewCount ?? 0
+  return `Rated by ${n} reviewer${n === 1 ? '' : 's'}`
+})
 
 const handleImageError = (event: Event) => {
   const img = event.target as HTMLImageElement
@@ -71,7 +95,24 @@ const formatViews = (viewCount: number): string => {
         loading="lazy"
         @error="handleImageError"
       />
-      
+
+      <!-- Overall community score ring (top-left) -->
+      <div class="score-ring" :title="hasScores ? `Overall review score: ${scores!.metric}` : 'Not yet rated'">
+        <svg viewBox="0 0 44 44" class="score-ring-svg">
+          <circle cx="22" cy="22" r="18" class="score-ring-track" />
+          <circle
+            v-if="hasScores"
+            cx="22" cy="22" r="18"
+            class="score-ring-value"
+            :stroke="scoreColor"
+            :stroke-dasharray="RING_CIRCUMFERENCE"
+            :stroke-dashoffset="ringOffset"
+          />
+          <circle v-else cx="22" cy="22" r="18" class="score-ring-track score-ring-empty" />
+        </svg>
+        <span class="score-ring-label">{{ hasScores ? scores!.metric : '—' }}</span>
+      </div>
+
       <!-- Duration Badge (if available) -->
       <div v-if="video.duration" class="duration-badge">
         {{ formatDuration(video.duration) }}
@@ -89,20 +130,47 @@ const formatViews = (viewCount: number): string => {
       <h3 class="video-title" :title="video.title">
         {{ video.title }}
       </h3>
-      
-      <!-- Metadata -->
-      <div class="video-metadata">
-        <span v-if="video.publishedAt" class="metadata-item">
-          {{ formatDate(video.publishedAt) }}
-        </span>
-        <span v-if="video.viewCount" class="metadata-item">
-          {{ formatViews(video.viewCount) }} views
-        </span>
-      </div>
-      
-      <!-- Channel Info -->
+
+      <!-- Channel -->
       <div v-if="video.channelTitle" class="channel-info">
         <span class="channel-name">{{ video.channelTitle }}</span>
+      </div>
+
+      <!-- Honesty signals (the differentiator) -->
+      <div v-if="hasScores" class="quality-signals">
+        <!-- Non-bias badge: the product's core promise -->
+        <span class="unbiased-badge" title="Community non-bias score">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" />
+          </svg>
+          Unbiased {{ scores!.non_bias }}
+        </span>
+        <!-- One supporting quality chip -->
+        <span class="quality-chip" title="Community clarity score">
+          Clarity {{ scores!.clarity }}
+        </span>
+      </div>
+
+      <!-- Not-yet-rated state doubles as a signup nudge -->
+      <div v-else class="not-rated">
+        Not yet rated — <span class="not-rated-cta">be the first to review</span>
+      </div>
+
+      <!-- Community count + secondary metadata -->
+      <div class="video-footer">
+        <span v-if="hasScores" class="review-count">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 10-4-4 4 4 0 004 4zm6 0a4 4 0 10-3-6.65" />
+          </svg>
+          {{ reviewCountLabel }}
+        </span>
+        <span class="video-meta-secondary">
+          <template v-if="video.viewCount">{{ formatViews(video.viewCount) }} views</template>
+          <template v-if="video.viewCount && video.publishedAt"> · </template>
+          <template v-if="video.publishedAt">{{ formatDate(video.publishedAt) }}</template>
+        </span>
       </div>
     </div>
   </AppCard>
@@ -112,12 +180,23 @@ const formatViews = (viewCount: number): string => {
 @reference "#main.css";
 
 .video-item-card {
-  @apply flex flex-col h-full bg-secondary-50 border border-app-light-blue rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer;
+  @apply flex flex-col h-full rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer;
+  /* Frosted glass surface (raw CSS so it overrides AppCard's solid bg). */
+  background-color: rgb(26 34 52 / 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgb(255 255 255 / 0.06);
 }
 
 /* Brand-coloured edge on hover reads better than a shadow swell alone on dark. */
 .video-item-card:hover {
   border-color: var(--color-brand-500);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .video-item-card {
+    background-color: var(--color-secondary-50);
+  }
 }
 
 .thumbnail-container {
@@ -138,6 +217,48 @@ const formatViews = (viewCount: number): string => {
 
 .duration-badge {
   @apply absolute bottom-2 right-2 text-white text-xs px-2 py-1 rounded bg-black/80;
+}
+
+/* --- Overall score ring (top-left over the thumbnail) --- */
+.score-ring {
+  @apply absolute top-2 left-2 z-20 flex items-center justify-center;
+  width: 44px;
+  height: 44px;
+}
+
+.score-ring-svg {
+  @apply absolute inset-0 w-full h-full;
+}
+
+.score-ring::before {
+  content: '';
+  @apply absolute rounded-full;
+  inset: 3px;
+  background-color: rgb(14 20 32 / 0.85);
+}
+
+.score-ring-track {
+  fill: none;
+  stroke: var(--color-secondary-200);
+  stroke-width: 4;
+}
+
+.score-ring-empty {
+  stroke-dasharray: 4 4;
+  stroke: var(--color-default-600);
+}
+
+.score-ring-value {
+  fill: none;
+  stroke-width: 4;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dashoffset 0.6s ease;
+}
+
+.score-ring-label {
+  @apply relative z-10 text-sm font-extrabold text-default-50;
 }
 
 .bookmark-button-container {
@@ -161,25 +282,48 @@ const formatViews = (viewCount: number): string => {
   overflow: hidden;
 }
 
-.video-metadata {
-  @apply flex flex-wrap gap-2 text-xs text-default-300;
-}
-
-.metadata-item {
-  @apply flex items-center;
-}
-
-.metadata-item:not(:last-child)::after {
-  content: '•';
-  @apply ml-2 text-default-400;
-}
-
 .channel-info {
-  @apply mt-auto;
+  @apply -mt-1;
 }
 
 .channel-name {
   @apply text-xs text-default-300 font-medium;
+}
+
+/* --- Honesty signals --- */
+.quality-signals {
+  @apply flex flex-wrap items-center gap-2 mt-1;
+}
+
+.unbiased-badge {
+  @apply inline-flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full;
+  @apply text-brand-300 border border-brand-500/50;
+  background-color: rgb(249 116 21 / 0.12);
+}
+
+.quality-chip {
+  @apply inline-flex items-center text-xs px-2 py-1 rounded-full text-default-200 bg-secondary-200;
+}
+
+.not-rated {
+  @apply mt-1 text-xs text-default-300 px-2 py-1.5 rounded-md bg-secondary-200 border border-app-light-blue;
+}
+
+.not-rated-cta {
+  @apply text-brand-400 font-semibold;
+}
+
+/* --- Footer: community count + secondary meta --- */
+.video-footer {
+  @apply mt-auto pt-2 flex flex-col gap-0.5;
+}
+
+.review-count {
+  @apply inline-flex items-center gap-1 text-xs text-default-300 font-medium;
+}
+
+.video-meta-secondary {
+  @apply text-[11px] text-default-400;
 }
 
 /* Mobile optimizations */

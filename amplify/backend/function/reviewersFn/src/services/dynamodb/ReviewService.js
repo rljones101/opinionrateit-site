@@ -98,6 +98,58 @@ class ReviewService extends BaseService {
     })
     return result.count || 0
   }
+
+  /**
+   * Aggregate the community scores for a single video from its reviews.
+   * Returns null when the video has no reviews yet (so the UI can show a
+   * "not yet rated — be the first" state).
+   *
+   * `metric` mirrors the frontend reviewMetric(): the mean of all 8 dimensions.
+   */
+  async aggregateScoresForVideo(videoId) {
+    const reviews = await this.getByVideoId(videoId)
+    return ReviewService.computeScores(reviews)
+  }
+
+  /**
+   * Pure aggregation helper — given a list of reviews, compute the rolled-up
+   * scores. Exposed statically so callers with reviews already loaded can reuse it.
+   */
+  static computeScores(reviews) {
+    if (!reviews || reviews.length === 0) return null
+
+    const dims = [
+      'clarity',
+      'product_view',
+      'product_detail_explanation',
+      'non_bias',
+      'average_review_time',
+      'product_focus',
+      'provided_resources',
+      'overall_presentation'
+    ]
+
+    const avg = (field) => {
+      const sum = reviews.reduce((acc, r) => acc + (Number(r[field]) || 0), 0)
+      return Math.round(sum / reviews.length)
+    }
+
+    const dimAverages = {}
+    dims.forEach((d) => (dimAverages[d] = avg(d)))
+
+    // Overall metric = mean of all dimension averages (matches reviewMetric()).
+    const metric = Math.round(
+      dims.reduce((acc, d) => acc + dimAverages[d], 0) / dims.length
+    )
+
+    return {
+      reviewCount: reviews.length,
+      metric,
+      non_bias: dimAverages.non_bias,
+      clarity: dimAverages.clarity,
+      overall_presentation: dimAverages.overall_presentation
+    }
+  }
 }
 
 function num(v) {

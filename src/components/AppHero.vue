@@ -7,9 +7,9 @@ const { goToSignup, goToVideos } = useNavRoutes()
 <template>
   <div class="hero w-full flex items-center justify-end">
     <div class="flex md:mr-4 flex-col text-left hero-text">
-      <h1 class="text-3xl lg:text-5xl mb-4 uppercase">
-        <span class="text-brand-300">Discover &amp; Share</span><br />
-        <span class="font-bold text-brand-500">Tech Product Reviews</span>
+      <h1 class="hero-heading text-4xl lg:text-6xl mb-4 uppercase font-extrabold tracking-tight">
+        <span class="text-gradient-brand">Discover &amp; Share</span><br />
+        <span class="text-white">Tech Product Reviews</span>
       </h1>
       <p class="text-default-300">
         Join a community of tech enthusiasts. Browse expert reviews, save favorites, and share
@@ -18,7 +18,7 @@ const { goToSignup, goToVideos } = useNavRoutes()
       <div class="mt-6 flex flex-wrap gap-4">
         <button
           type="button"
-          class="inline-flex items-center justify-center rounded-lg bg-brand-500 px-6 py-3 text-base font-medium text-white transition-colors duration-200 hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
+          class="btn-brand inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
           @click="goToSignup"
         >
           Sign Up Free
@@ -66,7 +66,13 @@ const { goToSignup, goToVideos } = useNavRoutes()
 .hero-text {
   position: relative;
   z-index: 1;
-  max-width: 28rem;
+  max-width: 30rem;
+}
+
+/* Soft orange glow behind the heading so it lifts off the dark hero art. */
+.hero-heading {
+  text-shadow: 0 2px 24px rgb(249 116 21 / 0.25);
+  line-height: 1.05;
 }
 
 @media (max-width: 768px) {

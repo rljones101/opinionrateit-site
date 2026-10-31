@@ -14,8 +14,8 @@ const emit = defineEmits(['selected'])
 
 <template>
   <div
-    :class="active ? 'border border-orange-500' : 'border border-app-light-blue'"
-    class="w-full flex flex-col max-w-sm p-4 bg-secondary-200 rounded-lg shadow sm:p-8 h-full"
+    :class="active ? 'border border-orange-500 glow-brand' : 'border border-app-light-blue'"
+    class="w-full flex flex-col max-w-sm p-4 bg-secondary-200 rounded-lg shadow sm:p-8 h-full transition-shadow duration-300"
   >
     <h5 class="mb-4 text-xl font-medium">{{ planName }}</h5>
     <div class="flex items-baseline" v-if="!isDisabled">
