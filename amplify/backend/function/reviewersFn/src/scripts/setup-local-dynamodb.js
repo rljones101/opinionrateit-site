@@ -12,6 +12,9 @@ const client = new DynamoDBClient({
   credentials: {
     accessKeyId: 'fake',
     secretAccessKey: 'fake'
+  },
+  requestHandler: {
+    requestTimeout: 5000 // 5 second timeout
   }
 })
 
@@ -103,14 +106,16 @@ const tableDefinitions = [
 async function setupTables() {
   try {
     console.log('🚀 Setting up local DynamoDB tables...')
+    console.log('📡 Connecting to DynamoDB at http://localhost:8000...')
     
     // List existing tables
+    console.log('📋 Listing existing tables...')
     const { TableNames } = await client.send(new ListTablesCommand({}))
-    console.log('Existing tables:', TableNames)
+    console.log('✅ Connected! Existing tables:', TableNames || [])
     
     // Delete existing tables if they exist
     for (const tableDef of tableDefinitions) {
-      if (TableNames.includes(tableDef.TableName)) {
+      if (TableNames && TableNames.includes(tableDef.TableName)) {
         console.log(`🗑️  Deleting existing table: ${tableDef.TableName}`)
         await client.send(new DeleteTableCommand({ TableName: tableDef.TableName }))
         
@@ -129,7 +134,12 @@ async function setupTables() {
     console.log('🎉 All tables created successfully!')
     
   } catch (error) {
-    console.error('❌ Error setting up tables:', error)
+    console.error('❌ Error setting up tables:', error.message)
+    console.error('Full error:', error)
+    console.error('\n💡 Troubleshooting:')
+    console.error('   1. Make sure DynamoDB Local is running: npm run dynamo:start')
+    console.error('   2. Check if port 8000 is accessible: curl http://localhost:8000')
+    console.error('   3. Verify Docker container is running: docker ps')
     process.exit(1)
   }
 }

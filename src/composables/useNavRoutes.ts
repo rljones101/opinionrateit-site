@@ -10,8 +10,13 @@ export const useNavRoutes = () => {
     await router.push({ name: 'home' })
   }
 
+  const goToVideos = async () => {
+    await router.push({ name: 'videos' })
+  }
+
   return {
     goToSignup,
-    goToHome
+    goToHome,
+    goToVideos
   }
 }

@@ -4,19 +4,19 @@ const authController = require('../controllers/authController.js')
 
 const router = express.Router()
 
-router.use(authController.protect)
-
+// Public reads — anyone can browse the published video catalog.
 router.route('/').get(publishedVideoController.getAll)
-
 router.route('/search').get(publishedVideoController.search)
+router.route('/:id').get(publishedVideoController.getOne)
 
-router.use(authController.restrictTo('reviewer-basic', 'reviewer-plus', 'admin'))
+// Everything below requires an authenticated reviewer/admin.
+router.use(authController.protect)
+router.use(authController.restrictTo('reviewer-basic', 'reviewer-plus', 'creator', 'admin'))
 
 router.route('/').post(publishedVideoController.createMultiple)
 
 router
   .route('/:id')
-  .get(publishedVideoController.getOne)
   .patch(publishedVideoController.updateOne)
   .delete(publishedVideoController.deleteOne)
 

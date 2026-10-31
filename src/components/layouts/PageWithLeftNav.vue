@@ -20,6 +20,10 @@ const logout = () => {
   router.push({ name: 'home' })
 }
 
+const goToLogin = () => {
+  router.push({ name: 'login' })
+}
+
 const searchHandler = async (value: string) => {
   let query = {}
   if (value) {
@@ -51,7 +55,7 @@ const searchHandler = async (value: string) => {
               <div class="flex-1 w-full flex justify-center items-center">
                 <SearchInput :model-value="searchValue" @update:modelValue="searchHandler" />
               </div>
-              <div v-if="userStore.user.name" class="flex items-center justify-center">
+              <div v-if="userStore.isLoggedIn && userStore.user.name" class="flex items-center justify-center">
                 <UserAvatar
                   :user="{ name: userStore.user.name, avatarUrl: userStore.user.avatar }"
                   class="w-8 h-8"
@@ -59,7 +63,8 @@ const searchHandler = async (value: string) => {
                 />
               </div>
               <div class="hidden md:flex items-center">
-                <BaseButton variant="primary" @click="logout">Logout</BaseButton>
+                <BaseButton v-if="userStore.isLoggedIn" variant="primary" @click="logout">Logout</BaseButton>
+                <BaseButton v-else variant="primary" @click="goToLogin">Login</BaseButton>
               </div>
             </div>
           </div>

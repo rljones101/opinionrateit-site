@@ -11,6 +11,7 @@
     "dynamo:start": "java -Djava.library.path=./dynamodb-local/DynamoDBLocal_lib -jar ./dynamodb-local/DynamoDBLocal.jar -sharedDb -port 8000",
     "dynamo:setup": "node scripts/setup-local-dynamodb.js",
     "dynamo:setup:aws": "node scripts/setup-aws-dynamodb.js",
+    "dynamo:seed": "cross-env NODE_ENV=development USE_DYNAMODB=true node scripts/seed-videos.js",
     "dynamo:test": "cross-env NODE_ENV=development USE_DYNAMODB=true node scripts/test-dynamodb.js",
     "dynamo:test:credentials": "node scripts/test-aws-credentials.js",
     "dynamo:admin": "node scripts/dynamo-admin.js",
