@@ -112,12 +112,23 @@ const formatViews = (viewCount: number): string => {
 @reference "#main.css";
 
 .video-item-card {
-  @apply flex flex-col h-full bg-secondary-50 border border-app-light-blue rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer;
+  @apply flex flex-col h-full rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer;
+  /* Frosted glass surface (raw CSS so it overrides AppCard's solid bg). */
+  background-color: rgb(26 34 52 / 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgb(255 255 255 / 0.06);
 }
 
 /* Brand-coloured edge on hover reads better than a shadow swell alone on dark. */
 .video-item-card:hover {
   border-color: var(--color-brand-500);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .video-item-card {
+    background-color: var(--color-secondary-50);
+  }
 }
 
 .thumbnail-container {

@@ -232,10 +232,20 @@ onUnmounted(() => {
 <style scoped>
 .app-header {
   width: 100%;
-  background-color: var(--color-secondary-200);
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  /* Frosted glass: semi-transparent dark + blur, so content scrolls under it. */
+  background-color: rgb(39 50 74 / 0.72); /* secondary-200 @ 72% */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgb(255 255 255 / 0.06);
+  box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.4);
   position: relative;
   z-index: 40;
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .app-header {
+    background-color: var(--color-secondary-200);
+  }
 }
 
 .header-container {
