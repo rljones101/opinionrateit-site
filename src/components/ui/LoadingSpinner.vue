@@ -64,7 +64,7 @@ const textSizeClass = computed(() => {
 }
 
 .loading-message {
-  @apply text-gray-600 font-medium;
+  @apply text-default-300 font-medium;
 }
 
 @keyframes spin {

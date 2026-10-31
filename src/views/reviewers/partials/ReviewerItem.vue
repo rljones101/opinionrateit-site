@@ -93,19 +93,19 @@ testImage(props.reviewer.thumbnailMedium)
             <span class="reviewer-details__label text-xs">Rating</span>
           </p>
           <p>
-            <span class="reviewer-details__text font-bold text-brand-800">{{
+            <span class="reviewer-details__text font-bold text-brand-300">{{
               formatDateShort(reviewer.createdAt)
             }}</span>
             <span class="reviewer-details__label text-xs">Joined</span>
           </p>
           <p>
-            <span class="reviewer-details__text font-bold text-brand-800">{{
+            <span class="reviewer-details__text font-bold text-brand-300">{{
               nFormatter(reviewer.numPublishedVideos, 1)
             }}</span>
             <span class="reviewer-details__label text-xs">videos</span>
           </p>
           <p>
-            <span class="reviewer-details__text font-bold text-brand-800">
+            <span class="reviewer-details__text font-bold text-brand-300">
               {{ nFormatter(reviewer.views, 1) }}</span
             >
             <span class="reviewer-details__label text-xs">views</span>

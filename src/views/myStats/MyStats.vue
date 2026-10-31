@@ -66,7 +66,7 @@ ReviewService.getNumReviews(userStore.user.youTubeChannelId)
       </div>
     </div>
     <div v-else class="mx-auto flex flex-col max-w-fit items-center space-y-2 text-center">
-      <ChatBubbleBottomCenterTextIcon class="h-12 w-12 text-gray-500" />
+      <ChatBubbleBottomCenterTextIcon class="h-12 w-12 text-default-400" />
       <span class="italic text-app-orange font-bold">NO REVIEWS YET!</span>
       <p>You haven't received any reviews yet.. check back later.</p>
     </div>

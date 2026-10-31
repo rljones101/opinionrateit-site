@@ -112,11 +112,11 @@ const formatViews = (viewCount: number): string => {
 @reference "#main.css";
 
 .video-item-card {
-  @apply flex flex-col h-full bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer;
+  @apply flex flex-col h-full bg-secondary-50 border border-app-light-blue rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer;
 }
 
 .thumbnail-container {
-  @apply relative w-full aspect-video bg-gray-200;
+  @apply relative w-full aspect-video bg-secondary-200;
 }
 
 .selection-overlay {
@@ -149,7 +149,7 @@ const formatViews = (viewCount: number): string => {
 }
 
 .video-title {
-  @apply font-semibold text-sm lg:text-base text-gray-900 line-clamp-2 leading-tight;
+  @apply font-semibold text-sm lg:text-base text-default-50 line-clamp-2 leading-tight;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -157,7 +157,7 @@ const formatViews = (viewCount: number): string => {
 }
 
 .video-metadata {
-  @apply flex flex-wrap gap-2 text-xs text-gray-500;
+  @apply flex flex-wrap gap-2 text-xs text-default-300;
 }
 
 .metadata-item {
@@ -166,7 +166,7 @@ const formatViews = (viewCount: number): string => {
 
 .metadata-item:not(:last-child)::after {
   content: '•';
-  @apply ml-2 text-gray-400;
+  @apply ml-2 text-default-400;
 }
 
 .channel-info {
@@ -174,7 +174,7 @@ const formatViews = (viewCount: number): string => {
 }
 
 .channel-name {
-  @apply text-xs text-gray-600 font-medium;
+  @apply text-xs text-default-300 font-medium;
 }
 
 /* Mobile optimizations */

@@ -25,7 +25,7 @@ const confirm = () => {
   >
     <div class="relative w-full max-w-2xl max-h-full">
       <!-- Modal content -->
-      <div class="relative rounded-lg bg-white shadow">
+      <div class="relative rounded-lg bg-secondary-50 border border-app-light-blue shadow">
         <!-- Modal header -->
         <div class="flex items-start justify-between p-5 rounded-t">
           <h3 class="text-xl font-semibold lg:text-2xl">
@@ -34,7 +34,7 @@ const confirm = () => {
           <button
             id="closeButton"
             type="button"
-            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            class="text-default-400 bg-transparent hover:bg-secondary-200 hover:text-default-50 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
             @click="close"
           >
             <svg

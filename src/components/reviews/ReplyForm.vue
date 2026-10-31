@@ -95,9 +95,9 @@ const handleCancel = () => {
 }
 
 .cancel-button {
-  @apply px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg;
-  @apply hover:bg-gray-50 transition-colors;
-  @apply focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-1;
+  @apply px-4 py-2 text-sm font-medium text-default-50 bg-secondary-50 border border-app-light-blue rounded-lg;
+  @apply hover:bg-secondary-200 transition-colors;
+  @apply focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-1;
 }
 
 .submit-button {

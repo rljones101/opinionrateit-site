@@ -1,13 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  --color-app-blue: #ebebeb;
-  --color-app-blue-soft: #d7d7d7;
-  --color-app-light-blue: #b0b0b0;
-  --color-app-text-color: #393939;
-  --color-app-orange: #f97415;
+  /* App surface tokens — dark slate theme (from redesign mockup) */
+  --color-app-blue: #0e1420;        /* page background (deep navy/charcoal) */
+  --color-app-blue-soft: #1a2234;   /* raised surface / panels */
+  --color-app-light-blue: #27324a;  /* borders / hover surfaces */
+  --color-app-text-color: #f8fafc;  /* primary text (near-white) */
+  --color-app-text-muted: #94a3b8;  /* secondary / muted text */
+  --color-app-orange: #f97415;      /* brand accent (unchanged) */
   --color-app-orange-soft: #fa9044;
   --color-app-orange-muted: #c75d11;
+
+  /* Data-viz accents used across charts/stats in the mockup */
+  --color-accent-teal: #2dd4bf;
+  --color-accent-cyan: #22d3ee;
+  --color-accent-blue: #3b82f6;
+  --color-accent-green: #22c55e;
+  --color-accent-purple: #a855f7;
 
   /* Standard color palette */
   --color-red-50: #fef2f2;
@@ -46,27 +55,31 @@
   --color-brand-800: #5c2616;
   --color-brand-900: #2e130b;
 
-  --color-default-50: #ebebeb;
-  --color-default-100: #d7d7d7;
-  --color-default-200: #b0b0b0;
-  --color-default-300: #888888;
-  --color-default-400: #616161;
-  --color-default-500: #393939;
-  --color-default-600: #2e2e2e;
-  --color-default-700: #222222;
-  --color-default-800: #171717;
-  --color-default-900: #0b0b0b;
+  /* Default scale — inverted for dark theme.
+     50 = lightest text, 900 = darkest surface, so existing utility
+     classes (text-default-500, bg-default-100, etc.) read correctly on dark. */
+  --color-default-50: #f8fafc;
+  --color-default-100: #e2e8f0;
+  --color-default-200: #cbd5e1;
+  --color-default-300: #94a3b8;
+  --color-default-400: #64748b;
+  --color-default-500: #cbd5e1;  /* body text on dark background */
+  --color-default-600: #334155;
+  --color-default-700: #27324a;
+  --color-default-800: #1a2234;
+  --color-default-900: #0e1420;
 
-  --color-secondary-50: #fbfbfb;
-  --color-secondary-100: #f8f8f8;
-  --color-secondary-200: #f1f1f1;
-  --color-secondary-300: #e9e9e9;
-  --color-secondary-400: #e2e2e2;
-  --color-secondary-500: #dbdbdb;
-  --color-secondary-600: #afafaf;
-  --color-secondary-700: #838383;
-  --color-secondary-800: #585858;
-  --color-secondary-900: #2c2c2c;
+  /* Secondary scale — surfaces. 50 = card surface on dark theme. */
+  --color-secondary-50: #1a2234;   /* card / panel background */
+  --color-secondary-100: #202a3e;
+  --color-secondary-200: #27324a;
+  --color-secondary-300: #2f3b56;
+  --color-secondary-400: #3a4866;
+  --color-secondary-500: #475569;
+  --color-secondary-600: #64748b;
+  --color-secondary-700: #94a3b8;
+  --color-secondary-800: #cbd5e1;
+  --color-secondary-900: #f1f5f9;
 }
 
 /* Generate utility classes for custom colors */
@@ -273,7 +286,8 @@
   .app-card {
     position: relative;
     background-color: var(--color-secondary-50);
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    border: 1px solid var(--color-app-light-blue);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.4);
     border-radius: 0.5rem;
   }
 
@@ -289,8 +303,8 @@
     content: '';
     position: fixed;
     inset: 0;
-    opacity: 0.3;
-    background: linear-gradient(to top, var(--color-app-orange), #0f172a);
+    opacity: 0.35;
+    background: linear-gradient(to top, var(--color-app-orange), var(--color-app-blue));
     z-index: -1;
   }
 
@@ -304,7 +318,7 @@
 @layer base {
   body {
     background-color: var(--color-app-blue);
-    color: var(--color-default-500);
+    color: var(--color-app-text-color);
     font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   }
 }

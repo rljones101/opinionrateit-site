@@ -32,7 +32,7 @@ const getClasses = computed(() => {
   // Variant classes
   const variantClasses = {
     primary: 'bg-brand-500 text-white hover:bg-brand-600 focus:ring-brand-500 border border-transparent',
-    secondary: 'bg-white text-gray-700 hover:bg-gray-50 focus:ring-gray-500 border border-gray-300',
+    secondary: 'bg-secondary-50 text-default-50 hover:bg-secondary-200 focus:ring-brand-500 border border-app-light-blue',
     danger: 'bg-red-500 text-white hover:bg-red-600 focus:ring-red-500 border border-transparent',
     small: 'bg-brand-500 text-white hover:bg-brand-600 focus:ring-brand-500 border border-transparent px-2 py-0.5 text-xs rounded-full font-semibold uppercase'
   }

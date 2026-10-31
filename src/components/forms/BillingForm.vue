@@ -68,10 +68,10 @@ const {
         <FormInput name="zip" label="Zip" placeholder="Your Zip" v-model="billingFormData.zip" />
       </div>
       <div>
-        <label class="block mb-2 text-sm font-medium text-gray-700">Credit Card Information</label>
+        <label class="block mb-2 text-sm font-medium text-default-200">Credit Card Information</label>
         <div 
           id="stripe-element-mount-point" 
-          class="border border-gray-300 rounded-lg p-3 bg-white"
+          class="border border-app-light-blue rounded-lg p-3 bg-white"
           style="min-height: 40px;"
         ></div>
         <p v-if="stripeError" class="mt-1 text-sm text-red-600">

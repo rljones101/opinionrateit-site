@@ -113,7 +113,7 @@ onMounted(() => {
     
     <!-- Replies Section (placeholder for now) -->
     <div v-if="showReplies && replyCount > 0" class="replies-section">
-      <p class="text-sm text-gray-500">Replies will appear here</p>
+      <p class="text-sm text-default-300">Replies will appear here</p>
     </div>
   </div>
 </template>
@@ -138,19 +138,19 @@ onMounted(() => {
 }
 
 .review-author {
-  @apply text-sm font-semibold text-gray-900;
+  @apply text-sm font-semibold text-default-50;
 }
 
 .review-date {
-  @apply text-xs text-gray-500;
+  @apply text-xs text-default-300;
 }
 
 .review-comment {
-  @apply text-gray-700 leading-relaxed;
+  @apply text-default-200 leading-relaxed;
 }
 
 .review-actions {
-  @apply flex items-center gap-2 pt-2 border-t border-gray-200;
+  @apply flex items-center gap-2 pt-2 border-t border-secondary-200;
 }
 
 .view-replies-button {
@@ -163,6 +163,6 @@ onMounted(() => {
 }
 
 .replies-section {
-  @apply pl-4 border-l-2 border-gray-200 space-y-2;
+  @apply pl-4 border-l-2 border-secondary-200 space-y-2;
 }
 </style>

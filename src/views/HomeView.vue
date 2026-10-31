@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import JoinMessage from '@/components/JoinMessage.vue'
-import IconCommunity from '@/components/icons/IconCommunity.vue'
-import IconDocumentation from '@/components/icons/IconDocumentation.vue'
-import IconEcosystem from '@/components/icons/IconEcosystem.vue'
 import AppHero from '@/components/AppHero.vue'
+import ValueProposition from '@/components/home/ValueProposition.vue'
+import HomePricing from '@/components/home/HomePricing.vue'
+import HowItWorks from '@/components/home/HowItWorks.vue'
+import QualityFeatures from '@/components/home/QualityFeatures.vue'
+import CommunityBenefits from '@/components/home/CommunityBenefits.vue'
+import FinalCTA from '@/components/home/FinalCTA.vue'
 import { nextTick, onMounted, onBeforeUnmount } from 'vue'
 import MainContentWrapper from '@/components/containers/MainContentWrapper.vue'
 
@@ -47,7 +49,7 @@ function useSetIsPinnedElement(className: string): void {
   onMounted(async () => {
     await nextTick()
     const el = document.querySelector(className) as HTMLElement
-    observer.observe(el)
+    if (el) observer.observe(el)
   })
 
   onBeforeUnmount(() => {
@@ -58,72 +60,54 @@ function useSetIsPinnedElement(className: string): void {
 
 <template>
   <MainContentWrapper>
+    <!-- Hero -->
     <section class="p-8 flex flex-col items-center justify-center">
       <AppHero />
     </section>
-    <section>
-      <JoinMessage class="max-w-7xl mx-auto" />
+
+    <!-- Value Proposition -->
+    <section id="learn-more" class="py-16 px-8 bg-secondary-200/40 reveal fade-up">
+      <ValueProposition class="max-w-7xl mx-auto" />
     </section>
-    <!--      <section class="pt-8 pb-8 hidden xl:flex">-->
-    <!--        <FeaturedReviewers class="reveal fade-right" />-->
-    <!--      </section>-->
-    <section>
-      <div class="max-w-7xl mx-auto">
-        <h1 class="pt-16 flex justify-center text-4xl text-center text-brand-800 uppercase">
-          Activate more effective reviews
-        </h1>
-        <div class="w-full flex flex-col items-center mt-8 mb-8">
-          <img src="../assets/img/desktop-split.png" alt="Desktop Image" class="object-contain" />
-        </div>
-        <div
-          class="px-24 pb-24 flex flex-col md:flex-row w-full gap-4 items-stretch justify-center"
-        >
-          <div
-            class="flex-1 flex flex-col items-center text-center gap-4 bg-secondary-200 p-4 rounded"
-          >
-            <div class="icon-wrapper"><IconCommunity /></div>
-            <h3 class="font-bold text-xl text-brand-800 uppercase">Community</h3>
-            <p>
-              Interact with other members and ensure your reviews are engaging while providing
-              valuable information.
-            </p>
-            <!--            <ReadMoreLink />-->
-          </div>
-          <div
-            class="flex-1 flex flex-col items-center text-center gap-4 bg-secondary-200 p-4 rounded"
-          >
-            <div class="icon-wrapper"><IconDocumentation /></div>
-            <h3 class="font-bold text-xl text-brand-800 uppercase">Tech Knowledge</h3>
-            <p>
-              Increase awareness in latest tech trends, connect with merchants that share your
-              interest.
-            </p>
-            <!--            <ReadMoreLink />-->
-          </div>
-          <div
-            class="flex-1 flex flex-col items-center text-center gap-4 bg-secondary-200 p-4 rounded"
-          >
-            <div class="icon-wrapper"><IconEcosystem /></div>
-            <h3 class="font-bold text-xl text-brand-800 uppercase">Engagement Tracking</h3>
-            <p>
-              Daily analysis is provided that will give you a deep understanding of how you can
-              reach your target audience.
-            </p>
-            <!--            <ReadMoreLink />-->
-          </div>
-        </div>
-      </div>
+
+    <!-- Pricing Tiers -->
+    <section class="py-16 px-8 reveal fade-up">
+      <HomePricing class="max-w-7xl mx-auto" />
+    </section>
+
+    <!-- How It Works -->
+    <section class="py-16 px-8 bg-secondary-200/40 reveal fade-up">
+      <HowItWorks class="max-w-7xl mx-auto" />
+    </section>
+
+    <!-- Quality / Features -->
+    <section class="py-16 px-8 reveal fade-up">
+      <QualityFeatures class="max-w-7xl mx-auto" />
+    </section>
+
+    <!-- Community Benefits -->
+    <section class="py-16 px-8 bg-secondary-200/40 reveal fade-up">
+      <CommunityBenefits class="max-w-7xl mx-auto" />
+    </section>
+
+    <!-- Final CTA -->
+    <section class="reveal fade-up">
+      <FinalCTA />
     </section>
   </MainContentWrapper>
 </template>
 
 <style scoped>
-.icon-wrapper {
-  background-color: var(--color-brand-500);
-  color: var(--color-secondary-50);
-  border-radius: 9999px;
-  padding: 1rem;
-  width: 50px;
-  height: 50px;
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s ease-out,
+    transform 0.6s ease-out;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>

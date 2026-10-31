@@ -16,11 +16,19 @@ import router from './router'
 export const app = createApp(App)
 export const pinia = createPinia()
 
+// Enable the dark theme globally (matches the dark slate token palette).
+document.documentElement.classList.add('app-dark')
+
 app.use(pinia)
 app.use(router)
 app.use(PrimeVue, {
   theme: {
-    preset: Material
+    preset: Material,
+    options: {
+      // App uses a dark theme. Scope PrimeVue dark mode to the .app-dark
+      // class on <html>, which we set below, so it stays in sync with our tokens.
+      darkModeSelector: '.app-dark'
+    }
   }
 })
 

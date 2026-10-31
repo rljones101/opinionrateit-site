@@ -141,7 +141,7 @@ onMounted(() => {
 }
 
 .error-message {
-  @apply text-gray-700 mb-4;
+  @apply text-default-200 mb-4;
 }
 
 .retry-button {
@@ -153,15 +153,15 @@ onMounted(() => {
 }
 
 .empty-icon {
-  @apply w-20 h-20 text-gray-400 mb-4;
+  @apply w-20 h-20 text-default-400 mb-4;
 }
 
 .empty-title {
-  @apply text-xl font-semibold text-gray-900 mb-2;
+  @apply text-xl font-semibold text-default-50 mb-2;
 }
 
 .empty-description {
-  @apply text-gray-600 mb-6 max-w-md;
+  @apply text-default-300 mb-6 max-w-md;
 }
 
 .browse-button {
@@ -177,8 +177,8 @@ onMounted(() => {
 }
 
 .load-more-button {
-  @apply px-6 py-3 bg-white border-2 border-brand-500 text-brand-500 rounded-lg;
-  @apply hover:bg-brand-50 transition-colors font-medium;
+  @apply px-6 py-3 bg-transparent border-2 border-brand-500 text-brand-500 rounded-lg;
+  @apply hover:bg-brand-500 hover:text-white transition-colors font-medium;
   @apply disabled:opacity-50 disabled:cursor-not-allowed;
 }
 </style>

@@ -16,7 +16,7 @@ const goToPath = async () => {
 <template>
   <div class="relative group">
     <button
-      class="flex items-center justify-center transition ease-out hover:ease-in duration-300 px-3 py-2 font-medium text-gray-700 hover:text-brand-500 uppercase text-center"
+      class="flex items-center justify-center transition ease-out hover:ease-in duration-300 px-3 py-2 font-medium text-default-200 hover:text-brand-500 uppercase text-center"
       @click="goToPath"
     >
       {{ label }}

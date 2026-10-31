@@ -38,7 +38,7 @@
       </div>
       
       <details v-if="showDetails && errorDetails" class="error-details">
-        <summary class="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
+        <summary class="cursor-pointer text-sm text-default-300 hover:text-default-100">
           Show technical details
         </summary>
         <pre class="error-stack">{{ errorDetails }}</pre>
@@ -120,7 +120,7 @@ defineExpose({
 }
 
 .error-content {
-  @apply max-w-md mx-auto text-center bg-white rounded-lg shadow-lg p-8 border border-red-100;
+  @apply max-w-md mx-auto text-center bg-secondary-50 rounded-lg shadow-lg p-8 border border-app-light-blue;
 }
 
 .error-icon {
@@ -128,11 +128,11 @@ defineExpose({
 }
 
 .error-title {
-  @apply text-xl font-semibold text-gray-900 mb-2;
+  @apply text-xl font-semibold text-default-50 mb-2;
 }
 
 .error-message {
-  @apply text-gray-600 mb-6 leading-relaxed;
+  @apply text-default-300 mb-6 leading-relaxed;
 }
 
 .error-actions {
@@ -152,6 +152,6 @@ defineExpose({
 }
 
 .error-stack {
-  @apply mt-2 p-3 bg-gray-100 rounded text-xs text-gray-700 overflow-auto max-h-32;
+  @apply mt-2 p-3 bg-secondary-200 rounded text-xs text-default-200 overflow-auto max-h-32;
 }
 </style>

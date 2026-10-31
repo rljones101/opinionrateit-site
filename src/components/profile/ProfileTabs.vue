@@ -62,7 +62,7 @@ const getIconSvg = (icon: string) => {
 @reference "#main.css";
 
 .profile-tabs {
-  @apply border-b border-gray-200;
+  @apply border-b border-app-light-blue;
 }
 
 .tabs-container {
@@ -79,11 +79,11 @@ const getIconSvg = (icon: string) => {
 }
 
 .tab-active {
-  @apply bg-white text-brand-600 border-b-2 border-brand-500 shadow-sm;
+  @apply bg-secondary-50 text-brand-600 border-b-2 border-brand-500 shadow-sm;
 }
 
 .tab-inactive {
-  @apply text-gray-500 hover:text-gray-700 hover:bg-gray-50;
+  @apply text-default-300 hover:text-default-200 hover:bg-secondary-200;
 }
 
 .tab-icon {
@@ -122,14 +122,14 @@ const getIconSvg = (icon: string) => {
 }
 
 .tabs-container::-webkit-scrollbar-track {
-  @apply bg-gray-100 rounded;
+  @apply bg-secondary-200 rounded;
 }
 
 .tabs-container::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 rounded;
+  @apply bg-secondary-200 rounded;
 }
 
 .tabs-container::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400;
+  @apply bg-secondary-300;
 }
 </style>

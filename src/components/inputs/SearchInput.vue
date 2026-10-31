@@ -27,7 +27,7 @@ const clearSearch = () => {
       <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
         <svg
           aria-hidden="true"
-          class="w-5 h-5 text-gray-500 dark:text-gray-400"
+          class="w-5 h-5 text-default-400"
           fill="currentColor"
           viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +51,7 @@ const clearSearch = () => {
         v-if="search !== ''"
         @click="clearSearch"
         type="button"
-        class="absolute top-2.5 right-3 ml-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-full focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8"
+        class="absolute top-2.5 right-3 ml-auto -mx-1.5 -my-1.5 bg-transparent text-default-400 hover:text-default-50 rounded-full focus:ring-2 focus:ring-brand-500 p-1.5 hover:bg-secondary-200 inline-flex h-8 w-8"
         aria-label="Close"
       >
         <span class="sr-only">Close</span>

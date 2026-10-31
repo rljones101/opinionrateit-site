@@ -82,14 +82,14 @@ onMounted(() => {
 
 .like-button {
   @apply inline-flex items-center gap-1 px-3 py-1.5 rounded-lg;
-  @apply text-gray-600 hover:text-blue-600 hover:bg-blue-50;
+  @apply text-default-300 hover:text-blue-400 hover:bg-blue-500/10;
   @apply transition-colors duration-200;
   @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1;
   @apply disabled:opacity-50 disabled:cursor-not-allowed;
 }
 
 .like-button.liked {
-  @apply text-blue-600 bg-blue-50;
+  @apply text-blue-400 bg-blue-500/10;
 }
 
 .like-icon {
