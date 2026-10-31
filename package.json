@@ -17,6 +17,7 @@
     "dynamo:logs": "docker-compose -f docker-compose.dynamodb.yml logs -f",
     "dynamo:setup": "cd ./amplify/backend/function/reviewersFn/src/ && npm run dynamo:setup",
     "dynamo:setup:aws": "cd ./amplify/backend/function/reviewersFn/src/ && npm run dynamo:setup:aws",
+    "dynamo:seed": "cd ./amplify/backend/function/reviewersFn/src/ && npm run dynamo:seed",
     "backend:dev": "cd ./amplify/backend/function/reviewersFn/src/ && SET NODE_ENV=development&&nodemon app.js",
     "backend:install": "npm install --prefix ./amplify/backend/function/reviewersFn/src",
     "format": "prettier --write src/"
