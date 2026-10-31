@@ -49,6 +49,14 @@ export interface ChannelDetailsInterface {
   }
 }
 
+export interface VideoScores {
+  reviewCount: number
+  metric: number
+  non_bias: number
+  clarity: number
+  overall_presentation: number
+}
+
 export interface Video {
   _id?: string
   id?: string
@@ -61,6 +69,7 @@ export interface Video {
   publishedAt?: string
   viewCount?: number
   channelTitle?: string
+  scores?: VideoScores | null
 }
 
 export interface PublishedVideo extends Video {

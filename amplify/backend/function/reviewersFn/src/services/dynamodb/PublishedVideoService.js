@@ -1,6 +1,7 @@
 const BaseService = require('./BaseService')
 const { keys } = require('./entities')
 const AppError = require('../../utils/appError')
+const ReviewService = require('./ReviewService')
 
 /**
  * DynamoDB service for PublishedVideo entities.
@@ -79,7 +80,8 @@ class PublishedVideoService extends BaseService {
   }
 
   /**
-   * List every video for a channel (Query on the base table partition).
+   * List every video for a channel (Query on the base table partition),
+   * enriched with each video's aggregated community scores.
    */
   async getByChannelId(channelId) {
     const result = await this.query(
@@ -91,7 +93,25 @@ class PublishedVideoService extends BaseService {
         }
       }
     )
-    return result.items.map((item) => this.format(item))
+    const videos = result.items.map((item) => this.format(item))
+    return this.attachScores(videos)
+  }
+
+  /**
+   * Enrich videos with a `scores` object aggregated from their reviews.
+   * `scores` is null for videos with no reviews yet (UI shows a "not yet
+   * rated" state). The catalog is small, so a per-video query is acceptable;
+   * for a large catalog this should move to a denormalised score on the video
+   * item updated when reviews change.
+   */
+  async attachScores(videos) {
+    const reviewService = new ReviewService()
+    return Promise.all(
+      videos.map(async (video) => ({
+        ...video,
+        scores: await reviewService.aggregateScoresForVideo(video.videoId)
+      }))
+    )
   }
 
   /**
@@ -113,14 +133,16 @@ class PublishedVideoService extends BaseService {
   }
 
   /**
-   * List the whole video catalog (via GSI1 partition VIDEO).
+   * List the whole video catalog (via GSI1 partition VIDEO), enriched with
+   * each video's aggregated community scores.
    */
   async getAll() {
     const result = await this.query('GSI1PK = :pk', {
       IndexName: 'GSI1',
       ExpressionAttributeValues: { ':pk': keys.videoGSI1PK() }
     })
-    return result.items.map((item) => this.format(item))
+    const videos = result.items.map((item) => this.format(item))
+    return this.attachScores(videos)
   }
 
   /**
