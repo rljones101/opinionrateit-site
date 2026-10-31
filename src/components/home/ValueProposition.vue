@@ -1,16 +1,21 @@
 <script setup lang="ts">
 import ValuePropositionCard from '@/components/home/ValuePropositionCard.vue'
+import {
+  MagnifyingGlassIcon,
+  PencilSquareIcon,
+  ChartBarIcon
+} from '@heroicons/vue/24/outline'
 
 const personas = [
   {
-    emoji: '🔍',
+    icon: MagnifyingGlassIcon,
     title: 'Discover Reviews',
     description:
       'Browse unlimited tech product reviews from trusted reviewers. Save your favorites and discover new products.',
     features: ['Browse all reviews', 'Save up to 10 favorites', 'Basic search', 'Watch videos']
   },
   {
-    emoji: '✍️',
+    icon: PencilSquareIcon,
     title: 'Share Your Voice',
     description:
       'Post your own reviews, get feedback from the community, and build your reputation as a trusted reviewer.',
@@ -22,7 +27,7 @@ const personas = [
     ]
   },
   {
-    emoji: '📊',
+    icon: ChartBarIcon,
     title: 'Grow Your Channel',
     description:
       'Connect your YouTube channel, get detailed analytics, and understand what makes your reviews effective.',
@@ -41,7 +46,7 @@ const personas = [
       <ValuePropositionCard
         v-for="persona in personas"
         :key="persona.title"
-        :emoji="persona.emoji"
+        :icon="persona.icon"
         :title="persona.title"
         :description="persona.description"
         :features="persona.features"

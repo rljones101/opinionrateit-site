@@ -4,7 +4,7 @@ import ValueProposition from '@/components/home/ValueProposition.vue'
 import HomePricing from '@/components/home/HomePricing.vue'
 import HowItWorks from '@/components/home/HowItWorks.vue'
 import QualityFeatures from '@/components/home/QualityFeatures.vue'
-import StatsBar from '@/components/home/StatsBar.vue'
+import CommunityBenefits from '@/components/home/CommunityBenefits.vue'
 import FinalCTA from '@/components/home/FinalCTA.vue'
 import { nextTick, onMounted, onBeforeUnmount } from 'vue'
 import MainContentWrapper from '@/components/containers/MainContentWrapper.vue'
@@ -85,9 +85,9 @@ function useSetIsPinnedElement(className: string): void {
       <QualityFeatures class="max-w-7xl mx-auto" />
     </section>
 
-    <!-- Social Proof -->
+    <!-- Community Benefits -->
     <section class="py-16 px-8 bg-secondary-200/40 reveal fade-up">
-      <StatsBar class="max-w-7xl mx-auto" />
+      <CommunityBenefits class="max-w-7xl mx-auto" />
     </section>
 
     <!-- Final CTA -->

@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import type { Component } from 'vue'
+
 defineProps<{
-  emoji: string
+  icon: Component
   title: string
   description: string
   features: string[]
@@ -11,8 +13,10 @@ defineProps<{
   <div
     class="flex-1 flex flex-col gap-4 bg-secondary-50 p-8 rounded-lg shadow transition-transform duration-200 hover:-translate-y-1 hover:shadow-lg"
   >
-    <div class="text-4xl" aria-hidden="true">{{ emoji }}</div>
-    <h3 class="font-bold text-xl text-brand-300 uppercase">{{ title }}</h3>
+    <div class="flex items-center gap-3">
+      <component :is="icon" class="flex-shrink-0 w-8 h-8 text-brand-500" aria-hidden="true" />
+      <h3 class="font-bold text-xl text-brand-300 uppercase">{{ title }}</h3>
+    </div>
     <p class="text-default-300">{{ description }}</p>
     <ul class="mt-2 space-y-2">
       <li v-for="(feature, index) in features" :key="index" class="flex items-start gap-2">

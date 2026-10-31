@@ -1,22 +1,24 @@
 <script setup lang="ts">
+import { LightBulbIcon, ScaleIcon, FilmIcon, BookOpenIcon } from '@heroicons/vue/24/outline'
+
 const benefits = [
   {
-    emoji: '💡',
+    icon: LightBulbIcon,
     title: 'Clear & Detailed',
     description: 'Easy to understand with great product visibility.'
   },
   {
-    emoji: '⚖️',
+    icon: ScaleIcon,
     title: 'Unbiased & Focused',
     description: 'Honest opinions that stay on topic.'
   },
   {
-    emoji: '🎬',
+    icon: FilmIcon,
     title: 'Well Produced',
     description: 'High-quality audio, video, and presentation.'
   },
   {
-    emoji: '📚',
+    icon: BookOpenIcon,
     title: 'Informative',
     description: 'Includes additional resources and context.'
   }
@@ -33,13 +35,13 @@ const benefits = [
       <div
         v-for="benefit in benefits"
         :key="benefit.title"
-        class="flex items-start gap-4 bg-secondary-200 p-6 rounded-lg"
+        class="flex flex-col gap-3 bg-secondary-200 p-6 rounded-lg"
       >
-        <div class="text-3xl" aria-hidden="true">{{ benefit.emoji }}</div>
-        <div>
+        <div class="flex items-center gap-3">
+          <component :is="benefit.icon" class="flex-shrink-0 w-8 h-8 text-brand-500" aria-hidden="true" />
           <h3 class="font-bold text-lg text-brand-300">{{ benefit.title }}</h3>
-          <p class="text-default-300">{{ benefit.description }}</p>
         </div>
+        <p class="text-default-300">{{ benefit.description }}</p>
       </div>
     </div>
   </div>
