@@ -140,31 +140,63 @@ Fields: `privacy.{profileVisibility, showEmail, showActivity, allowMessages}`.
   - A messaging feature before `allowMessages` means anything.
 - **Effort:** Large (depends on building public profiles + messaging first).
 
-### 7. Security preferences
+### 7. Security tab
 
-Fields: `security.{loginNotifications, suspiciousActivityAlerts, passwordExpiry, sessionTimeout}`.
+The **Security** tab (`src/components/profile/ProfileSecurity.vue`) is a
+separate feature from the Preferences store. Current state as of 2026-10-31:
 
-- **Status:** was never in the Preferences form (the form never rendered or
-  sent a `security` section). A separate **Security** tab
-  (`src/components/profile/ProfileSecurity.vue`) has its own UI but uses local
-  mock state: session list is mocked, 2FA toggle and "save settings" are TODO
-  stubs that don't persist. Only password change is real.
+- **Change Password — LIVE.** Real `PATCH /users/updateMyPassword`.
+- **Active Sessions — LIVE (wired 2026-10-31).** Lists and revokes real
+  sessions against the existing backend:
+  - `GET /api/v1/users/me/sessions` (list, flags current)
+  - `DELETE /api/v1/users/me/sessions/:id` (revoke one; refuses current)
+  - `DELETE /api/v1/users/me/sessions` (revoke all others)
+  Backed by `SessionService` (dedicated `user-sessions` DynamoDB table, token
+  hashing, 30-day TTL). Sessions are created on every login and validated in
+  `protect`.
+- **Two-Factor Authentication — REMOVED (deferred).** Was a `setTimeout` stub
+  flipping a local boolean; no backend. See roadmap item 7a.
+- **Security Notifications + Session Timeout — REMOVED (deferred).** Was a
+  `setTimeout` stub that persisted nothing. See roadmap item 7b.
+
+#### 7a. Two-Factor Authentication (deferred)
+
+- **Promise:** optional TOTP-based 2FA on the account.
+- **Why deferred:** no backend at all (no secret storage, no enrollment, no
+  login-time verification).
 - **To make real (prerequisites):**
-  - Real session listing + revocation endpoints (session records exist via
-    `SessionService`; expose list/revoke).
-  - Enforce `sessionTimeout` in token/session TTL.
-  - `passwordExpiry` enforcement + prompt flow.
-  - 2FA (TOTP enrollment/verification).
-  - Login / suspicious-activity notifications depend on item 5 (notifications).
+  - TOTP secret generation + encrypted storage per user.
+  - Enrollment flow (QR code / otpauth URI) and verification step.
+  - Enforcement at login (prompt for code when 2FA is enabled).
+  - Recovery/backup codes.
 - **Effort:** Large.
+
+#### 7b. Security notifications & configurable session timeout (deferred)
+
+Fields that used to appear: `loginNotifications`, `suspiciousActivityAlerts`,
+`passwordExpiry`, `sessionTimeout`.
+
+- **Why deferred:**
+  - Login / suspicious-activity notifications depend on a notification system
+    (see item 5) that does not exist.
+  - `passwordExpiry` needs an expiry policy + prompt flow.
+  - `sessionTimeout` is currently hardcoded to 30 days in `SessionService`
+    (`createSession`); making it configurable means reading a per-user setting
+    when issuing the session TTL.
+- **Effort:** Medium-Large (notifications piece is the heavy part).
 
 ---
 
 ## Suggested sequencing (when revived)
 
 1. **Playback (item 1)** — cheap, self-contained, visible value. Good first revive.
-2. **Security tab real sessions + session timeout (item 7, partial)** — leverages
-   existing `SessionService`; improves account safety.
+2. **Configurable session timeout (item 7b, partial)** — leverages the existing
+   `SessionService`; small change to make the 30-day TTL per-user.
 3. **Theme (item 2)** — once a light palette is worth the design effort.
-4. **Privacy (item 6)** — only after public profiles exist.
-5. **Notifications (item 5)** and **i18n (item 3)** — largest, lowest near-term ROI.
+4. **2FA (item 7a)** — meaningful account security, but self-contained backend work.
+5. **Privacy (item 6)** — only after public profiles exist.
+6. **Notifications (item 5, incl. security notifications 7b)** and **i18n (item 3)**
+   — largest, lowest near-term ROI.
+
+> Note: Active Sessions (item 7) is already live as of 2026-10-31 — the
+> backend existed and the UI was wired to it, so it is no longer a roadmap item.
