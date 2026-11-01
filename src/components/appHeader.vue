@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onUnmounted } from 'vue'
 import type { Ref } from 'vue'
 import { useRouter } from 'vue-router'
 import ButtonNav from './buttons/buttonNav.vue'
@@ -7,7 +7,7 @@ import BaseButton from '@/components/buttons/BaseButton.vue'
 import { useUserStore } from '@/stores/userStore'
 import { useLoginDialogStore } from '@/stores/loginDialogStore'
 import SiteLogo from '@/components/siteLogo.vue'
-import UserAvatar from '@/components/UserAvatar.vue'
+import UserMenu from '@/components/UserMenu.vue'
 
 interface linkItem {
   label: string
@@ -19,7 +19,6 @@ const router = useRouter()
 const userStore = useUserStore()
 const loginDialog = useLoginDialogStore()
 const showMenu = ref(false)
-const showUserMenu = ref(false)
 
 const navLinks: Ref<linkItem[]> = ref([
   {
@@ -57,27 +56,10 @@ const closeMenu = () => {
   document.body.style.overflow = ''
 }
 
-const toggleUserMenu = () => {
-  showUserMenu.value = !showUserMenu.value
-}
-
 const logout = async () => {
   await userStore.logoutUser()
-  showUserMenu.value = false
   closeMenu()
   router.push({ name: 'home' })
-}
-
-// Close menus when clicking outside
-const handleClickOutside = (event: Event) => {
-  const target = event.target as Element
-  if (!target.closest('.user-menu') && showUserMenu.value) {
-    showUserMenu.value = false
-  }
-}
-
-const handleKeydown = (event: KeyboardEvent) => {
-  if (event.key === 'Escape') showUserMenu.value = false
 }
 
 // Close mobile menu on route change
@@ -85,14 +67,7 @@ router.afterEach(() => {
   closeMenu()
 })
 
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-  document.addEventListener('keydown', handleKeydown)
-})
-
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-  document.removeEventListener('keydown', handleKeydown)
   document.body.style.overflow = ''
 })
 </script>
@@ -138,43 +113,7 @@ onUnmounted(() => {
             Login
           </BaseButton>
           
-          <div v-else class="user-menu">
-            <button
-              type="button"
-              class="user-avatar-button"
-              :aria-expanded="showUserMenu"
-              aria-haspopup="menu"
-              :title="userStore.user.name"
-              @click="toggleUserMenu"
-            >
-              <UserAvatar
-                :user="{ name: userStore.user.name, avatarUrl: userStore.user.avatar }"
-                class="w-8 h-8"
-              />
-            </button>
-
-            <!-- User Dropdown: name + email + logout -->
-            <transition name="user-menu-pop">
-              <div v-if="showUserMenu" class="user-dropdown" role="menu">
-                <div class="user-dropdown-header">
-                  <UserAvatar
-                    :user="{ name: userStore.user.name, avatarUrl: userStore.user.avatar }"
-                    class="w-9 h-9 flex-shrink-0"
-                  />
-                  <div class="user-dropdown-identity">
-                    <span class="user-dropdown-name">{{ userStore.user.name }}</span>
-                    <span v-if="userStore.user.email" class="user-dropdown-email">{{ userStore.user.email }}</span>
-                  </div>
-                </div>
-                <BaseButton variant="secondary" class="user-dropdown-logout" @click="logout">
-                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                  Logout
-                </BaseButton>
-              </div>
-            </transition>
-          </div>
+          <UserMenu v-else />
         </div>
       </nav>
     </div>
@@ -399,84 +338,6 @@ onUnmounted(() => {
   font-weight: 500;
 }
 
-.user-menu {
-  position: relative;
-}
-
-.user-avatar-button {
-  display: flex;
-  align-items: center;
-  border-radius: 9999px;
-  cursor: pointer;
-  transition: box-shadow 0.2s;
-}
-
-.user-avatar-button:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px var(--color-brand-500), 0 0 0 4px rgba(230, 95, 55, 0.1);
-}
-
-.user-dropdown {
-  position: absolute;
-  right: 0;
-  margin-top: 0.5rem;
-  width: 16rem;
-  background-color: var(--color-secondary-50);
-  border-radius: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
-  padding: 1rem;
-  z-index: 50;
-  border: 1px solid var(--color-app-light-blue);
-}
-
-.user-dropdown-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding-bottom: 0.75rem;
-  margin-bottom: 0.75rem;
-  border-bottom: 1px solid var(--color-app-light-blue);
-}
-
-.user-dropdown-identity {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.user-dropdown-name {
-  font-weight: 600;
-  color: var(--color-default-50);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.user-dropdown-email {
-  font-size: 0.875rem;
-  color: var(--color-default-300);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.user-dropdown-logout {
-  width: 100%;
-  justify-content: center;
-}
-
-/* Popover transition */
-.user-menu-pop-enter-active,
-.user-menu-pop-leave-active {
-  transition: opacity 0.15s ease, transform 0.15s ease;
-}
-
-.user-menu-pop-enter-from,
-.user-menu-pop-leave-to {
-  opacity: 0;
-  transform: translateY(-4px);
-}
-
 /* Mobile Navigation */
 .mobile-nav {
   position: fixed;
@@ -618,7 +479,6 @@ onUnmounted(() => {
   }
   
   .mobile-menu-button,
-  .user-avatar-button,
   .mobile-nav-link {
     transition: none;
   }
