@@ -202,7 +202,7 @@ const handleAvatarUpload = async (event: Event) => {
 }
 
 .header-content {
-  @apply relative z-10 p-6 flex flex-col md:flex-row items-start md:items-end gap-6;
+  @apply relative z-10 p-6 flex flex-col md:flex-row items-start gap-6;
 }
 
 .avatar-section {
