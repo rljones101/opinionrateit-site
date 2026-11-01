@@ -62,8 +62,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     'bio',
     'location',
     'website',
-    'twitter',
-    'linkedin'
+    'socialLinks'
   )
 
   const userService = serviceFactory.getUserService()

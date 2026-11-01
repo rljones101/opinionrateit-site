@@ -17,8 +17,8 @@ export const useUserStore = defineStore('useUserStore', () => {
     bio: '',
     location: '',
     website: '',
-    twitter: '',
-    linkedin: ''
+    // Map of platform -> handle/url, e.g. { x: '@me', patreon: 'patreon.com/me' }
+    socialLinks: {} as Record<string, string>
   }
 
   const isLoggedIn = ref(false)
@@ -39,8 +39,7 @@ export const useUserStore = defineStore('useUserStore', () => {
       bio,
       location,
       website,
-      twitter,
-      linkedin
+      socialLinks
     } = userDetails
     
     // Normalize user data
@@ -57,8 +56,7 @@ export const useUserStore = defineStore('useUserStore', () => {
       bio: bio || '',
       location: location || '',
       website: website || '',
-      twitter: twitter || '',
-      linkedin: linkedin || ''
+      socialLinks: socialLinks || {}
     }
     
     // Store non-sensitive user data in localStorage

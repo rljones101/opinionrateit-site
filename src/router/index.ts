@@ -208,8 +208,7 @@ router.beforeEach(async (to, from, next) => {
       bio: '',
       location: '',
       website: '',
-      twitter: '',
-      linkedin: ''
+      socialLinks: {}
     }
   }
 

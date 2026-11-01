@@ -31,15 +31,76 @@ const isSaving = ref(false)
 const saveMessage = ref('')
 const saveError = ref('')
 
+// Supported social platforms the user can add. `prefix` is shown as a hint
+// and `placeholder` guides the expected value (handle or URL).
+interface SocialPlatform {
+  id: string
+  label: string
+  placeholder: string
+}
+
+const SOCIAL_PLATFORMS: SocialPlatform[] = [
+  { id: 'x', label: 'X', placeholder: '@username' },
+  { id: 'patreon', label: 'Patreon', placeholder: 'patreon.com/username' },
+  { id: 'discord', label: 'Discord', placeholder: 'username or invite link' },
+  { id: 'telegram', label: 'Telegram', placeholder: '@username or t.me/username' },
+  { id: 'instagram', label: 'Instagram', placeholder: '@username' },
+  { id: 'tiktok', label: 'TikTok', placeholder: '@username' },
+  { id: 'youtube', label: 'YouTube', placeholder: 'youtube.com/@channel' },
+  { id: 'twitch', label: 'Twitch', placeholder: 'twitch.tv/username' }
+]
+
+const platformLabel = (id: string) =>
+  SOCIAL_PLATFORMS.find((p) => p.id === id)?.label || id
+
+const platformPlaceholder = (id: string) =>
+  SOCIAL_PLATFORMS.find((p) => p.id === id)?.placeholder || ''
+
+// Start the existing links from the user's stored map.
+const initialSocialLinks = (): Record<string, string> => ({
+  ...((props.user as any).socialLinks || {})
+})
+
 const formData = reactive({
   name: props.user.name,
   email: props.user.email,
   bio: (props.user as any).bio || '',
   location: (props.user as any).location || '',
   website: (props.user as any).website || '',
-  twitter: (props.user as any).twitter || '',
-  linkedin: (props.user as any).linkedin || ''
+  socialLinks: initialSocialLinks() as Record<string, string>
 })
+
+// Which platform is currently selected in the "add" dropdown.
+const platformToAdd = ref('')
+
+// Platforms not yet added, available to pick from the dropdown.
+const availablePlatforms = computed(() =>
+  SOCIAL_PLATFORMS.filter((p) => !(p.id in formData.socialLinks))
+)
+
+// Ordered list of the links the user has added (for stable rendering).
+const addedPlatforms = computed(() =>
+  SOCIAL_PLATFORMS.filter((p) => p.id in formData.socialLinks).map((p) => p.id)
+)
+
+const addSocialLink = () => {
+  if (!platformToAdd.value) return
+  if (!(platformToAdd.value in formData.socialLinks)) {
+    formData.socialLinks[platformToAdd.value] = ''
+  }
+  platformToAdd.value = ''
+}
+
+const removeSocialLink = (id: string) => {
+  delete formData.socialLinks[id]
+}
+
+const socialLinksEqual = (a: Record<string, string>, b: Record<string, string>) => {
+  const ak = Object.keys(a)
+  const bk = Object.keys(b)
+  if (ak.length !== bk.length) return false
+  return ak.every((k) => a[k] === b[k])
+}
 
 const hasChanges = computed(() => {
   return formData.name !== props.user.name || 
@@ -47,8 +108,7 @@ const hasChanges = computed(() => {
          formData.bio !== ((props.user as any).bio || '') ||
          formData.location !== ((props.user as any).location || '') ||
          formData.website !== ((props.user as any).website || '') ||
-         formData.twitter !== ((props.user as any).twitter || '') ||
-         formData.linkedin !== ((props.user as any).linkedin || '')
+         !socialLinksEqual(formData.socialLinks, (props.user as any).socialLinks || {})
 })
 
 const handleEdit = () => {
@@ -64,9 +124,9 @@ const handleCancel = () => {
   formData.bio = (props.user as any).bio || ''
   formData.location = (props.user as any).location || ''
   formData.website = (props.user as any).website || ''
-  formData.twitter = (props.user as any).twitter || ''
-  formData.linkedin = (props.user as any).linkedin || ''
-  
+  formData.socialLinks = initialSocialLinks()
+  platformToAdd.value = ''
+
   isEditing.value = false
   saveError.value = ''
 }
@@ -91,12 +151,14 @@ const handleSave = async () => {
       saveError.value = 'Please enter a valid website URL'
       return
     }
-    
-    if (formData.linkedin && !formData.linkedin.includes('linkedin.com')) {
-      saveError.value = 'Please enter a valid LinkedIn URL'
-      return
+
+    // Drop any social links left blank so we don't persist empty entries.
+    const socialLinks: Record<string, string> = {}
+    for (const [platform, value] of Object.entries(formData.socialLinks)) {
+      const trimmed = value.trim()
+      if (trimmed) socialLinks[platform] = trimmed
     }
-    
+
     // Update user profile via API
     await userStore.updateProfile({
       name: formData.name,
@@ -104,8 +166,7 @@ const handleSave = async () => {
       bio: formData.bio,
       location: formData.location,
       website: formData.website,
-      twitter: formData.twitter,
-      linkedin: formData.linkedin
+      socialLinks
     })
     
     saveMessage.value = 'Profile updated successfully!'
@@ -241,33 +302,58 @@ const handleDeleteAccount = async () => {
       <!-- Social Links (only in full view) -->
       <div v-if="!compact" class="settings-section">
         <h3 class="section-title">Social Links</h3>
-        
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="twitter" class="form-label">Twitter</label>
+        <p class="section-description">
+          Add links to the places people can find you. Pick a platform to add it.
+        </p>
+
+        <!-- Added links -->
+        <div v-if="addedPlatforms.length" class="social-list">
+          <div v-for="id in addedPlatforms" :key="id" class="social-row">
+            <span class="social-platform">{{ platformLabel(id) }}</span>
             <input
-              id="twitter"
-              v-model="formData.twitter"
+              v-model="formData.socialLinks[id]"
               type="text"
-              class="form-input"
+              class="form-input social-input"
               :disabled="!isEditing"
               :class="{ 'input-disabled': !isEditing }"
-              placeholder="@username"
+              :placeholder="platformPlaceholder(id)"
+              :aria-label="platformLabel(id)"
             />
+            <button
+              v-if="isEditing"
+              type="button"
+              class="social-remove"
+              :aria-label="`Remove ${platformLabel(id)}`"
+              @click="removeSocialLink(id)"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
-          
-          <div class="form-group">
-            <label for="linkedin" class="form-label">LinkedIn</label>
-            <input
-              id="linkedin"
-              v-model="formData.linkedin"
-              type="text"
-              class="form-input"
-              :disabled="!isEditing"
-              :class="{ 'input-disabled': !isEditing }"
-              placeholder="linkedin.com/in/username"
-            />
-          </div>
+        </div>
+
+        <p v-else class="social-empty">No social links added yet.</p>
+
+        <!-- Add control (edit mode only) -->
+        <div v-if="isEditing && availablePlatforms.length" class="social-add">
+          <select v-model="platformToAdd" class="form-input social-select" aria-label="Choose a platform to add">
+            <option value="">Add a platform…</option>
+            <option v-for="p in availablePlatforms" :key="p.id" :value="p.id">
+              {{ p.label }}
+            </option>
+          </select>
+          <BaseButton
+            variant="secondary"
+            size="sm"
+            :disabled="!platformToAdd"
+            @click="addSocialLink"
+          >
+            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            Add
+          </BaseButton>
         </div>
       </div>
       
@@ -402,6 +488,38 @@ const handleDeleteAccount = async () => {
 
 .input-disabled {
   @apply bg-secondary-200 text-default-300 cursor-not-allowed;
+}
+
+.social-list {
+  @apply space-y-3 mb-4;
+}
+
+.social-row {
+  @apply flex items-center gap-3;
+}
+
+.social-platform {
+  @apply w-24 flex-shrink-0 text-sm font-medium text-default-200;
+}
+
+.social-input {
+  @apply flex-1;
+}
+
+.social-remove {
+  @apply flex-shrink-0 p-2 rounded-md text-default-300 hover:text-red-400 hover:bg-red-500/10 transition-colors;
+}
+
+.social-empty {
+  @apply text-sm text-default-300 mb-4;
+}
+
+.social-add {
+  @apply flex items-center gap-3;
+}
+
+.social-select {
+  @apply max-w-xs;
 }
 
 .settings-actions {

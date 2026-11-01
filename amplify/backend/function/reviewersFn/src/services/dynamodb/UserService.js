@@ -369,7 +369,7 @@ class UserService extends BaseService {
    */
   validateUpdateData(data) {
     const allowedFields = [
-      'name', 'bio', 'location', 'website', 'twitter', 'linkedin', 
+      'name', 'bio', 'location', 'website', 'socialLinks',
       'photo', 'youTubeChannelId', 'role', 'stripeCustomerId'
     ]
 
@@ -396,16 +396,36 @@ class UserService extends BaseService {
       throw new AppError('Website must be a valid URL', 400)
     }
 
-    if (data.linkedin && !data.linkedin.includes('linkedin.com')) {
-      throw new AppError('LinkedIn must be a valid LinkedIn URL', 400)
-    }
-
-    if (data.twitter && data.twitter.length > 50) {
-      throw new AppError('Twitter handle must be less than 50 characters', 400)
+    if (data.socialLinks !== undefined) {
+      this.validateSocialLinks(data.socialLinks)
     }
 
     if (data.role) {
       this.validateRole(data.role)
+    }
+  }
+
+  /**
+   * Social links are stored as a map of platform -> handle/url. Each platform
+   * must be one we support, and each value a reasonable-length string.
+   */
+  validateSocialLinks(socialLinks) {
+    if (typeof socialLinks !== 'object' || socialLinks === null || Array.isArray(socialLinks)) {
+      throw new AppError('socialLinks must be an object', 400)
+    }
+
+    const supported = ['x', 'patreon', 'discord', 'telegram', 'instagram', 'tiktok', 'youtube', 'twitch']
+
+    for (const [platform, value] of Object.entries(socialLinks)) {
+      if (!supported.includes(platform)) {
+        throw new AppError(`Unsupported social platform: ${platform}`, 400)
+      }
+      if (typeof value !== 'string') {
+        throw new AppError(`Social link for ${platform} must be a string`, 400)
+      }
+      if (value.length > 200) {
+        throw new AppError(`Social link for ${platform} is too long`, 400)
+      }
     }
   }
 }
