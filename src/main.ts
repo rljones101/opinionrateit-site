@@ -7,6 +7,7 @@ import { createPinia } from 'pinia'
 
 import PrimeVue from 'primevue/config'
 import Material from '@primeuix/themes/material'
+import vue3GoogleLogin from 'vue3-google-login'
 
 import App from './App.vue'
 import router from './router'
@@ -30,6 +31,14 @@ app.use(PrimeVue, {
       darkModeSelector: '.app-dark'
     }
   }
+})
+
+// Sign in with Google (Google Identity Services). The client id comes from the
+// Google Cloud Console OAuth 2.0 "Web application" credential; set it as
+// VITE_GOOGLE_CLIENT_ID. The feature degrades gracefully (button hidden) when
+// it's absent — see UserLogin.vue.
+app.use(vue3GoogleLogin, {
+  clientId: import.meta.env.VITE_GOOGLE_CLIENT_ID || ''
 })
 
 app.mount('#app')

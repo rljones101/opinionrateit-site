@@ -15,8 +15,13 @@ const usersSignup = async (data: any) => {
   return await apiPost('/users/signup', data)
 }
 
+// Exchange a Google ID token (credential) for an app session.
+const usersGoogleAuth = async (credential: string) => {
+  return await apiPost('/users/auth/google', { credential })
+}
+
 const getReviewerChannel = async (channelId: string) => {
   return await apiGet(`/reviewers/${channelId}`)
 }
 
-export { usersLogin, usersSignup, getProfile, getReviewerChannel }
+export { usersLogin, usersSignup, usersGoogleAuth, getProfile, getReviewerChannel }

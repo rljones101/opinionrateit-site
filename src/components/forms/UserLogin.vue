@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import type { AppApiResponse, AppApiErrorResponse } from '@/types'
 import { useRouter } from 'vue-router'
+import { GoogleLogin, type CallbackTypes } from 'vue3-google-login'
 import FormInput from '@/components/inputs/FormInput.vue'
 import FormContainer from '@/components/containers/FormContainer.vue'
 import ComponentSpinner from '@/components/spinners/ComponentSpinner.vue'
@@ -17,13 +18,44 @@ const emit = defineEmits<{ (e: 'success'): void; (e: 'close'): void }>()
 
 const router = useRouter()
 
-const { loginUser } = useUserStore()
+const { loginUser, loginWithGoogle } = useUserStore()
 
 const email = ref('')
 const password = ref('')
 const showError = ref(false)
 const loading = ref(false)
 const errorMessage = ref('Email and Password are required!')
+
+// Only offer Google sign-in when a client id is configured.
+const googleEnabled = !!import.meta.env.VITE_GOOGLE_CLIENT_ID
+
+const onGoogleSuccess = async (response: CallbackTypes.CredentialPopupResponse) => {
+  if (!response.credential) return
+  try {
+    loading.value = true
+    showError.value = false
+    const res: AppApiResponse | AppApiErrorResponse = await loginWithGoogle(response.credential)
+    if (res.status === 'success') {
+      if (props.dialog) emit('success')
+      await router.push({ name: 'videos' })
+    } else {
+      showError.value = true
+      errorMessage.value =
+        'message' in res && res.message ? res.message : 'Google sign-in failed. Please try again.'
+    }
+  } catch (err) {
+    console.error('Google sign-in error:', err)
+    showError.value = true
+    errorMessage.value = 'Something went wrong with Google sign-in. Please try again.'
+  } finally {
+    loading.value = false
+  }
+}
+
+const onGoogleError = () => {
+  showError.value = true
+  errorMessage.value = 'Google sign-in was cancelled or failed. Please try again.'
+}
 
 const login = async () => {
   // validate
@@ -104,6 +136,19 @@ const closeDialog = () => {
       <!--      </div>-->
       <div v-if="showError" class="text-red-500">{{ errorMessage }}</div>
       <BaseButton variant="primary" class="w-full" @click="login">Login to your account</BaseButton>
+
+      <!-- Continue with Google -->
+      <template v-if="googleEnabled">
+        <div class="or-divider">
+          <span class="or-line"></span>
+          <span class="or-text">or</span>
+          <span class="or-line"></span>
+        </div>
+        <div class="flex justify-center">
+          <GoogleLogin :callback="onGoogleSuccess" :error="onGoogleError" />
+        </div>
+      </template>
+
       <div class="flex text-sm font-medium items-center gap-2">
         Not registered?
         <AppLink to="/signup">Create Account</AppLink> |
@@ -114,4 +159,18 @@ const closeDialog = () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+@reference "#main.css";
+
+.or-divider {
+  @apply flex items-center gap-3 my-1;
+}
+
+.or-line {
+  @apply flex-1 h-px bg-app-light-blue;
+}
+
+.or-text {
+  @apply text-sm text-default-300;
+}
+</style>

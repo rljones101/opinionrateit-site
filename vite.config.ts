@@ -21,12 +21,12 @@ export default defineConfig({
       // Content Security Policy for Stripe integration
       'Content-Security-Policy': [
         "default-src 'self'",
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.youtube.com https://s.ytimg.com",
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com https://www.youtube.com https://s.ytimg.com https://accounts.google.com",
         "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
         "font-src 'self' https://fonts.gstatic.com",
         "img-src 'self' data: https:",
-        "connect-src 'self' https://api.stripe.com https://www.googleapis.com https://www.youtube.com http://localhost:3000",
-        "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://www.youtube.com",
+        "connect-src 'self' https://api.stripe.com https://www.googleapis.com https://www.youtube.com https://accounts.google.com http://localhost:3000",
+        "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://www.youtube.com https://accounts.google.com",
         "frame-ancestors 'none'"
       ].join('; ')
     }

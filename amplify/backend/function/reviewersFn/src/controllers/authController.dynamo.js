@@ -1,5 +1,6 @@
 const { promisify } = require('util')
 const jwt = require('jsonwebtoken')
+const { OAuth2Client } = require('google-auth-library')
 const catchAsync = require('../utils/catchAsync.js')
 const AppError = require('../utils/appError.js')
 const tokenUtils = require('../utils/tokenUtils.js')
@@ -9,6 +10,15 @@ const ReviewerService = require('../services/dynamodb/ReviewerService.js')
 
 const sessionService = new SessionService()
 const reviewerService = new ReviewerService()
+
+// Lazily construct the Google OAuth client so a missing GOOGLE_CLIENT_ID only
+// fails the Google route (with a clear message), not the whole module.
+let googleClient = null
+const getGoogleClient = () => {
+  if (!process.env.GOOGLE_CLIENT_ID) return null
+  if (!googleClient) googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+  return googleClient
+}
 
 const createSendToken = async (user, statusCode, res, req) => {
   const token = tokenUtils.signToken(user.userId)
@@ -152,6 +162,76 @@ exports.login = catchAsync(async (req, res, next) => {
     console.error('Login error:', error)
     return next(new AppError('Login failed', 500))
   }
+})
+
+/**
+ * Google sign-in / sign-up.
+ *
+ * The frontend obtains a Google ID token (JWT) via Google Identity Services
+ * and POSTs it here as { credential }. We verify the token with Google, then:
+ *   - existing Google user (matched by email) -> log in
+ *   - existing email/password user (same verified email) -> link + log in
+ *   - no user -> create a password-less Free account
+ * In all cases we finish with createSendToken so the cookie + session contract
+ * is identical to normal login.
+ */
+exports.googleAuth = catchAsync(async (req, res, next) => {
+  const client = getGoogleClient()
+  if (!client) {
+    return next(
+      new AppError('Google sign-in is not configured on the server (missing GOOGLE_CLIENT_ID).', 503)
+    )
+  }
+
+  const { credential } = req.body
+  if (!credential) {
+    return next(new AppError('Missing Google credential', 400))
+  }
+
+  // 1) Verify the ID token (signature, audience, expiry) with Google.
+  let payload
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID
+    })
+    payload = ticket.getPayload()
+  } catch (err) {
+    console.error('Google token verification failed:', err.message)
+    return next(new AppError('Invalid Google credential', 401))
+  }
+
+  // 2) Require a verified email (we match/link accounts by email).
+  if (!payload || !payload.email || payload.email_verified === false) {
+    return next(new AppError('Google account email is not verified', 401))
+  }
+
+  const email = payload.email.toLowerCase()
+  const googleId = payload.sub
+  const name = payload.name || email.split('@')[0]
+  const avatar = payload.picture || null
+
+  const userService = serviceFactory.getUserService()
+
+  // 3) Find-or-create / link.
+  let user = await userService.getUserByEmail(email)
+  if (user) {
+    // Existing account with this (Google-verified) email: link the Google id
+    // if it isn't already recorded, then log in.
+    if (user.googleId !== googleId) {
+      try {
+        user = await userService.linkGoogleAccount(user.userId, googleId)
+      } catch (err) {
+        console.error('Failed to link Google account:', err.message)
+      }
+    }
+  } else {
+    user = await userService.createOAuthUser({ name, email, googleId, avatar })
+  }
+
+  // 4) Issue cookies + session exactly like a normal login.
+  const statusCode = 200
+  await createSendToken(user, statusCode, res, req)
 })
 
 exports.logout = catchAsync(async (req, res) => {

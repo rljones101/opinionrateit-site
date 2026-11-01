@@ -24,6 +24,9 @@ const authLimiter = rateLimit({
 // Apply auth rate limiting to these routes
 router.post('/signup', authLimiter, validateSignup, authController.signup)
 router.post('/login', authLimiter, validateLogin, authController.login)
+// Google sign-in / sign-up: verifies a Google ID token, no password involved,
+// so it deliberately bypasses validateLogin/validateSignup.
+router.post('/auth/google', authLimiter, authController.googleAuth)
 router.post('/logout', authController.logout)
 router.post('/refresh-token', authController.refreshToken)
 router.post('/forgot-password', authLimiter, validatePasswordReset, authController.forgotPassword)

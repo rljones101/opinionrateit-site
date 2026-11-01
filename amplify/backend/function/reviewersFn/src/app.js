@@ -61,11 +61,12 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
       fontSrc: ["'self'", "https://fonts.gstatic.com"],
       imgSrc: ["'self'", "data:", "https:"],
-      scriptSrc: ["'self'", "https://js.stripe.com"],
-      frameSrc: ["'self'", "https://js.stripe.com", "https://hooks.stripe.com", "https://www.youtube.com"],
+      scriptSrc: ["'self'", "https://js.stripe.com", "https://accounts.google.com"],
+      frameSrc: ["'self'", "https://js.stripe.com", "https://hooks.stripe.com", "https://www.youtube.com", "https://accounts.google.com"],
       connectSrc: [
         "'self'", 
         "https://api.stripe.com",
+        "https://accounts.google.com",
         process.env.NODE_ENV === 'development' ? "http://localhost:5173" : "https://dev.opinionrateit.com"
       ]
     }

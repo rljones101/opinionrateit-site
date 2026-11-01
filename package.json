@@ -42,6 +42,7 @@
     "vue-chart-3": "^3.1.8",
     "vue-router": "^4.5.1",
     "vue-youtube-vue-3": "^1.5.0",
+    "vue3-google-login": "^2.1.4",
     "yup": "^1.2.0"
   },
   "devDependencies": {

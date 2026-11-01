@@ -62,6 +62,71 @@ class UserService extends BaseService {
   }
 
   /**
+   * Create a user authenticated via an OAuth provider (e.g. Google).
+   *
+   * Unlike createUser there is no password: OAuth users authenticate through
+   * the provider, so we skip password validation/hashing entirely and never
+   * store a `password` field. We record `authProvider` and the provider's
+   * stable subject id (`googleId`) so future logins can be matched/linked.
+   * These accounts default to the Free tier and are active immediately (the
+   * provider has already verified the email).
+   */
+  async createOAuthUser({ name, email, googleId, avatar, provider = 'google' }) {
+    if (!name || name.trim().length === 0) {
+      throw new AppError('Name is required', 400)
+    }
+    if (!email || !validator.isEmail(email)) {
+      throw new AppError('Valid email is required', 400)
+    }
+
+    // Guard against a race / duplicate: email must be unique.
+    const existingUser = await this.getUserByEmail(email)
+    if (existingUser) {
+      throw new AppError('User with this email already exists', 409)
+    }
+
+    const userId = this.generateId()
+    const slug = slugify(name, { lower: true })
+
+    const userItem = {
+      PK: `USER#${userId}`,
+      SK: 'PROFILE',
+      GSI1PK: `EMAIL#${email.toLowerCase()}`,
+      GSI1SK: `USER#${userId}`,
+      userId,
+      name: name.trim(),
+      email: email.toLowerCase(),
+      slug,
+      role: 'free',
+      active: true,
+      authProvider: provider,
+      googleId: googleId || null,
+      photo: avatar || null,
+      stripeCustomerId: null,
+      youTubeChannelId: null
+    }
+
+    const savedUser = await this.putItem(userItem)
+    const { password: _, ...userResponse } = savedUser
+    return userResponse
+  }
+
+  /**
+   * Link a Google account to an existing (e.g. email/password) user. Records
+   * the provider subject id and marks the account as also usable via Google;
+   * does not remove any existing password.
+   */
+  async linkGoogleAccount(userId, googleId) {
+    const updatedUser = await this.updateItem(
+      { PK: `USER#${userId}`, SK: 'PROFILE' },
+      'SET googleId = :googleId, authProvider = if_not_exists(authProvider, :provider)',
+      { ':googleId': googleId, ':provider': 'google' }
+    )
+    const { password: _, ...userResponse } = updatedUser
+    return userResponse
+  }
+
+  /**
    * Get user by ID
    */
   async getUserById(userId) {

@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { usersLogin, usersSignup } from '@/services/UserService'
+import { usersLogin, usersSignup, usersGoogleAuth } from '@/services/UserService'
 
 export const useUserStore = defineStore('useUserStore', () => {
   const defaultUserDetails = {
@@ -87,6 +87,18 @@ export const useUserStore = defineStore('useUserStore', () => {
 
   const signupUser = async (data: any) => {
     const res = await usersSignup(data)
+    if (res.status === 'success') {
+      if ('data' in res) {
+        saveUser(res.data.user)
+      }
+    }
+    return res
+  }
+
+  // Sign in / sign up with a Google ID token (credential from Google Identity
+  // Services). The backend finds-or-creates the account and returns the user.
+  const loginWithGoogle = async (credential: string) => {
+    const res = await usersGoogleAuth(credential)
     if (res.status === 'success') {
       if ('data' in res) {
         saveUser(res.data.user)
@@ -287,6 +299,7 @@ export const useUserStore = defineStore('useUserStore', () => {
     // Original methods
     getUser,
     loginUser,
+    loginWithGoogle,
     logoutUser,
     signupUser,
     isLoggedIn,
