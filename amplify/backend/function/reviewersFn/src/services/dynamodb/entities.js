@@ -53,7 +53,39 @@ const keys = {
   reviewSK: (reviewId) => `REVIEW#${reviewId}`,
   reviewSKPrefix: () => 'REVIEW#',
   reviewGSI1PK: (channelId) => `CHANNEL#${channelId}`,
-  reviewGSI1SK: (reviewId) => `REVIEW#${reviewId}`
+  reviewGSI1SK: (reviewId) => `REVIEW#${reviewId}`,
+
+  // --- Per-user entities (all under the user's partition) ---
+  // Bookmark: one per (user, video). Deterministic SK enforces uniqueness.
+  bookmarkPK: (userId) => `USER#${userId}`,
+  bookmarkSK: (videoId) => `BOOKMARK#${videoId}`,
+  bookmarkSKPrefix: () => 'BOOKMARK#',
+
+  // Watch history: one per (user, video).
+  watchPK: (userId) => `USER#${userId}`,
+  watchSK: (videoId) => `WATCH#${videoId}`,
+  watchSKPrefix: () => 'WATCH#',
+
+  // Preferences: a single item per user.
+  preferencesPK: (userId) => `USER#${userId}`,
+  preferencesSK: () => 'PREFERENCES',
+
+  // Activity: many per user, time-ordered via a timestamp in the SK.
+  activityPK: (userId) => `USER#${userId}`,
+  activitySK: (timestamp, activityId) => `ACTIVITY#${timestamp}#${activityId}`,
+  activitySKPrefix: () => 'ACTIVITY#',
+
+  // --- Review interactions ---
+  // Likes live under the review's partition; deterministic SK per user
+  // enforces one-like-per-user (replaces the Mongo unique compound index).
+  likePK: (reviewId) => `REVIEWLIKE#${reviewId}`,
+  likeSK: (userId) => `USER#${userId}`,
+  likeSKPrefix: () => 'USER#',
+
+  // Replies live under the review's partition, time-ordered.
+  replyPK: (reviewId) => `REVIEWREPLY#${reviewId}`,
+  replySK: (timestamp, replyId) => `REPLY#${timestamp}#${replyId}`,
+  replySKPrefix: () => 'REPLY#'
 }
 
 module.exports = { ENTITY, keys }

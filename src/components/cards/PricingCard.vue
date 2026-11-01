@@ -7,6 +7,8 @@ defineProps<{
   pricing?: string
   annualDiscountPrice?: string
   isDisabled?: boolean
+  tagline?: string
+  featuresHeading?: string
 }>()
 
 const emit = defineEmits(['selected'])
@@ -17,7 +19,9 @@ const emit = defineEmits(['selected'])
     :class="active ? 'border border-orange-500 glow-brand' : 'border border-app-light-blue'"
     class="w-full flex flex-col max-w-sm p-4 bg-secondary-200 rounded-lg shadow sm:p-8 h-full transition-shadow duration-300"
   >
-    <h5 class="mb-4 text-xl font-medium">{{ planName }}</h5>
+    <h5 class="text-xl font-medium">{{ planName }}</h5>
+    <p v-if="tagline" class="mb-4 mt-1 text-sm text-default-300">{{ tagline }}</p>
+    <div v-else class="mb-4"></div>
     <div class="flex items-baseline" v-if="!isDisabled">
       <span class="text-3xl font-semibold" v-if="pricing">$</span>
       <span class="text-5xl font-extrabold tracking-tight" v-if="pricing">{{ pricing }}</span>
@@ -34,7 +38,10 @@ const emit = defineEmits(['selected'])
     </div>
 
     <!-- List -->
-    <ul role="list" class="space-y-5 my-7 flex-grow">
+    <p v-if="featuresHeading" class="mt-2 mb-3 text-xs font-semibold uppercase tracking-wide text-default-400">
+      {{ featuresHeading }}
+    </p>
+    <ul role="list" class="space-y-5 flex-grow" :class="featuresHeading ? 'mb-7' : 'my-7'">
       <slot name="list"></slot>
     </ul>
     <BaseButton

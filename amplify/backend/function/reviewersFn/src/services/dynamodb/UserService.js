@@ -245,6 +245,33 @@ class UserService extends BaseService {
   }
 
   /**
+   * Find a user by their slug (profile-by-name lookup). The table is small, so
+   * a filtered scan is acceptable; add a slug GSI if this grows hot.
+   */
+  async getBySlug(slug) {
+    const result = await this.scan({
+      FilterExpression: 'SK = :sk AND slug = :slug',
+      ExpressionAttributeValues: { ':sk': 'PROFILE', ':slug': slug }
+    })
+    if (result.items.length === 0) return null
+    const { password, ...user } = result.items[0]
+    return user
+  }
+
+  /**
+   * Update the user's avatar (photo) URL.
+   */
+  async updateAvatar(userId, photoUrl) {
+    const updated = await this.updateItem(
+      { PK: `USER#${userId}`, SK: 'PROFILE' },
+      'SET photo = :photo',
+      { ':photo': photoUrl }
+    )
+    const { password, ...user } = updated
+    return user
+  }
+
+  /**
    * Check if password was changed after JWT timestamp
    */
   changedPasswordAfter(user, JWTTimestamp) {

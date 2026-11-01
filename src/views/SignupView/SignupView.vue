@@ -3,17 +3,29 @@
 import BaseButton from '@/components/buttons/BaseButton.vue'
 // Types
 import { SIGNUP_STEPS } from '@/types'
-// Stores
+// Stores / routing
+import { useRoute } from 'vue-router'
 import { useSignupStore } from '@/stores/signupStore'
+import signupViewController from '@/controllers/signupViewController'
 import BillingStep from '@/views/SignupView/BillingStep.vue'
 import YoutubeStep from '@/views/SignupView/YoutubeStep.vue'
 import AccountStep from '@/views/SignupView/AccountStep.vue'
+import CompleteStep from '@/views/SignupView/CompleteStep.vue'
 import ChoosePlans from '@/views/SignupView/ChoosePlans.vue'
 import PricingCards from '@/views/SignupView/PricingCards.vue'
 import MainContentWrapper from '@/components/containers/MainContentWrapper.vue'
 
 const signupStore = useSignupStore()
+const route = useRoute()
+
 signupStore.reset()
+
+// Honour a ?plan=<role> query param so a tier chosen on the home page (or a
+// shared link) starts the flow on the right step.
+const planParam = route.query.plan as string | undefined
+if (planParam && signupViewController.getSignupPlans().some((p) => p.role === planParam)) {
+  signupStore.selectPlan(planParam)
+}
 </script>
 
 <template>
@@ -49,6 +61,7 @@ signupStore.reset()
         <YoutubeStep v-if="signupStore.selectedPlan.requiresYouTube" :key="1" />
         <AccountStep :key="2" />
         <BillingStep v-if="signupStore.selectedPlan.requiresBilling" :key="3" />
+        <CompleteStep :key="4" />
       </TransitionGroup>
     </div>
   </MainContentWrapper>

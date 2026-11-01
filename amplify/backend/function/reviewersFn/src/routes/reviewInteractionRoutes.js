@@ -1,6 +1,6 @@
 const express = require('express')
 const reviewInteractionController = require('../controllers/reviewInteractionController')
-const authController = require('../controllers/authController')
+const authController = require('../controllers/authController.dynamo')
 
 const router = express.Router()
 

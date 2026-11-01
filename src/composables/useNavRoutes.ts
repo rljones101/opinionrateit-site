@@ -2,8 +2,10 @@ import { useRouter } from 'vue-router'
 export const useNavRoutes = () => {
   const router = useRouter()
 
-  const goToSignup = async () => {
-    await router.push({ name: 'signup' })
+  // Optionally pre-select a plan tier via ?plan=<role> so the signup flow
+  // starts on the right step (and the link is shareable/bookmarkable).
+  const goToSignup = async (plan?: string) => {
+    await router.push({ name: 'signup', query: plan ? { plan } : {} })
   }
 
   const goToHome = async () => {

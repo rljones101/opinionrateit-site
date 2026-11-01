@@ -1,123 +1,102 @@
-const BookmarkedVideo = require('../models/bookmarkedVideoModel')
-const PublishedVideo = require('../models/publishedVideoModel')
 const catchAsync = require('../utils/catchAsync')
 const AppError = require('../utils/appError')
+const BookmarkService = require('../services/dynamodb/BookmarkService')
+const PublishedVideoService = require('../services/dynamodb/PublishedVideoService')
 
-// Get all bookmarks for current user
-exports.getBookmarks = catchAsync(async (req, res, next) => {
+const bookmarkService = new BookmarkService()
+const videoService = new PublishedVideoService()
+
+const uid = (req) => req.user.userId || req.user.id
+
+// Shape a DynamoDB video into the `video` object the frontend expects.
+function mapVideo(video) {
+  if (!video) return null
+  return {
+    id: video.videoId,
+    title: video.title,
+    description: video.description || '',
+    thumbnailUrl: video.thumbnail,
+    channelId: video.channelId,
+    channelTitle: video.channelTitle || '',
+    duration: video.duration,
+    viewCount: video.viewCount,
+    publishedAt: video.publishedAt
+  }
+}
+
+// GET /api/v1/bookmarks
+exports.getBookmarks = catchAsync(async (req, res) => {
   const limit = parseInt(req.query.limit) || 20
   const offset = parseInt(req.query.offset) || 0
   const sort = req.query.sort || 'newest'
-  
-  const sortOption = sort === 'oldest' ? { createdAt: 1 } : { createdAt: -1 }
-  
-  const bookmarks = await BookmarkedVideo.find({
-    userId: req.user.id,
-    bookmarked: true
-  })
-    .sort(sortOption)
-    .skip(offset)
-    .limit(limit)
-  
-  // Populate video details
-  const bookmarksWithVideos = await Promise.all(
-    bookmarks.map(async (bookmark) => {
-      const video = await PublishedVideo.findById(bookmark.publishedVideoId)
-      return {
-        id: bookmark._id,
-        userId: bookmark.userId,
-        videoId: bookmark.publishedVideoId,
-        createdAt: bookmark.createdAt,
-        video: video ? {
-          id: video._id,
-          title: video.title,
-          description: video.description,
-          thumbnailUrl: video.thumbnailUrl,
-          channelId: video.channelId,
-          channelTitle: video.channelTitle,
-          duration: video.duration,
-          viewCount: video.viewCount,
-          publishedAt: video.publishedAt
-        } : null
-      }
-    })
-  )
-  
-  const total = await BookmarkedVideo.countDocuments({
-    userId: req.user.id,
-    bookmarked: true
-  })
-  
+
+  const all = await bookmarkService.listForUser(uid(req), { sort })
+  const total = all.length
+  const pageItems = all.slice(offset, offset + limit)
+
+  const bookmarks = (
+    await Promise.all(
+      pageItems.map(async (b) => {
+        const video = await videoService.getByVideoId(b.videoId)
+        if (!video) return null
+        return {
+          id: b.videoId, // id == videoId in the single-table model
+          userId: b.userId,
+          videoId: b.videoId,
+          createdAt: b.createdAt,
+          updatedAt: b.updatedAt,
+          video: mapVideo(video)
+        }
+      })
+    )
+  ).filter((b) => b !== null)
+
   res.status(200).json({
     status: 'success',
     data: {
-      bookmarks: bookmarksWithVideos.filter(b => b.video !== null),
+      bookmarks,
       total,
       hasMore: offset + limit < total
     }
   })
 })
 
-// Add bookmark
+// POST /api/v1/bookmarks  { videoId }
 exports.addBookmark = catchAsync(async (req, res, next) => {
   const { videoId } = req.body
-  
   if (!videoId) {
     return next(new AppError('Video ID is required', 400))
   }
-  
-  // Upsert (update if exists, create if not)
-  const bookmark = await BookmarkedVideo.findOneAndUpdate(
-    { userId: req.user.id, publishedVideoId: videoId },
-    { userId: req.user.id, publishedVideoId: videoId, bookmarked: true, createdAt: Date.now() },
-    { upsert: true, new: true, setDefaultsOnInsert: true }
-  )
-  
+
+  const bookmark = await bookmarkService.add(uid(req), videoId)
+
   res.status(200).json({
     status: 'success',
     data: {
       bookmark: {
-        id: bookmark._id,
+        id: bookmark.videoId,
         userId: bookmark.userId,
-        videoId: bookmark.publishedVideoId,
+        videoId: bookmark.videoId,
         createdAt: bookmark.createdAt
       }
     }
   })
 })
 
-// Remove bookmark by ID
+// DELETE /api/v1/bookmarks/:bookmarkId  (bookmarkId == videoId)
 exports.removeBookmark = catchAsync(async (req, res, next) => {
-  const bookmark = await BookmarkedVideo.findOneAndUpdate(
-    { _id: req.params.bookmarkId, userId: req.user.id },
-    { bookmarked: false },
-    { new: true }
-  )
-  
-  if (!bookmark) {
+  const removed = await bookmarkService.removeByVideo(uid(req), req.params.bookmarkId)
+  if (!removed) {
     return next(new AppError('Bookmark not found', 404))
   }
-  
-  res.status(200).json({
-    status: 'success',
-    message: 'Bookmark removed'
-  })
+  res.status(200).json({ status: 'success', message: 'Bookmark removed' })
 })
 
-// Remove bookmark by video ID
+// DELETE /api/v1/bookmarks/video/:videoId
 exports.removeBookmarkByVideoId = catchAsync(async (req, res, next) => {
-  const bookmark = await BookmarkedVideo.findOneAndUpdate(
-    { publishedVideoId: req.params.videoId, userId: req.user.id },
-    { bookmarked: false },
-    { new: true }
-  )
-  
-  if (!bookmark) {
+  const removed = await bookmarkService.removeByVideo(uid(req), req.params.videoId)
+  if (!removed) {
     return next(new AppError('Bookmark not found', 404))
   }
-  
-  res.status(200).json({
-    status: 'success',
-    message: 'Bookmark removed'
-  })
+  res.status(200).json({ status: 'success', message: 'Bookmark removed' })
 })

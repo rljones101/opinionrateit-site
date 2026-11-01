@@ -3,51 +3,19 @@ import PricingCard from '@/components/cards/PricingCard.vue'
 import CheckListItem from '@/components/CheckListItem.vue'
 import type { SignupPlan } from '@/types'
 import signupViewController from '@/controllers/signupViewController'
-import { useSignupStore } from '@/stores/signupStore'
 import { useNavRoutes } from '@/composables/useNavRoutes'
 
-const signupStore = useSignupStore()
 const { goToSignup } = useNavRoutes()
 const signupPlans: SignupPlan[] = signupViewController.getSignupPlans()
 
-// Feature descriptions for each tier based on requirements
-const getFeatureList = (plan: SignupPlan) => {
-  if (plan.role === 'free') {
-    return [
-      { label: 'Browse reviews', checked: true },
-      { label: 'Read reviews', checked: true },
-      { label: 'Watch videos', checked: true },
-      { label: 'Basic search', checked: true },
-      { label: 'Save up to 10 favorites', checked: true },
-      { label: 'Post reviews', checked: false },
-      { label: 'Unlimited favorites', checked: false },
-      { label: 'Follow reviewers', checked: false }
-    ]
-  } else if (plan.role === 'basic') {
-    return [
-      { label: 'Everything in Free', checked: true },
-      { label: 'Post reviews', checked: true },
-      { label: 'Unlimited favorites', checked: true },
-      { label: 'Follow reviewers', checked: true },
-      { label: 'YouTube channel connection', checked: false },
-      { label: 'Video reviews', checked: false },
-      { label: 'Analytics', checked: false }
-    ]
-  } else if (plan.role === 'creator') {
-    return [
-      { label: 'Everything in Basic', checked: true },
-      { label: 'YouTube channel connection', checked: true },
-      { label: 'Video reviews', checked: true },
-      { label: 'Analytics', checked: true }
-    ]
-  }
-  return []
-}
+// Tier presentation is shared via the controller so the home page and signup
+// flow stay in sync.
+const getFeatureList = (plan: SignupPlan) => signupViewController.getFeatureList(plan.role)
 
-// Pre-select the chosen tier in the signup flow, then route to signup.
+// Route to signup with the chosen tier in the URL (?plan=<role>). SignupView
+// reads it after resetting, so the selection survives the navigation.
 const choosePlan = async (role: string) => {
-  signupStore.selectPlan(role)
-  await goToSignup()
+  await goToSignup(role)
 }
 </script>
 
@@ -68,6 +36,8 @@ const choosePlan = async (role: string) => {
         <PricingCard
           :plan-name="plan.name"
           :pricing="plan.cost > 0 ? plan.cost.toString() : undefined"
+          :tagline="signupViewController.getPlanTagline(plan.role)"
+          :features-heading="signupViewController.getFeaturesHeading(plan.role)"
           @selected="choosePlan(plan.role)"
           class="h-full"
         >

@@ -141,6 +141,27 @@ This application implements comprehensive security measures including:
 
 See [SECURITY.md](./SECURITY.md) for detailed security documentation.
 
+## Deployment
+
+The site is deployed to AWS with the **Amplify CLI**. The backend is an Express
+app running as a Lambda (`reviewersFn`) behind API Gateway; the frontend is the
+Vite-built Vue app hosted by Amplify.
+
+```bash
+amplify status     # show the active environment and resource states
+amplify push       # deploy backend (Lambda + API) changes
+amplify publish     # build the frontend and deploy everything
+```
+
+Active environment: **`dev`** · App ID `dyrvis20ihsc` · Region **us-east-2** (Ohio).
+
+> ⚠️ Deploying affects the live site. The backend is mid-migration from MongoDB
+> to DynamoDB — auth/sessions still need MongoDB — so review the **pre-deploy
+> checklist** before pushing.
+
+See [docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md) for the full guide, verified
+environment details, the pre-deploy checklist, and recovery steps.
+
 ## Website
 Website is in development and is located at: https://dev.opinionrateit.com/
 
