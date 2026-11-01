@@ -24,7 +24,9 @@ export const stripeElementsStyle = {
 
 export const stripeElementsOptions = {
   style: stripeElementsStyle,
-  hidePostalCode: false
+  // ZIP/postal is collected by the billing form (sent as
+  // billing_details.postal_code), so hide the card element's built-in field.
+  hidePostalCode: true
 }
 
 // Convert Tailwind oklch colors to hex for Stripe compatibility

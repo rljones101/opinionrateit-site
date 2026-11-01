@@ -24,8 +24,12 @@ async function confirmCardPayment(secret: string, paymentMethodId: string) {
 }
 
 function createElement(elementType: string) {
+  // Hide the card element's built-in postal field — ZIP is collected by the
+  // billing form and sent as billing_details.postal_code.
+  const options: Record<string, any> = { style: stripeElementsStyle }
+  if (elementType === 'card') options.hidePostalCode = true
   return !getCardElement()
-    ? elements.create(elementType, { style: stripeElementsStyle })
+    ? elements.create(elementType, options)
     : getCardElement()
 }
 

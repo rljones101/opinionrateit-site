@@ -76,9 +76,14 @@ export function useStripe() {
       return existingElement
     }
 
-    // Create new card element with hex colors (no oklch)
+    // Create new card element with hex colors (no oklch).
+    // hidePostalCode: the billing form already collects ZIP and sends it as
+    // billing_details.postal_code, so we hide the card element's built-in
+    // postal field to avoid a duplicate (and the "postal code is incomplete"
+    // error when only the form field is filled).
     cardElement.value = elements.value.create('card', {
-      style: stripeElementsStyle
+      style: stripeElementsStyle,
+      hidePostalCode: true
     })
 
     return cardElement.value
