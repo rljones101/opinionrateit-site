@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { useRouter } from 'vue-router'
 import UserAvatar from '@/components/UserAvatar.vue'
-import BaseButton from '@/components/buttons/BaseButton.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import { formatDate } from '@/utils/DateUtils'
 import { useUserStore } from '@/stores/userStore'
@@ -25,7 +23,6 @@ interface Props {
 const props = defineProps<Props>()
 
 const userStore = useUserStore()
-const router = useRouter()
 
 const isEditingAvatar = ref(false)
 const isUploadingAvatar = ref(false)
@@ -121,10 +118,6 @@ const handleAvatarUpload = async (event: Event) => {
   }
 }
 
-const handleEditProfile = () => {
-  // Navigate to the profile Settings tab where the editable form lives.
-  router.push({ name: 'profile', query: { tab: 'settings' } })
-}
 </script>
 
 <template>
@@ -191,19 +184,6 @@ const handleEditProfile = () => {
         </div>
       </div>
       
-      <!-- Actions -->
-      <div class="header-actions">
-        <BaseButton 
-          variant="secondary" 
-          size="sm"
-          @click="handleEditProfile"
-        >
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
-          Edit Profile
-        </BaseButton>
-      </div>
     </div>
   </div>
 </template>
@@ -295,10 +275,6 @@ const handleEditProfile = () => {
 
 .meta-value {
   @apply font-medium;
-}
-
-.header-actions {
-  @apply flex-shrink-0;
 }
 
 /* Mobile responsiveness */
