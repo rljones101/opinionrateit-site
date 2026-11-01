@@ -71,12 +71,15 @@ const login = async () => {
         }
       } else {
         showError.value = true
-        if ('message' in res) {
-          errorMessage.value = res.message
-        }
+        errorMessage.value =
+          'message' in res && res.message ? res.message : 'Incorrect email or password'
       }
     } catch (err) {
-      console.log('login error:', err)
+      // apiPost normally returns an error object rather than throwing, but
+      // guard anyway so the user always gets feedback.
+      console.error('login error:', err)
+      showError.value = true
+      errorMessage.value = 'Something went wrong signing in. Please try again.'
     } finally {
       loading.value = false
     }

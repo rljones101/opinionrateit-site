@@ -108,16 +108,34 @@ export const useSignupStore = defineStore('useSignupStore', () => {
       }
     }
 
+  /**
+   * Build the signup payload, dropping an empty `youTubeChannelId`. Only the
+   * Creator tier collects a channel ID; sending an empty string for other
+   * tiers trips the backend's length validation, so omit it entirely when the
+   * plan doesn't require YouTube.
+   */
+  const buildSignupPayload = (overrides: Record<string, any>) => {
+    const payload: Record<string, any> = {
+      ...accountFormData.value,
+      ...overrides
+    }
+    if (!selectedPlan.value.requiresYouTube || !payload.youTubeChannelId) {
+      delete payload.youTubeChannelId
+    }
+    return payload
+  }
+
   const paymentComplete = async (formData: any) => {
     // Setting this value serves no purpose
     billingFormData.value = { ...formData }
     console.log('billingFormData:', billingFormData.value)
     console.log('formData:', formData) // Signup the user
-    await userStore.signupUser({
-      ...accountFormData.value,
-      name: billingFormData.value.name,
-      active: true
-    })
+    await userStore.signupUser(
+      buildSignupPayload({
+        name: billingFormData.value.name,
+        active: true
+      })
+    )
     // User should now be signed up
     //await complete()
   }
@@ -130,11 +148,20 @@ export const useSignupStore = defineStore('useSignupStore', () => {
   const completeFreeSignup = async () => {
     const fullName =
       accountFormData.value.firstName.trim() + ' ' + accountFormData.value.lastName.trim()
-    await userStore.signupUser({
-      ...accountFormData.value,
-      name: fullName,
-      active: true
-    })
+    const res = await userStore.signupUser(
+      buildSignupPayload({
+        name: fullName,
+        active: true
+      })
+    )
+    // signupUser returns an error object (it doesn't throw) on failure — only
+    // advance to Complete when the account was actually created and the user
+    // is now signed in.
+    if (!res || res.status !== 'success') {
+      throw new Error(
+        (res && 'message' in res && res.message) || 'Unable to create your account. Please try again.'
+      )
+    }
     currentStep.value = SIGNUP_STEPS.COMPLETE
   }
 

@@ -15,8 +15,10 @@ const validateSignup = [
     .trim()
     .isLength({ min: 2, max: 50 })
     .withMessage('Name must be between 2 and 50 characters')
-    .matches(/^[a-zA-Z\s]+$/)
-    .withMessage('Name can only contain letters and spaces'),
+    // Allow letters, numbers, spaces, and common name punctuation
+    // (apostrophes, hyphens, periods) — e.g. "test1", "O'Brien", "Jean-Luc".
+    .matches(/^[\p{L}\p{N} .'-]+$/u)
+    .withMessage('Name contains invalid characters'),
   
   body('email')
     .isEmail()
@@ -45,7 +47,10 @@ const validateSignup = [
     .withMessage('Invalid role specified'),
   
   body('youTubeChannelId')
-    .optional()
+    // `checkFalsy` so an empty string (sent by Free/Basic signups) is treated
+    // as "not provided" and skips the length check. Creator-tier requirement is
+    // enforced in the auth controller.
+    .optional({ checkFalsy: true })
     .isLength({ min: 10, max: 50 })
     .withMessage('YouTube Channel ID must be between 10 and 50 characters'),
   

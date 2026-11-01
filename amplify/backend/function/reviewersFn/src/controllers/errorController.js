@@ -37,7 +37,10 @@ const sendErrorDev = (err, res) => {
   })
 }
 
-module.exports = (err, req, res) => {
+// Must accept 4 args (err, req, res, next) — Express only recognises a
+// middleware as an *error* handler by its arity. Without `next`, errors fall
+// through to Express's default handler (which returns an HTML page).
+module.exports = (err, req, res, next) => {
   // Return default 500 code unless provided
   err.statusCode = err.statusCode || 500
   // Return status 'error' unless provided
@@ -45,14 +48,14 @@ module.exports = (err, req, res) => {
 
   const env = process.env.NODE_ENV
 
-  // If we are dev mode, return error with stack trace
-  if (env === 'development') {
-    sendErrorDev(err, res)
-  } else if (env === 'production') {
+  if (env === 'production') {
     // Fix - use the err.constructor.name to get the name of the error
     let error = Object.assign(err)
     if (error.name === 'ValidationError') error = handleValidationErrorDB(error)
 
     sendErrorProd(error, res)
+  } else {
+    // development (and any other env): return JSON error with stack trace
+    sendErrorDev(err, res)
   }
 }
