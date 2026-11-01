@@ -19,7 +19,7 @@ const { goToSignup, goToVideos } = useNavRoutes()
         <button
           type="button"
           class="btn-brand inline-flex items-center justify-center rounded-lg px-6 py-3 text-base font-medium focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2"
-          @click="goToSignup"
+          @click="goToSignup()"
         >
           Sign Up Free
         </button>

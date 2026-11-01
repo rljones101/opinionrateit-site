@@ -15,7 +15,7 @@ const { goToSignup } = useNavRoutes()
     <button
       type="button"
       class="mt-8 inline-flex items-center justify-center rounded-lg bg-white px-8 py-4 text-lg font-semibold text-brand-800 shadow transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-500"
-      @click="goToSignup"
+      @click="goToSignup()"
     >
       Sign Up Free
     </button>
