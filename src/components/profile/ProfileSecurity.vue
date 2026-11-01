@@ -434,7 +434,9 @@ onMounted(() => {
 }
 
 .session-current {
-  @apply border-brand-200 bg-brand-50;
+  /* Subtle brand-tinted highlight that reads on the dark theme (not a pale
+     light-theme panel). */
+  @apply border-brand-500/40 bg-brand-500/10;
 }
 
 .session-icon {
@@ -454,7 +456,7 @@ onMounted(() => {
 }
 
 .current-badge {
-  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-brand-100 text-brand-800;
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-brand-500 text-white;
 }
 
 .session-details {
