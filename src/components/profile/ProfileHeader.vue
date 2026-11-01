@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
+import { useRouter } from 'vue-router'
 import UserAvatar from '@/components/UserAvatar.vue'
 import BaseButton from '@/components/buttons/BaseButton.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
@@ -24,6 +25,7 @@ interface Props {
 const props = defineProps<Props>()
 
 const userStore = useUserStore()
+const router = useRouter()
 
 const isEditingAvatar = ref(false)
 const isUploadingAvatar = ref(false)
@@ -120,8 +122,8 @@ const handleAvatarUpload = async (event: Event) => {
 }
 
 const handleEditProfile = () => {
-  // TODO: Open edit profile modal or navigate to edit page
-  console.log('Edit profile clicked')
+  // Navigate to the profile Settings tab where the editable form lives.
+  router.push({ name: 'profile', query: { tab: 'settings' } })
 }
 </script>
 

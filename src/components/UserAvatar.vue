@@ -18,7 +18,7 @@ const initials = computed(() => getInitials(props.user.name))
     <img :alt="user.name" :src="avatarImage" v-if="avatarImage" class="rounded-full shadow" />
     <div
       v-else
-      class="bg-default-50 border-brand-500 border-2 w-full h-full flex items-center justify-center text-brand-500 font-bold uppercase rounded-full shadow p-2"
+      class="bg-brand-500 w-full h-full flex items-center justify-center text-white font-bold uppercase rounded-full shadow p-2"
     >
       {{ initials }}
     </div>

@@ -75,7 +75,9 @@ const getIconSvg = (icon: string) => {
 
 .tab-button {
   @apply flex items-center gap-2 px-4 py-3 text-sm font-medium rounded-t-lg transition-all duration-200 whitespace-nowrap;
-  @apply focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2;
+  /* Only show the focus ring for keyboard navigation, not after a mouse
+     click (which otherwise leaves a lingering outline until you click off). */
+  @apply outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2;
 }
 
 .tab-active {
