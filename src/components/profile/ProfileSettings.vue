@@ -333,7 +333,9 @@ const handleDeleteAccount = async () => {
           </div>
         </div>
 
-        <p v-else class="social-empty">No social links added yet.</p>
+        <p v-else class="social-empty">
+          {{ isEditing ? 'No social links yet. Pick a platform below to add one.' : 'No social links added yet. Click “Edit Profile” to add some.' }}
+        </p>
 
         <!-- Add control (edit mode only) -->
         <div v-if="isEditing && availablePlatforms.length" class="social-add">
