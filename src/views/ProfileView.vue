@@ -22,7 +22,6 @@ const isLoading = ref(true)
 const error = ref<string | null>(null)
 
 const tabs = [
-  { id: 'overview', label: 'Overview', icon: 'user' },
   { id: 'settings', label: 'Settings', icon: 'settings' },
   { id: 'activity', label: 'Activity', icon: 'activity' },
   { id: 'preferences', label: 'Preferences', icon: 'heart' },
@@ -30,11 +29,11 @@ const tabs = [
 ]
 
 const validTab = (tab: unknown) =>
-  typeof tab === 'string' && tabs.some((t) => t.id === tab) ? tab : 'overview'
+  typeof tab === 'string' && tabs.some((t) => t.id === tab) ? tab : 'settings'
 
 // Initialize from the ?tab= query so deep links (e.g. the header "Edit
 // Profile" button -> settings, or "View all activity" -> activity) land on
-// the right tab.
+// the right tab. Defaults to Settings.
 const activeTab = ref(validTab(route.query.tab))
 
 // Keep the active tab in sync when the query changes (back/forward, in-app nav).
@@ -101,16 +100,8 @@ onMounted(() => {
 
       <!-- Profile Content -->
       <div class="profile-content">
-        <!-- Overview Tab -->
-        <div v-if="activeTab === 'overview'" class="tab-content">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <ProfileSettings :user="userStore.currentUser" :compact="true" />
-            <ProfileActivity :user="userStore.currentUser" :compact="true" />
-          </div>
-        </div>
-
         <!-- Settings Tab -->
-        <ProfileSettings v-else-if="activeTab === 'settings'" :user="userStore.currentUser" />
+        <ProfileSettings v-if="activeTab === 'settings'" :user="userStore.currentUser" />
 
         <!-- Activity Tab -->
         <ProfileActivity v-else-if="activeTab === 'activity'" :user="userStore.currentUser" />

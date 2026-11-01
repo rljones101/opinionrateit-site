@@ -19,10 +19,9 @@ const router = useRouter()
 
 const isLoading = ref(true)
 const error = ref<string | null>(null)
-const activeTab = ref('overview')
+const activeTab = ref('settings')
 
 const tabs = [
-  { id: 'overview', label: 'Overview', icon: 'user' },
   { id: 'settings', label: 'Settings', icon: 'settings' },
   { id: 'activity', label: 'Activity', icon: 'activity' },
   { id: 'preferences', label: 'Preferences', icon: 'heart' },
@@ -81,16 +80,8 @@ onMounted(() => {
 
       <!-- Profile Content -->
       <div class="profile-content">
-        <!-- Overview Tab -->
-        <div v-if="activeTab === 'overview'" class="tab-content">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <ProfileSettings :user="userStore.currentUser" :compact="true" />
-            <ProfileActivity :user="userStore.currentUser" :compact="true" />
-          </div>
-        </div>
-
         <!-- Settings Tab -->
-        <ProfileSettings v-else-if="activeTab === 'settings'" :user="userStore.currentUser" />
+        <ProfileSettings v-if="activeTab === 'settings'" :user="userStore.currentUser" />
 
         <!-- Activity Tab -->
         <ProfileActivity v-else-if="activeTab === 'activity'" :user="userStore.currentUser" />
