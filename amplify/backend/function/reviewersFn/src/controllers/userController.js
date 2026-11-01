@@ -1,24 +1,46 @@
-const factory = require('./handlerFactory.js')
-const User = require('../models/userModel.js')
-const catchAsync = require('../utils/catchAsync.js')
+const catchAsync = require('./../utils/catchAsync.js')
 const AppError = require('../utils/appError.js')
 const { uploadToS3, deleteFromS3 } = require('../utils/s3Upload.js')
+const serviceFactory = require('../services/ServiceFactory')
+const ActivityService = require('../services/dynamodb/ActivityService')
+
+const activityService = new ActivityService()
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {}
-  Object.keys(obj).forEach(el => {
+  Object.keys(obj).forEach((el) => {
     if (allowedFields.includes(el)) newObj[el] = obj[el]
   })
   return newObj
 }
 
-exports.getAll = factory.getAll(User)
-exports.getOne = factory.getOne(User)
-exports.deleteUser = factory.deleteOne(User)
+const uid = (req) => req.user.userId || req.user.id
 
+// GET /api/v1/users  (admin)
+exports.getAll = catchAsync(async (req, res) => {
+  const userService = serviceFactory.getUserService()
+  const { users } = await userService.getUsers({ limit: parseInt(req.query.limit) || 100 })
+
+  res.status(200).json({
+    status: 'success',
+    results: users.length,
+    data: users
+  })
+})
+
+// DELETE /api/v1/users/:id  (admin)
+exports.deleteUser = catchAsync(async (req, res) => {
+  const userService = serviceFactory.getUserService()
+  await userService.deleteUser(req.params.id)
+
+  res.status(204).json({ status: 'success', data: null })
+})
+
+// GET /api/v1/profile/:name
 exports.getUserByName = catchAsync(async (req, res) => {
-  const slug = req.params.name.trim().replace(' ', '-').toLowerCase()
-  const user = await User.findOne({ slug })
+  const slug = req.params.name.trim().replace(/ /g, '-').toLowerCase()
+  const userService = serviceFactory.getUserService()
+  const user = await userService.getBySlug(slug)
 
   res.status(200).json({
     status: 'success',
@@ -26,95 +48,74 @@ exports.getUserByName = catchAsync(async (req, res) => {
   })
 })
 
+// PATCH /api/v1/users/updateMe
 exports.updateMe = catchAsync(async (req, res, next) => {
-  // 1) Create error if user POSTs password data
   if (req.body.password || req.body.passwordConfirm) {
     return next(
-      new AppError(
-        'This route is not for password updates. Please use /updateMyPassword.',
-        400
-      )
+      new AppError('This route is not for password updates. Please use /updateMyPassword.', 400)
     )
   }
 
-  // 2) Filtered out unwanted fields names that are not allowed to be updated
-  const filteredBody = filterObj(req.body, 'name', 'email', 'bio', 'location', 'website', 'twitter', 'linkedin')
+  const filteredBody = filterObj(
+    req.body,
+    'name',
+    'bio',
+    'location',
+    'website',
+    'twitter',
+    'linkedin'
+  )
 
-  // 3) Update user document
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
-    new: true,
-    runValidators: true
-  })
+  const userService = serviceFactory.getUserService()
+  const updatedUser = await userService.updateUser(uid(req), filteredBody)
 
-  // Log profile update activity
-  const UserActivity = require('../models/userActivityModel')
-  const updatedFields = Object.keys(filteredBody)
-  UserActivity.logActivity(
-    req.user.id,
-    'profile_update',
-    'Updated profile',
-    `Updated: ${updatedFields.join(', ')}`,
-    { updatedFields }
-  ).catch(err => console.error('Failed to log profile update activity:', err))
+  // Fire-and-forget activity log.
+  activityService
+    .logActivity(uid(req), 'profile_update', 'Updated profile', `Updated: ${Object.keys(filteredBody).join(', ')}`, {
+      updatedFields: Object.keys(filteredBody)
+    })
+    .catch((err) => console.error('Failed to log profile update activity:', err.message))
 
   res.status(200).json({
     status: 'success',
-    data: {
-      user: updatedUser
-    }
+    data: { user: updatedUser }
   })
 })
 
-exports.deleteMe = catchAsync(async (req, res, next) => {
-  await User.findByIdAndUpdate(req.user.id, { active: false })
+// DELETE /api/v1/users/deleteMe
+exports.deleteMe = catchAsync(async (req, res) => {
+  const userService = serviceFactory.getUserService()
+  await userService.deactivateUser(uid(req))
 
-  res.status(204).json({
-    status: 'success',
-    data: null
-  })
+  res.status(204).json({ status: 'success', data: null })
 })
 
+// POST /api/v1/users/me/avatar
 exports.uploadAvatar = catchAsync(async (req, res, next) => {
   if (!req.file) {
     return next(new AppError('Please provide an image file', 400))
   }
 
-  // Get current user to check for existing avatar
-  const currentUser = await User.findById(req.user.id)
+  const userService = serviceFactory.getUserService()
+  const currentUser = await userService.getUserById(uid(req))
 
-  // Upload new avatar to S3
-  const avatarUrl = await uploadToS3(
-    req.file.buffer,
-    req.file.filename,
-    req.file.mimetype
-  )
+  const avatarUrl = await uploadToS3(req.file.buffer, req.file.filename, req.file.mimetype)
 
-  // Update user with new avatar URL
-  const updatedUser = await User.findByIdAndUpdate(
-    req.user.id,
-    { photo: avatarUrl },
-    { new: true, runValidators: true }
-  )
+  const updatedUser = await userService.updateAvatar(uid(req), avatarUrl)
 
-  // Delete old avatar from S3 (if exists and not default)
-  if (currentUser.photo && currentUser.photo !== avatarUrl) {
+  // Clean up the previous avatar if it changed.
+  if (currentUser && currentUser.photo && currentUser.photo !== avatarUrl) {
     await deleteFromS3(currentUser.photo)
   }
 
-  // Log avatar upload activity
-  const UserActivity = require('../models/userActivityModel')
-  UserActivity.logActivity(
-    req.user.id,
-    'profile_update',
-    'Updated profile picture',
-    'Uploaded new avatar',
-    { action: 'avatar_upload' }
-  ).catch(err => console.error('Failed to log avatar upload activity:', err))
+  activityService
+    .logActivity(uid(req), 'profile_update', 'Updated profile picture', 'Uploaded new avatar', {
+      action: 'avatar_upload'
+    })
+    .catch((err) => console.error('Failed to log avatar upload activity:', err.message))
 
   res.status(200).json({
     status: 'success',
-    data: {
-      avatarUrl: updatedUser.photo
-    }
+    data: { avatarUrl: updatedUser.photo }
   })
 })

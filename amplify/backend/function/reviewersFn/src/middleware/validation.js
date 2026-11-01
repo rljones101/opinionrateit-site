@@ -41,7 +41,7 @@ const validateSignup = [
   
   body('role')
     .optional()
-    .isIn(['user', 'reviewer-basic', 'reviewer-plus'])
+    .isIn(['free', 'basic', 'creator', 'user', 'reviewer-basic', 'reviewer-plus', 'admin'])
     .withMessage('Invalid role specified'),
   
   body('youTubeChannelId')

@@ -1,95 +1,54 @@
-const UserPreferences = require('../models/userPreferencesModel')
 const catchAsync = require('../utils/catchAsync')
 const AppError = require('../utils/appError')
+const PreferencesService = require('../services/dynamodb/PreferencesService')
 
-// Get user preferences (or create with defaults if not exists)
-exports.getPreferences = catchAsync(async (req, res, next) => {
-  const preferences = await UserPreferences.getOrCreate(req.user.id)
+const preferencesService = new PreferencesService()
+
+const uid = (req) => req.user.userId || req.user.id
+
+// GET /api/v1/users/me/preferences
+exports.getPreferences = catchAsync(async (req, res) => {
+  const preferences = await preferencesService.getOrCreate(uid(req))
 
   res.status(200).json({
     status: 'success',
-    data: {
-      preferences
-    }
+    data: { preferences }
   })
 })
 
-// Update user preferences (partial update supported)
+// PATCH /api/v1/users/me/preferences
 exports.updatePreferences = catchAsync(async (req, res, next) => {
   const { notifications, display, privacy, content, security } = req.body
 
-  // Build update object with only provided fields
-  const updateData = {}
-  
-  if (notifications) {
-    updateData['notifications'] = {
-      ...notifications
-    }
+  // Validate enum / type constraints (same as before).
+  if (display && display.theme && !['light', 'dark', 'auto'].includes(display.theme)) {
+    return next(new AppError('Invalid theme value. Must be light, dark, or auto', 400))
   }
-  
-  if (display) {
-    // Validate theme enum
-    if (display.theme && !['light', 'dark', 'auto'].includes(display.theme)) {
-      return next(new AppError('Invalid theme value. Must be light, dark, or auto', 400))
-    }
-    updateData['display'] = {
-      ...display
-    }
+  if (
+    privacy &&
+    privacy.profileVisibility &&
+    !['public', 'members', 'private'].includes(privacy.profileVisibility)
+  ) {
+    return next(new AppError('Invalid profile visibility. Must be public, members, or private', 400))
   }
-  
-  if (privacy) {
-    // Validate profileVisibility enum
-    if (privacy.profileVisibility && !['public', 'members', 'private'].includes(privacy.profileVisibility)) {
-      return next(new AppError('Invalid profile visibility. Must be public, members, or private', 400))
-    }
-    updateData['privacy'] = {
-      ...privacy
-    }
-  }
-  
-  if (content) {
-    updateData['content'] = {
-      ...content
-    }
-  }
-  
-  if (security) {
-    // Validate sessionTimeout is a number
-    if (security.sessionTimeout !== undefined && typeof security.sessionTimeout !== 'number') {
-      return next(new AppError('Session timeout must be a number', 400))
-    }
-    updateData['security'] = {
-      ...security
-    }
+  if (
+    security &&
+    security.sessionTimeout !== undefined &&
+    typeof security.sessionTimeout !== 'number'
+  ) {
+    return next(new AppError('Session timeout must be a number', 400))
   }
 
-  // Get or create preferences first
-  let preferences = await UserPreferences.findOne({ userId: req.user.id })
-  
-  if (!preferences) {
-    // Create new preferences with provided data
-    preferences = await UserPreferences.create({
-      userId: req.user.id,
-      ...updateData
-    })
-  } else {
-    // Update existing preferences
-    Object.keys(updateData).forEach(key => {
-      if (updateData[key]) {
-        preferences[key] = {
-          ...preferences[key].toObject(),
-          ...updateData[key]
-        }
-      }
-    })
-    
-    await preferences.save()
-  }
+  const preferences = await preferencesService.update(uid(req), {
+    notifications,
+    display,
+    privacy,
+    content,
+    security
+  })
 
   res.status(200).json({
     status: 'success',
-    data: {
-      preferences
-    }
+    data: { preferences }
   })
 })
