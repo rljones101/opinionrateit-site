@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue'
+import { onMounted, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import { formatDate, timeAgo } from '@/utils/DateUtils'
+import { useActivityStore } from '@/stores/activityStore'
 
 interface User {
   id: string
@@ -14,15 +16,6 @@ interface User {
   lastLoginAt?: string
 }
 
-interface ActivityItem {
-  id: string
-  type: 'review' | 'video_view' | 'profile_update' | 'login' | 'signup'
-  title: string
-  description: string
-  timestamp: string
-  metadata?: Record<string, any>
-}
-
 interface Props {
   user: User
   compact?: boolean
@@ -32,35 +25,26 @@ const props = withDefaults(defineProps<Props>(), {
   compact: false
 })
 
-const isLoading = ref(true)
-const activities = ref<ActivityItem[]>([])
-const error = ref('')
+const activityStore = useActivityStore()
+const { activities, stats, loading: isLoading, error } = storeToRefs(activityStore)
 
 const displayLimit = computed(() => props.compact ? 5 : 20)
 
+// Derive the display stats from the store. The store supplies the
+// user-scoped counts; last-active is computed from the most recent item.
 const activityStats = computed(() => {
-  const stats = {
-    totalReviews: 0,
-    totalVideoViews: 0,
-    thisWeekActivity: 0,
-    lastActivity: null as string | null
+  const lastActivity = activities.value.length
+    ? activities.value.reduce((latest, a) =>
+        new Date(a.timestamp) > new Date(latest) ? a.timestamp : latest,
+      activities.value[0].timestamp)
+    : null
+
+  return {
+    totalReviews: stats.value.totalReviews,
+    totalVideoViews: stats.value.totalVideoViews,
+    thisWeekActivity: stats.value.thisWeekActivity,
+    lastActivity
   }
-  
-  const oneWeekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
-  
-  activities.value.forEach(activity => {
-    const activityDate = new Date(activity.timestamp)
-    
-    if (activity.type === 'review') stats.totalReviews++
-    if (activity.type === 'video_view') stats.totalVideoViews++
-    if (activityDate > oneWeekAgo) stats.thisWeekActivity++
-    
-    if (!stats.lastActivity || activityDate > new Date(stats.lastActivity)) {
-      stats.lastActivity = activity.timestamp
-    }
-  })
-  
-  return stats
 })
 
 const getActivityIcon = (type: string) => {
@@ -85,65 +69,10 @@ const getActivityColor = (type: string) => {
   return colors[type] || colors.profile_update
 }
 
-const loadActivity = async () => {
-  try {
-    isLoading.value = true
-    error.value = ''
-    
-    // TODO: Replace with actual API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    // Mock activity data
-    activities.value = [
-      {
-        id: '1',
-        type: 'review',
-        title: 'Left a review',
-        description: 'Reviewed "Amazing Tech Review" by TechChannel',
-        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-        metadata: { videoId: 'abc123', rating: 4.5 }
-      },
-      {
-        id: '2',
-        type: 'video_view',
-        title: 'Watched a video',
-        description: 'Watched "Latest Gaming Setup" by GameReviewer',
-        timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
-        metadata: { videoId: 'def456', duration: 1200 }
-      },
-      {
-        id: '3',
-        type: 'profile_update',
-        title: 'Updated profile',
-        description: 'Changed profile picture and bio',
-        timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString()
-      },
-      {
-        id: '4',
-        type: 'login',
-        title: 'Signed in',
-        description: 'Logged in from Chrome on Windows',
-        timestamp: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-        metadata: { browser: 'Chrome', os: 'Windows' }
-      },
-      {
-        id: '5',
-        type: 'signup',
-        title: 'Joined OpinionRateIt',
-        description: 'Welcome to the community!',
-        timestamp: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString()
-      }
-    ]
-    
-  } catch (err: any) {
-    error.value = err.message || 'Failed to load activity'
-  } finally {
-    isLoading.value = false
-  }
-}
-
 onMounted(() => {
-  loadActivity()
+  // Fetch the current user's activity (the endpoint is scoped to the
+  // authenticated user server-side, so each user only sees their own).
+  activityStore.fetchActivity({ limit: props.compact ? 5 : 20, offset: 0 })
 })
 </script>
 

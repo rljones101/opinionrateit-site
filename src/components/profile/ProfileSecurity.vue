@@ -45,54 +45,29 @@ const passwordForm = reactive({
   confirmPassword: ''
 })
 
-const twoFactorEnabled = ref(false)
 const sessions = ref<LoginSession[]>([])
 
-const securitySettings = reactive({
-  loginNotifications: true,
-  suspiciousActivityAlerts: true,
-  passwordExpiry: false,
-  sessionTimeout: 30 // days
-})
+const API_URL = import.meta.env.VITE_API_URL
 
 const loadSecurityData = async () => {
   try {
     isLoading.value = true
-    
-    // TODO: Load security data from API
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    // Mock data
-    sessions.value = [
-      {
-        id: '1',
-        device: 'Windows PC',
-        browser: 'Chrome 118',
-        location: 'New York, NY',
-        ipAddress: '192.168.1.100',
-        lastActive: new Date().toISOString(),
-        current: true
-      },
-      {
-        id: '2',
-        device: 'iPhone 14',
-        browser: 'Safari Mobile',
-        location: 'New York, NY',
-        ipAddress: '192.168.1.101',
-        lastActive: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-        current: false
-      },
-      {
-        id: '3',
-        device: 'MacBook Pro',
-        browser: 'Firefox 119',
-        location: 'Boston, MA',
-        ipAddress: '10.0.0.50',
-        lastActive: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-        current: false
-      }
-    ]
-    
+    saveError.value = ''
+
+    const response = await fetch(`${API_URL}/api/v1/users/me/sessions`, {
+      credentials: 'include'
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to load active sessions')
+    }
+
+    const data = await response.json()
+    if (data.status === 'success') {
+      sessions.value = data.data.sessions
+    } else {
+      throw new Error(data.message || 'Failed to load active sessions')
+    }
   } catch (error: any) {
     saveError.value = error.message || 'Failed to load security data'
   } finally {
@@ -146,87 +121,59 @@ const handlePasswordChange = async () => {
   }
 }
 
-const handleToggle2FA = async () => {
+const handleRevokeSession = async (sessionId: string) => {
+  if (!confirm('Revoke this session? That device will be signed out.')) return
+
   try {
-    isSaving.value = true
     saveError.value = ''
-    
-    // TODO: Call API to toggle 2FA
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    twoFactorEnabled.value = !twoFactorEnabled.value
-    
-    saveMessage.value = twoFactorEnabled.value 
-      ? 'Two-factor authentication enabled!' 
-      : 'Two-factor authentication disabled!'
-    
+    const response = await fetch(`${API_URL}/api/v1/users/me/sessions/${sessionId}`, {
+      method: 'DELETE',
+      credentials: 'include'
+    })
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}))
+      throw new Error(data.message || 'Failed to revoke session')
+    }
+
+    sessions.value = sessions.value.filter((s) => s.id !== sessionId)
+    saveMessage.value = 'Session revoked successfully!'
     setTimeout(() => {
       saveMessage.value = ''
     }, 3000)
-    
   } catch (error: any) {
-    saveError.value = error.message || 'Failed to update two-factor authentication'
-  } finally {
-    isSaving.value = false
-  }
-}
-
-const handleRevokeSession = async (sessionId: string) => {
-  if (confirm('Are you sure you want to revoke this session? The user will be logged out.')) {
-    try {
-      // TODO: Call API to revoke session
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
-      sessions.value = sessions.value.filter(s => s.id !== sessionId)
-      saveMessage.value = 'Session revoked successfully!'
-      
-      setTimeout(() => {
-        saveMessage.value = ''
-      }, 3000)
-      
-    } catch (error: any) {
-      saveError.value = error.message || 'Failed to revoke session'
-    }
+    saveError.value = error.message || 'Failed to revoke session'
   }
 }
 
 const handleRevokeAllSessions = async () => {
-  if (confirm('Are you sure you want to revoke all other sessions? You will remain logged in on this device.')) {
-    try {
-      // TODO: Call API to revoke all sessions except current
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      sessions.value = sessions.value.filter(s => s.current)
-      saveMessage.value = 'All other sessions revoked successfully!'
-      
-      setTimeout(() => {
-        saveMessage.value = ''
-      }, 3000)
-      
-    } catch (error: any) {
-      saveError.value = error.message || 'Failed to revoke sessions'
-    }
-  }
-}
+  if (
+    !confirm(
+      'Revoke all other sessions? You will stay signed in on this device, and all other devices will be signed out.'
+    )
+  )
+    return
 
-const handleSaveSettings = async () => {
   try {
-    isSaving.value = true
     saveError.value = ''
-    
-    // TODO: Save security settings to API
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    saveMessage.value = 'Security settings saved successfully!'
-    
+    const response = await fetch(`${API_URL}/api/v1/users/me/sessions`, {
+      method: 'DELETE',
+      credentials: 'include'
+    })
+
+    if (!response.ok) {
+      const data = await response.json().catch(() => ({}))
+      throw new Error(data.message || 'Failed to revoke sessions')
+    }
+
+    // Keep only the current session locally.
+    sessions.value = sessions.value.filter((s) => s.current)
+    saveMessage.value = 'All other sessions revoked successfully!'
     setTimeout(() => {
       saveMessage.value = ''
     }, 3000)
-    
   } catch (error: any) {
-    saveError.value = error.message || 'Failed to save security settings'
-  } finally {
-    isSaving.value = false
+    saveError.value = error.message || 'Failed to revoke sessions'
   }
 }
 
@@ -324,46 +271,6 @@ onMounted(() => {
         </form>
       </div>
       
-      <!-- Two-Factor Authentication -->
-      <div class="security-section">
-        <h3 class="section-title">Two-Factor Authentication</h3>
-        <p class="section-description">
-          Add an extra layer of security to your account with two-factor authentication.
-        </p>
-        
-        <div class="two-factor-status">
-          <div class="status-indicator">
-            <div class="status-icon" :class="twoFactorEnabled ? 'status-enabled' : 'status-disabled'">
-              <svg v-if="twoFactorEnabled" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <svg v-else class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div class="status-text">
-              <span class="status-title">
-                {{ twoFactorEnabled ? 'Enabled' : 'Disabled' }}
-              </span>
-              <span class="status-description">
-                {{ twoFactorEnabled 
-                  ? 'Your account is protected with 2FA' 
-                  : 'Enable 2FA for better security' 
-                }}
-              </span>
-            </div>
-          </div>
-          
-          <BaseButton 
-            :variant="twoFactorEnabled ? 'danger' : 'primary'"
-            @click="handleToggle2FA"
-            :disabled="isSaving"
-          >
-            {{ twoFactorEnabled ? 'Disable 2FA' : 'Enable 2FA' }}
-          </BaseButton>
-        </div>
-      </div>
-      
       <!-- Active Sessions -->
       <div class="security-section">
         <div class="section-header">
@@ -427,80 +334,6 @@ onMounted(() => {
         </div>
       </div>
       
-      <!-- Security Settings -->
-      <div class="security-section">
-        <h3 class="section-title">Security Notifications</h3>
-        <p class="section-description">
-          Configure how you want to be notified about security events.
-        </p>
-        
-        <div class="settings-grid">
-          <div class="setting-item">
-            <label class="setting-label">
-              <input 
-                v-model="securitySettings.loginNotifications" 
-                type="checkbox" 
-                class="setting-checkbox"
-              />
-              <span class="setting-text">
-                <span class="setting-name">Login Notifications</span>
-                <span class="setting-desc">Get notified when someone logs into your account</span>
-              </span>
-            </label>
-          </div>
-          
-          <div class="setting-item">
-            <label class="setting-label">
-              <input 
-                v-model="securitySettings.suspiciousActivityAlerts" 
-                type="checkbox" 
-                class="setting-checkbox"
-              />
-              <span class="setting-text">
-                <span class="setting-name">Suspicious Activity Alerts</span>
-                <span class="setting-desc">Get alerts for unusual account activity</span>
-              </span>
-            </label>
-          </div>
-          
-          <div class="setting-item">
-            <label class="setting-label">
-              <input 
-                v-model="securitySettings.passwordExpiry" 
-                type="checkbox" 
-                class="setting-checkbox"
-              />
-              <span class="setting-text">
-                <span class="setting-name">Password Expiry Reminders</span>
-                <span class="setting-desc">Remind me to change my password periodically</span>
-              </span>
-            </label>
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label for="sessionTimeout" class="form-label">Session Timeout</label>
-          <select id="sessionTimeout" v-model="securitySettings.sessionTimeout" class="form-select">
-            <option :value="1">1 day</option>
-            <option :value="7">7 days</option>
-            <option :value="30">30 days</option>
-            <option :value="90">90 days</option>
-            <option :value="0">Never</option>
-          </select>
-          <p class="form-hint">How long to keep you logged in when inactive</p>
-        </div>
-        
-        <div class="form-actions">
-          <BaseButton 
-            variant="primary" 
-            :disabled="isSaving"
-            @click="handleSaveSettings"
-          >
-            <LoadingState v-if="isSaving" size="sm" class="mr-2" />
-            Save Settings
-          </BaseButton>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -592,38 +425,6 @@ onMounted(() => {
   @apply flex justify-start;
 }
 
-.two-factor-status {
-  @apply flex items-center justify-between p-4 bg-secondary-200 rounded-lg;
-}
-
-.status-indicator {
-  @apply flex items-center gap-3;
-}
-
-.status-icon {
-  @apply w-10 h-10 rounded-full flex items-center justify-center;
-}
-
-.status-enabled {
-  @apply bg-green-100 text-green-600;
-}
-
-.status-disabled {
-  @apply bg-gray-100 text-gray-400;
-}
-
-.status-text {
-  @apply flex flex-col;
-}
-
-.status-title {
-  @apply font-medium text-default-50;
-}
-
-.status-description {
-  @apply text-sm text-default-300;
-}
-
 .sessions-list {
   @apply space-y-4;
 }
@@ -633,7 +434,9 @@ onMounted(() => {
 }
 
 .session-current {
-  @apply border-brand-200 bg-brand-50;
+  /* Subtle brand-tinted highlight that reads on the dark theme (not a pale
+     light-theme panel). */
+  @apply border-brand-500/40 bg-brand-500/10;
 }
 
 .session-icon {
@@ -653,7 +456,7 @@ onMounted(() => {
 }
 
 .current-badge {
-  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-brand-100 text-brand-800;
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-brand-500 text-white;
 }
 
 .session-details {
@@ -675,33 +478,5 @@ onMounted(() => {
 
 .session-actions {
   @apply flex-shrink-0;
-}
-
-.settings-grid {
-  @apply space-y-4 mb-6;
-}
-
-.setting-item {
-  @apply flex items-start;
-}
-
-.setting-label {
-  @apply flex items-start gap-3 cursor-pointer;
-}
-
-.setting-checkbox {
-  @apply mt-1 h-4 w-4 text-brand-600 focus:ring-brand-500 border-app-light-blue rounded;
-}
-
-.setting-text {
-  @apply flex flex-col;
-}
-
-.setting-name {
-  @apply font-medium text-default-50;
-}
-
-.setting-desc {
-  @apply text-sm text-default-300;
 }
 </style>

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import UserAvatar from '@/components/UserAvatar.vue'
-import BaseButton from '@/components/buttons/BaseButton.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import { formatDate } from '@/utils/DateUtils'
 import { useUserStore } from '@/stores/userStore'
@@ -119,10 +118,6 @@ const handleAvatarUpload = async (event: Event) => {
   }
 }
 
-const handleEditProfile = () => {
-  // TODO: Open edit profile modal or navigate to edit page
-  console.log('Edit profile clicked')
-}
 </script>
 
 <template>
@@ -134,6 +129,11 @@ const handleEditProfile = () => {
     </div>
     
     <div class="header-content">
+      <!-- Tier badge (top-right) -->
+      <span class="tier-badge role-badge" :class="roleColor">
+        {{ roleDisplayName }}
+      </span>
+
       <!-- Avatar Section -->
       <div class="avatar-section">
         <div class="avatar-container" @click="handleAvatarClick">
@@ -172,10 +172,6 @@ const handleEditProfile = () => {
         <p class="user-email">{{ user.email }}</p>
         
         <div class="user-meta">
-          <span class="role-badge" :class="roleColor">
-            {{ roleDisplayName }}
-          </span>
-          
           <div class="meta-items">
             <div class="meta-item">
               <span class="meta-label">Member since:</span>
@@ -189,19 +185,6 @@ const handleEditProfile = () => {
         </div>
       </div>
       
-      <!-- Actions -->
-      <div class="header-actions">
-        <BaseButton 
-          variant="secondary" 
-          size="sm"
-          @click="handleEditProfile"
-        >
-          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
-          Edit Profile
-        </BaseButton>
-      </div>
     </div>
   </div>
 </template>
@@ -219,7 +202,7 @@ const handleEditProfile = () => {
 }
 
 .header-content {
-  @apply relative z-10 p-6 flex flex-col md:flex-row items-start md:items-end gap-6;
+  @apply relative z-10 p-6 flex flex-col md:flex-row items-start gap-6;
 }
 
 .avatar-section {
@@ -231,7 +214,14 @@ const handleEditProfile = () => {
 }
 
 .avatar-image {
-  @apply ring-4 ring-white shadow-lg;
+  @apply shadow-lg rounded-full;
+}
+
+/* The ring must sit on a rounded element or it renders as a square box
+   around the circular avatar. Use a soft themed ring, not stark white. */
+.avatar-image :deep(> div),
+.avatar-image :deep(> img) {
+  @apply ring-2 ring-brand-500/40;
 }
 
 .avatar-overlay {
@@ -272,6 +262,11 @@ const handleEditProfile = () => {
   @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
 }
 
+.tier-badge {
+  /* Pin the tier badge to the top-right corner of the header. */
+  @apply absolute top-4 right-4 z-20 shadow-sm;
+}
+
 .meta-items {
   @apply flex flex-col sm:flex-row gap-4;
 }
@@ -286,10 +281,6 @@ const handleEditProfile = () => {
 
 .meta-value {
   @apply font-medium;
-}
-
-.header-actions {
-  @apply flex-shrink-0;
 }
 
 /* Mobile responsiveness */

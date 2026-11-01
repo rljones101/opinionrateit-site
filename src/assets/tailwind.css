@@ -408,4 +408,27 @@
     color: var(--color-app-text-color);
     font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   }
+
+  /* The app runs in a dark theme (main.ts adds `.app-dark` to <html>). Tell the
+     browser so native UI — <select> option lists, date pickers, scrollbars —
+     renders with dark chrome instead of the default light widgets. Without
+     this, a native <select>'s dropdown shows light (unreadable) options. */
+  .app-dark {
+    color-scheme: dark;
+  }
+
+  /* Give native form controls a dark surface so they match our .form-input
+     styling and stay readable. Keeps the browser's native dropdown behavior
+     (now dark, thanks to color-scheme above). */
+  .app-dark select,
+  .app-dark textarea,
+  .app-dark input:not([type='checkbox']):not([type='radio']):not([type='file']) {
+    background-color: var(--color-secondary-200);
+    color: var(--color-default-50);
+  }
+
+  .app-dark select option {
+    background-color: var(--color-secondary-200);
+    color: var(--color-default-50);
+  }
 }

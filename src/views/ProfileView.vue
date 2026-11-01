@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useUserStore } from '@/stores/userStore'
 import { useLoginDialogStore } from '@/stores/loginDialogStore'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import AppTitle from '@/components/AppTitle.vue'
 import LoadingState from '@/components/ui/LoadingState.vue'
 import ErrorBoundary from '@/components/ui/ErrorBoundary.vue'
@@ -10,24 +10,37 @@ import ProfileHeader from '@/components/profile/ProfileHeader.vue'
 import ProfileTabs from '@/components/profile/ProfileTabs.vue'
 import ProfileSettings from '@/components/profile/ProfileSettings.vue'
 import ProfileActivity from '@/components/profile/ProfileActivity.vue'
-import ProfilePreferences from '@/components/profile/ProfilePreferences.vue'
 import ProfileSecurity from '@/components/profile/ProfileSecurity.vue'
 
 const userStore = useUserStore()
 const loginDialog = useLoginDialogStore()
 const router = useRouter()
+const route = useRoute()
 
 const isLoading = ref(true)
 const error = ref<string | null>(null)
-const activeTab = ref('overview')
 
 const tabs = [
-  { id: 'overview', label: 'Overview', icon: 'user' },
   { id: 'settings', label: 'Settings', icon: 'settings' },
   { id: 'activity', label: 'Activity', icon: 'activity' },
-  { id: 'preferences', label: 'Preferences', icon: 'heart' },
   { id: 'security', label: 'Security', icon: 'shield' }
 ]
+
+const validTab = (tab: unknown) =>
+  typeof tab === 'string' && tabs.some((t) => t.id === tab) ? tab : 'settings'
+
+// Initialize from the ?tab= query so deep links (e.g. the header "Edit
+// Profile" button -> settings, or "View all activity" -> activity) land on
+// the right tab. Defaults to Settings.
+const activeTab = ref(validTab(route.query.tab))
+
+// Keep the active tab in sync when the query changes (back/forward, in-app nav).
+watch(
+  () => route.query.tab,
+  (tab) => {
+    activeTab.value = validTab(tab)
+  }
+)
 
 const loadProfile = async () => {
   try {
@@ -53,6 +66,10 @@ const loadProfile = async () => {
 
 const handleTabChange = (tabId: string) => {
   activeTab.value = tabId
+  // Reflect the selection in the URL (keeps it shareable / refresh-safe).
+  if (route.query.tab !== tabId) {
+    router.replace({ name: 'profile', query: { ...route.query, tab: tabId } })
+  }
 }
 
 const handleRetry = () => {
@@ -81,22 +98,11 @@ onMounted(() => {
 
       <!-- Profile Content -->
       <div class="profile-content">
-        <!-- Overview Tab -->
-        <div v-if="activeTab === 'overview'" class="tab-content">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <ProfileSettings :user="userStore.currentUser" :compact="true" />
-            <ProfileActivity :user="userStore.currentUser" :compact="true" />
-          </div>
-        </div>
-
         <!-- Settings Tab -->
-        <ProfileSettings v-else-if="activeTab === 'settings'" :user="userStore.currentUser" />
+        <ProfileSettings v-if="activeTab === 'settings'" :user="userStore.currentUser" />
 
         <!-- Activity Tab -->
         <ProfileActivity v-else-if="activeTab === 'activity'" :user="userStore.currentUser" />
-
-        <!-- Preferences Tab -->
-        <ProfilePreferences v-else-if="activeTab === 'preferences'" :user="userStore.currentUser" />
 
         <!-- Security Tab -->
         <ProfileSecurity v-else-if="activeTab === 'security'" :user="userStore.currentUser" />

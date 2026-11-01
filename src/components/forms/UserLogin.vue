@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useUserStore } from '@/stores/userStore'
-import { useLoginDialogStore } from '@/stores/loginDialogStore'
 import type { AppApiResponse, AppApiErrorResponse } from '@/types'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import FormInput from '@/components/inputs/FormInput.vue'
 import FormContainer from '@/components/containers/FormContainer.vue'
 import ComponentSpinner from '@/components/spinners/ComponentSpinner.vue'
@@ -17,9 +16,7 @@ const props = defineProps<{ dialog?: boolean }>()
 const emit = defineEmits<{ (e: 'success'): void; (e: 'close'): void }>()
 
 const router = useRouter()
-const route = useRoute()
 
-const loginDialog = useLoginDialogStore()
 const { loginUser } = useUserStore()
 
 const email = ref('')
@@ -43,31 +40,15 @@ const login = async () => {
         email.value = ''
         password.value = ''
 
-        // Resolve where to go next: the dialog store's redirect (when opened
-        // from a guard/prompt), the route's ?redirect (full-page /login), or
-        // the video browser as a sensible default.
-        const redirect =
-          loginDialog.redirect || (route.query.redirect as string | undefined) || null
-
+        // Always send the user to the video browser after logging in.
         if (props.dialog) {
-          // In the dialog, stay on the current page unless a redirect was set.
           emit('success')
-          if (redirect) {
-            try {
-              await router.push(redirect)
-            } catch (routerError) {
-              console.error('Router navigation error:', routerError)
-            }
-          }
-          return
         }
 
         try {
-          await router.push(redirect || { name: 'videos' })
+          await router.push({ name: 'videos' })
         } catch (routerError) {
           console.error('Router navigation error:', routerError)
-          // Fallback to a known route
-          await router.push({ name: 'videos' })
         }
       } else {
         showError.value = true

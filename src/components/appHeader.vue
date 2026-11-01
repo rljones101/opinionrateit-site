@@ -7,6 +7,7 @@ import BaseButton from '@/components/buttons/BaseButton.vue'
 import { useUserStore } from '@/stores/userStore'
 import { useLoginDialogStore } from '@/stores/loginDialogStore'
 import SiteLogo from '@/components/siteLogo.vue'
+import UserAvatar from '@/components/UserAvatar.vue'
 
 interface linkItem {
   label: string
@@ -75,6 +76,10 @@ const handleClickOutside = (event: Event) => {
   }
 }
 
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape') showUserMenu.value = false
+}
+
 // Close mobile menu on route change
 router.afterEach(() => {
   closeMenu()
@@ -82,10 +87,12 @@ router.afterEach(() => {
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
+  document.addEventListener('keydown', handleKeydown)
 })
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
+  document.removeEventListener('keydown', handleKeydown)
   document.body.style.overflow = ''
 })
 </script>
@@ -132,32 +139,41 @@ onUnmounted(() => {
           </BaseButton>
           
           <div v-else class="user-menu">
-            <button 
-              @click="toggleUserMenu"
-              class="user-menu-button"
+            <button
+              type="button"
+              class="user-avatar-button"
               :aria-expanded="showUserMenu"
+              aria-haspopup="menu"
+              :title="userStore.user.name"
+              @click="toggleUserMenu"
             >
-              <span class="user-name">{{ userStore.user.name }}</span>
-              <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
+              <UserAvatar
+                :user="{ name: userStore.user.name, avatarUrl: userStore.user.avatar }"
+                class="w-8 h-8"
+              />
             </button>
-            
-            <!-- User Dropdown -->
-            <div v-if="showUserMenu" class="user-dropdown">
-              <router-link :to="{ name: 'profile' }" class="dropdown-item">
-                Profile
-              </router-link>
-              <router-link :to="{ name: 'my-profile', params: { name: userStore.user.name } }" class="dropdown-item">
-                My Profile (Legacy)
-              </router-link>
-              <router-link :to="{ name: 'my-stats', params: { name: userStore.user.name } }" class="dropdown-item">
-                Statistics
-              </router-link>
-              <button @click="logout" class="dropdown-item logout-item">
-                Logout
-              </button>
-            </div>
+
+            <!-- User Dropdown: name + email + logout -->
+            <transition name="user-menu-pop">
+              <div v-if="showUserMenu" class="user-dropdown" role="menu">
+                <div class="user-dropdown-header">
+                  <UserAvatar
+                    :user="{ name: userStore.user.name, avatarUrl: userStore.user.avatar }"
+                    class="w-9 h-9 flex-shrink-0"
+                  />
+                  <div class="user-dropdown-identity">
+                    <span class="user-dropdown-name">{{ userStore.user.name }}</span>
+                    <span v-if="userStore.user.email" class="user-dropdown-email">{{ userStore.user.email }}</span>
+                  </div>
+                </div>
+                <BaseButton variant="secondary" class="user-dropdown-logout" @click="logout">
+                  <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  Logout
+                </BaseButton>
+              </div>
+            </transition>
           </div>
         </div>
       </nav>
@@ -387,74 +403,78 @@ onUnmounted(() => {
   position: relative;
 }
 
-.user-menu-button {
+.user-avatar-button {
   display: flex;
   align-items: center;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--color-app-text-color);
-  border-radius: 0.375rem;
-  transition: color 0.2s;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
 }
 
-.user-menu-button:hover {
-  color: var(--color-brand-500);
-}
-
-.user-menu-button:focus {
+.user-avatar-button:focus-visible {
   outline: none;
   box-shadow: 0 0 0 2px var(--color-brand-500), 0 0 0 4px rgba(230, 95, 55, 0.1);
-}
-
-.user-name {
-  max-width: 20rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .user-dropdown {
   position: absolute;
   right: 0;
   margin-top: 0.5rem;
-  width: 12rem;
+  width: 16rem;
   background-color: var(--color-secondary-50);
-  border-radius: 0.375rem;
+  border-radius: 0.5rem;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
+  padding: 1rem;
   z-index: 50;
   border: 1px solid var(--color-app-light-blue);
 }
 
-.dropdown-item {
-  display: block;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+.user-dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-app-light-blue);
+}
+
+.user-dropdown-identity {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.user-dropdown-name {
+  font-weight: 600;
+  color: var(--color-default-50);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-dropdown-email {
   font-size: 0.875rem;
-  color: var(--color-app-text-color);
+  color: var(--color-default-300);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-dropdown-logout {
   width: 100%;
-  text-align: left;
-  transition: background-color 0.2s;
+  justify-content: center;
 }
 
-.dropdown-item:hover {
-  background-color: var(--color-app-light-blue);
+/* Popover transition */
+.user-menu-pop-enter-active,
+.user-menu-pop-leave-active {
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
-.logout-item {
-  border-top: 1px solid var(--color-app-light-blue);
-  color: #f87171;
-}
-
-.logout-item:hover {
-  background-color: rgba(248, 113, 113, 0.12);
+.user-menu-pop-enter-from,
+.user-menu-pop-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
 }
 
 /* Mobile Navigation */
@@ -589,10 +609,6 @@ onUnmounted(() => {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
   }
-  
-  .user-name {
-    max-width: 24rem;
-  }
 }
 
 /* Accessibility */
@@ -602,8 +618,7 @@ onUnmounted(() => {
   }
   
   .mobile-menu-button,
-  .user-menu-button,
-  .dropdown-item,
+  .user-avatar-button,
   .mobile-nav-link {
     transition: none;
   }
