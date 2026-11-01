@@ -302,20 +302,20 @@ const handleDeleteAccount = async () => {
       </div>
       
       <!-- Danger Zone (only in full view) -->
-      <div v-if="!compact" class="settings-section danger-zone">
-        <h3 class="section-title text-red-600">Danger Zone</h3>
-        <p class="section-description text-red-600">
-          These actions are irreversible. Please proceed with caution.
-        </p>
-        
-        <div class="danger-actions">
-          <BaseButton variant="danger" @click="handleDeleteAccount">
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-            Delete Account
-          </BaseButton>
+      <div v-if="!compact" class="danger-zone">
+        <div class="danger-text">
+          <h3 class="danger-title">Delete account</h3>
+          <p class="danger-description">
+            This permanently removes your account and data. This action cannot be undone.
+          </p>
         </div>
+
+        <BaseButton variant="danger" class="danger-button" @click="handleDeleteAccount">
+          <svg class="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+          Delete Account
+        </BaseButton>
       </div>
     </div>
   </div>
@@ -413,11 +413,26 @@ const handleDeleteAccount = async () => {
 }
 
 .danger-zone {
-  @apply border-red-200 bg-red-50 p-4 rounded-lg;
+  /* Red-tinted panel that reads on the dark theme (not a bright white box),
+     with a single row: text left, action aligned right. */
+  @apply flex flex-col sm:flex-row sm:items-center justify-between gap-4;
+  @apply border border-red-500/30 bg-red-500/10 px-4 py-3 rounded-lg;
 }
 
-.danger-actions {
-  @apply pt-4;
+.danger-text {
+  @apply min-w-0;
+}
+
+.danger-title {
+  @apply text-base font-semibold text-red-400;
+}
+
+.danger-description {
+  @apply text-sm text-red-300/80 mt-0.5;
+}
+
+.danger-button {
+  @apply flex-shrink-0 self-start sm:self-auto whitespace-nowrap;
 }
 
 /* Compact mode adjustments */
