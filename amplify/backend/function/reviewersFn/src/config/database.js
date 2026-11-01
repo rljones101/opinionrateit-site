@@ -1,49 +1,19 @@
-const mongoose = require('mongoose')
 const { DynamoDBClient } = require('@aws-sdk/client-dynamodb')
 const { DynamoDBDocumentClient } = require('@aws-sdk/lib-dynamodb')
 
+/**
+ * Database manager. The app uses DynamoDB exclusively (MongoDB has been
+ * removed). Kept as a thin manager so callers have a single connect()/status
+ * surface.
+ */
 class DatabaseManager {
   constructor() {
-    this.useMongoDB = process.env.USE_MONGODB === 'true'
-    this.useDynamoDB = process.env.USE_DYNAMODB === 'true'
+    this.useDynamoDB = process.env.USE_DYNAMODB !== 'false' // default on
     this.dynamoClient = null
-    this.mongoConnection = null
   }
 
   async connect() {
-    if (this.useMongoDB) {
-      await this.connectMongoDB()
-    }
-    
-    if (this.useDynamoDB) {
-      await this.connectDynamoDB()
-    }
-
-    if (!this.useMongoDB && !this.useDynamoDB) {
-      throw new Error('No database configuration specified. Set USE_MONGODB=true or USE_DYNAMODB=true')
-    }
-  }
-
-  async connectMongoDB() {
-    try {
-      const DATABASE_USER = process.env.DATABASE_USER
-      const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD
-      const DATABASE_HOST = process.env.DATABASE_HOST
-      const DATABASE_PORT = process.env.DATABASE_PORT
-      const DATABASE_NAME = process.env.DATABASE_NAME
-
-      await mongoose.connect(
-        `mongodb://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}`,
-        { dbName: DATABASE_NAME }
-      )
-
-      console.log('✅ MongoDB connection successful!')
-      console.log('Connected to database:', mongoose.connection.db.databaseName)
-      this.mongoConnection = mongoose.connection
-    } catch (error) {
-      console.error('❌ MongoDB connection failed:', error)
-      throw error
-    }
+    await this.connectDynamoDB()
   }
 
   async connectDynamoDB() {
@@ -57,10 +27,10 @@ class DatabaseManager {
         config.endpoint = process.env.DYNAMODB_ENDPOINT
         config.credentials = {
           accessKeyId: process.env.DYNAMODB_ACCESS_KEY_ID || process.env.AWS_ACCESS_KEY_ID || 'fake',
-          secretAccessKey: process.env.DYNAMODB_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY || 'fake'
+          secretAccessKey:
+            process.env.DYNAMODB_SECRET_ACCESS_KEY || process.env.AWS_SECRET_ACCESS_KEY || 'fake'
         }
       } else if (process.env.AWS_ACCESS_KEY_ID && process.env.AWS_SECRET_ACCESS_KEY) {
-        // AWS DynamoDB with explicit credentials
         config.credentials = {
           accessKeyId: process.env.AWS_ACCESS_KEY_ID,
           secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
@@ -88,17 +58,6 @@ class DatabaseManager {
       throw new Error('DynamoDB client not initialized. Call connect() first.')
     }
     return this.dynamoClient
-  }
-
-  getMongoConnection() {
-    if (!this.mongoConnection) {
-      throw new Error('MongoDB connection not initialized. Call connect() first.')
-    }
-    return this.mongoConnection
-  }
-
-  isUsingMongoDB() {
-    return this.useMongoDB
   }
 
   isUsingDynamoDB() {

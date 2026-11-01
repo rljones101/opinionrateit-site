@@ -28,11 +28,17 @@ appApi.interceptors.response.use(
   async (error: AxiosError) => {
     const originalRequest = error.config as any
     
-    // Don't retry if this is already a refresh token request or if we've already retried
-    if (error.response?.status === 401 && 
-        !originalRequest._retry && 
-        !originalRequest.url?.includes('/users/refresh-token')) {
-      
+    // Only attempt a token refresh for 401s that likely mean an *expired
+    // session* — never for the auth endpoints themselves, where a 401 means
+    // the submitted credentials were wrong (and refreshing/redirecting would
+    // swallow the error the user needs to see).
+    const url = originalRequest.url || ''
+    const isAuthEndpoint =
+      url.includes('/users/login') ||
+      url.includes('/users/signup') ||
+      url.includes('/users/refresh-token')
+
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthEndpoint) {
       originalRequest._retry = true
       
       try {
@@ -67,12 +73,14 @@ const apiErrorResponse = (
 const handleError = (error: AxiosError): AppApiErrorResponse => {
   if (error.response) {
     const response: AxiosResponse = error.response
-    // The request was made and the server responded with a status code
-    // that falls out of the range of 2xx
-    // console.log(response.data)
-    // console.log(response.status)
-    // console.log(response.headers)
-    return apiErrorResponse(response.status, response.data.message)
+    // The server responded with a non-2xx status. Prefer the JSON `message`
+    // from our error handler; fall back to a status-appropriate default when
+    // the body isn't our JSON shape.
+    const body = response.data as any
+    const message =
+      (body && typeof body === 'object' && body.message) ||
+      (response.status === 401 ? 'Incorrect email or password' : 'Request failed. Please try again.')
+    return apiErrorResponse(response.data, response.status, message)
   } else if (error.request) {
     // The request was made but no response was received
     // `error.request` is an instance of XMLHttpRequest in the browser and an instance of

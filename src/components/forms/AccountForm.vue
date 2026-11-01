@@ -45,16 +45,26 @@ let form = {
   ...props.formData
 }
 
+// Password rule mirrors the backend validator (middleware/validation.js):
+// 8-128 chars with a lowercase, uppercase, number, and special character.
+const passwordRules =
+  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,128}$/
+const passwordMessage =
+  'Password must be 8+ characters with an uppercase letter, lowercase letter, number, and special character (@$!%*?&)'
+
 const accountFormSchema = yup.object({
   firstName: yup.string().required().label('First Name'),
   lastName: yup.string().required().label('Last Name'),
   email: yup.string().required().email().label('Email'),
-  password: yup.string().min(6).required().label('Your Password'),
+  password: yup
+    .string()
+    .required()
+    .matches(passwordRules, passwordMessage)
+    .label('Your Password'),
   passwordConfirm: yup
     .string()
     .required()
-    .min(6)
-    .oneOf([yup.ref('password'), 'Password does not match'])
+    .oneOf([yup.ref('password')], 'Passwords do not match')
     .label('Confirm Password')
 })
 const registerForm = useForm({
