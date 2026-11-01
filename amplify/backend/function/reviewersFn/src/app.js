@@ -1,12 +1,9 @@
 const express = require('express')
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware')
-const mongoose = require('mongoose')
 const helmet = require('helmet')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
 const rateLimit = require('express-rate-limit')
-const mongoSanitize = require('express-mongo-sanitize')
-const xss = require('xss-clean')
 const hpp = require('hpp')
 const AppError = require('./utils/appError.js')
 
@@ -46,42 +43,8 @@ async function initializeDatabases() {
   }
 }
 
-// Legacy MongoDB connection (kept for backward compatibility)
-async function DatabaseConnect() {
-  if (process.env.USE_MONGODB !== 'true') {
-    console.log('⏭️  Skipping MongoDB connection (USE_MONGODB not set to true)')
-    return
-  }
-
-  const DATABASE_USER = process.env.DATABASE_USER
-  const DATABASE_PASSWORD = process.env.DATABASE_PASSWORD
-  const DATABASE_HOST = process.env.DATABASE_HOST
-  const DATABASE_PORT = process.env.DATABASE_PORT
-  const DATABASE_NAME = process.env.DATABASE_NAME
-
-  await mongoose.connect(
-    `mongodb://${DATABASE_USER}:${DATABASE_PASSWORD}@${DATABASE_HOST}:${DATABASE_PORT}`,
-    { dbName: DATABASE_NAME }
-  )
-}
-
-// Initialize databases
+// Initialize databases (DynamoDB)
 initializeDatabases()
-
-// Keep legacy MongoDB connection for backward compatibility
-DatabaseConnect()
-  .then(() => {
-    if (mongoose.connection.db) {
-      console.log('Database connection successful!')
-      console.log('Connected to database:', mongoose.connection.db.databaseName)
-      console.log('Connection string used:', `mongodb://${process.env.DATABASE_USER}:***@${process.env.DATABASE_HOST}:${process.env.DATABASE_PORT}`)
-    }
-  })
-  .catch((error) => {
-    if (process.env.USE_MONGODB === 'true') {
-      console.log('MongoDB connection error:', error)
-    }
-  })
 
 // declare a new express app
 const app = express()

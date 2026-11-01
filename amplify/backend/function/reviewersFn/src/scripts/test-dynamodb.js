@@ -10,9 +10,9 @@ async function testDynamoDB() {
     
     // Set environment for DynamoDB
     process.env.USE_DYNAMODB = 'true'
-    process.env.USE_MONGODB = 'false'
-    
+
     // Connect to database
+    const databaseManager = require('../config/database')
     await databaseManager.connect()
     console.log('✅ Database connection successful')
     
