@@ -129,6 +129,11 @@ const handleAvatarUpload = async (event: Event) => {
     </div>
     
     <div class="header-content">
+      <!-- Tier badge (top-right) -->
+      <span class="tier-badge role-badge" :class="roleColor">
+        {{ roleDisplayName }}
+      </span>
+
       <!-- Avatar Section -->
       <div class="avatar-section">
         <div class="avatar-container" @click="handleAvatarClick">
@@ -167,10 +172,6 @@ const handleAvatarUpload = async (event: Event) => {
         <p class="user-email">{{ user.email }}</p>
         
         <div class="user-meta">
-          <span class="role-badge" :class="roleColor">
-            {{ roleDisplayName }}
-          </span>
-          
           <div class="meta-items">
             <div class="meta-item">
               <span class="meta-label">Member since:</span>
@@ -259,6 +260,11 @@ const handleAvatarUpload = async (event: Event) => {
 
 .role-badge {
   @apply inline-flex items-center px-3 py-1 rounded-full text-sm font-medium;
+}
+
+.tier-badge {
+  /* Pin the tier badge to the top-right corner of the header. */
+  @apply absolute top-4 right-4 z-20 shadow-sm;
 }
 
 .meta-items {
