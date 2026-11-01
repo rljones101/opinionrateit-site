@@ -14,8 +14,9 @@ const props = withDefaults(defineProps<{
 }>(), {
   variant: 'primary',
   size: 'md',
-  disabled: false,
-  type: 'button'
+  disabled: false
+  // `type` intentionally has no default so the legacy `btnType` prop can take
+  // effect; the resolved type falls back to 'button' in the template.
 })
 
 const getClasses = computed(() => {
@@ -48,7 +49,7 @@ const getClasses = computed(() => {
 
 <template>
   <button
-    :type="type || btnType"
+    :type="type || btnType || 'button'"
     :disabled="disabled"
     :class="getClasses"
   >

@@ -122,6 +122,22 @@ export const useSignupStore = defineStore('useSignupStore', () => {
     //await complete()
   }
 
+  /**
+   * Finish signup for a tier that doesn't require billing (Free): create the
+   * account on the backend now (there's no billing step to do it), then
+   * advance to the Complete step.
+   */
+  const completeFreeSignup = async () => {
+    const fullName =
+      accountFormData.value.firstName.trim() + ' ' + accountFormData.value.lastName.trim()
+    await userStore.signupUser({
+      ...accountFormData.value,
+      name: fullName,
+      active: true
+    })
+    currentStep.value = SIGNUP_STEPS.COMPLETE
+  }
+
   const clearAccountData = () => {
     accountFormData.value.youTubeChannelId = ''
     accountFormData.value.title = ''
@@ -252,6 +268,7 @@ export const useSignupStore = defineStore('useSignupStore', () => {
     setAccountData,
     selectPlan,
     paymentComplete,
+    completeFreeSignup,
     getNextStep,
     goToNextStep,
     goToPreviousStep,

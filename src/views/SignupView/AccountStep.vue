@@ -15,7 +15,13 @@ const handleSubmitAccount = async (formData: AccountDetails) => {
   
   try {
     await signupStore.setAccountData(formData)
-    signupStore.goToNextStep()
+    if (signupStore.selectedPlan.requiresBilling) {
+      // Paid tiers continue to the billing step.
+      signupStore.goToNextStep()
+    } else {
+      // Free tier: create the account now and go to the Complete step.
+      await signupStore.completeFreeSignup()
+    }
   } catch (err: any) {
     console.error('Account step error:', err)
     
