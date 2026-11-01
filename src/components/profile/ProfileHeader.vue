@@ -233,7 +233,14 @@ const handleEditProfile = () => {
 }
 
 .avatar-image {
-  @apply ring-4 ring-white shadow-lg;
+  @apply shadow-lg rounded-full;
+}
+
+/* The ring must sit on a rounded element or it renders as a square box
+   around the circular avatar. Use a soft themed ring, not stark white. */
+.avatar-image :deep(> div),
+.avatar-image :deep(> img) {
+  @apply ring-2 ring-brand-500/40;
 }
 
 .avatar-overlay {
