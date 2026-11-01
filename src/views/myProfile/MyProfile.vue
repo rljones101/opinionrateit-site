@@ -10,7 +10,6 @@ import ProfileHeader from '@/components/profile/ProfileHeader.vue'
 import ProfileTabs from '@/components/profile/ProfileTabs.vue'
 import ProfileSettings from '@/components/profile/ProfileSettings.vue'
 import ProfileActivity from '@/components/profile/ProfileActivity.vue'
-import ProfilePreferences from '@/components/profile/ProfilePreferences.vue'
 import ProfileSecurity from '@/components/profile/ProfileSecurity.vue'
 
 const userStore = useUserStore()
@@ -24,7 +23,6 @@ const activeTab = ref('settings')
 const tabs = [
   { id: 'settings', label: 'Settings', icon: 'settings' },
   { id: 'activity', label: 'Activity', icon: 'activity' },
-  { id: 'preferences', label: 'Preferences', icon: 'heart' },
   { id: 'security', label: 'Security', icon: 'shield' }
 ]
 
@@ -85,9 +83,6 @@ onMounted(() => {
 
         <!-- Activity Tab -->
         <ProfileActivity v-else-if="activeTab === 'activity'" :user="userStore.currentUser" />
-
-        <!-- Preferences Tab -->
-        <ProfilePreferences v-else-if="activeTab === 'preferences'" :user="userStore.currentUser" />
 
         <!-- Security Tab -->
         <ProfileSecurity v-else-if="activeTab === 'security'" :user="userStore.currentUser" />
